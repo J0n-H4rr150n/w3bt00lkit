@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>src.modules.proxyhelper API documentation</title>
+<meta name="description" content="proxyhelper.py">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.modules.proxyhelper</code></h1>
+</header>
+<section id="section-intro">
+<p>proxyhelper.py</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.modules.proxyhelper.signal_handler"><code class="name flex">
+<span>def <span class="ident">signal_handler</span></span>(<span>sig, frame) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Signal handler.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sig</code></strong></dt>
+<dd>The signal to handle.</dd>
+<dt><strong><code>frame</code></strong></dt>
+<dd>The frame to handle.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.modules.proxyhelper.ProxyHelper"><code class="flex name class">
+<span>class <span class="ident">ProxyHelper</span></span>
+<span>(</span><span>target, in_scope, parent_callback_proxy_message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ProxyHelper.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProxyHelper:
+    &#34;&#34;&#34;ProxyHelper.&#34;&#34;&#34;
+    target: str = &#39;&#39;
+    exclusion_list: list = []
+
+    def __init__(self, target, in_scope, parent_callback_proxy_message) -&gt; None:
+        self.target = target
+        self.in_scope = in_scope
+        self._parent_callback_proxy_message = parent_callback_proxy_message
+        #print(&#34;proxyhelper.py &gt;&#34;, target)
+        #print(&#34;proxyhelper.py &gt; in scope,  &gt; &#34;, in_scope)
+        #if self.in_scope is not None:
+        #    for item in in_scope:
+        #        if item[&#39;fqdn&#39;] is not None:
+        #            print(item[&#39;fqdn&#39;])
+
+    def request(self, flow: http.HTTPFlow) -&gt; None: # pylint: disable=R0914
+        &#34;&#34;&#34;Proxy request.
+        
+        Args:
+            flow: The flow object for the request.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        #for exclusion in self.exclusion_list:
+        #    if exclusion in flow.request.host:
+        #        print(&#34;Skip: %s&#34;, exclusion)
+        #        return
+
+        if self.target is None or self.in_scope is None:
+            return
+
+        save_request = False
+        for item in self.in_scope:
+            if item[&#39;fqdn&#39;] is not None:
+                if flow.request.host == item[&#39;fqdn&#39;]:
+                    save_request = True
+                if &#39;*&#39; in item[&#39;fqdn&#39;]:
+                    tmp_fqdn = item[&#39;fqdn&#39;].replace(&#39;*&#39;,&#39;&#39;)
+                    if flow.request.host.endswith(tmp_fqdn):
+                        save_request = True
+
+        if save_request == False:
+            return
+
+        #self._parent_callback_proxy_message(f&#34;REQUEST: {flow.request.pretty_url}&#34;)
+
+        request = flow.request
+
+        host = flow.request.host
+        port = flow.request.port
+        method = flow.request.method
+        scheme = flow.request.scheme
+        authority = flow.request.authority
+        path = flow.request.path
+
+        try:
+            content = flow.request.text.replace(&#39;\x00&#39;, &#39;&#39;)
+        except Exception as exc:
+            self._parent_callback_proxy_message(f&#34;REQUEST: clean content exception - {exc}&#34;)
+
+        timestamp_start = flow.request.timestamp_start
+        timestamp_end = flow.request.timestamp_end
+
+        full_url: str = f&#39;{request.scheme}://{request.host}:{request.port}{request.path}&#39;
+
+        parsed: ParseResult = urlparse(full_url)
+        path: str = parsed.path
+        url: str = f&#39;{parsed.scheme}://{parsed.netloc.replace(&#34;:443&#34;,&#34;&#34;)}{parsed.path}&#39;
+
+        try:
+            proxy_database = ProxyDatabase()
+            db_session: Session = proxy_database.session_local()
+
+            headers_string = &#34;, &#34;.join([f&#34;{k}: {v}&#34; for k, v in flow.request.headers.items()])
+
+            new_request = ProxyModel(
+                target_id=int(self.target[&#39;id&#39;]),
+                name=None,
+                request=None,
+                action=&#39;Request&#39;,
+                host=host,
+                port=port,
+                method=method,
+                scheme=scheme,
+                authority=authority,
+                path=path,
+                headers=headers_string,
+                content=content,
+                timestamp_start=timestamp_start,
+                timestamp_end=timestamp_end,
+                full_url=full_url,
+                parsed_full_url=str(parsed),
+                parsed_path=path,
+                parsed_url=url
+            )
+
+            #self._parent_callback_proxy_message(new_request.__dict__)
+
+            proxy_database._add_request(db_session, new_request) # pylint: disable=W0212
+        except Exception as database_exception: # pylint: disable=W0718
+            self._parent_callback_proxy_message(&#34;REQUEST: database_exception - &#34;, database_exception)
+            print(&#34;Database exception:&#34;,database_exception)
+
+    def response(self, flow: http.HTTPFlow) -&gt; None:
+        &#34;&#34;&#34;Proxy response.
+        
+        Args:
+            flow: The flow object for the response.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+
+        #self._parent_callback_proxy_message(flow.request.host)
+
+        if self.target is None or self.in_scope is None:
+            self._parent_callback_proxy_message(&#34;RESPONSE: self in_scope is none&#34;)
+            return
+
+        save_response = False
+
+        try:
+            for item in self.in_scope:
+                if item[&#39;fqdn&#39;] is not None:
+                    if flow.request.host == item[&#39;fqdn&#39;]:
+                        save_response = True
+                    if &#39;*&#39; in item[&#39;fqdn&#39;]:
+                        tmp_fqdn = item[&#39;fqdn&#39;].replace(&#39;*&#39;,&#39;&#39;)
+                        if flow.request.host.endswith(tmp_fqdn):
+                            save_response = True
+            if save_response == False:
+                return
+        except Exception as exc:
+            self._parent_callback_proxy_message(f&#34;{flow.request.pretty_url} ---&gt; \n {exc}&#34;)
+
+        request = flow.request
+
+        host = flow.request.host
+        port = flow.request.port
+        method = flow.request.method
+        scheme = flow.request.scheme
+        authority = flow.request.authority
+        path = flow.request.path
+
+        headers = flow.request.headers
+
+        try:
+            content = flow.request.text.replace(&#39;\x00&#39;, &#39;&#39;)
+        except Exception as exc:
+            self._parent_callback_proxy_message(f&#34;RESPONSE: clean content exception - {exc}&#34;)
+
+        timestamp_start = flow.request.timestamp_start
+        timestamp_end = flow.request.timestamp_end
+
+        full_url: str = f&#39;{request.scheme}://{request.host}:{request.port}{request.path}&#39;
+
+        parsed: ParseResult = urlparse(full_url)
+        path: str = parsed.path
+        url: str = f&#39;{parsed.scheme}://{parsed.netloc.replace(&#34;:443&#34;,&#34;&#34;)}{parsed.path}&#39;
+
+        try:
+            proxy_database = ProxyDatabase()
+            db_session: Session = proxy_database.session_local()
+
+            #headers_string = &#34;, &#34;.join([f&#34;{k}: {v}&#34; for k, v in flow.response.headers.items()])
+
+            new_request = ProxyModel(
+                target_id=int(self.target[&#39;id&#39;]),
+                name=None,
+                request=None,
+                action=&#39;Response&#39;,
+                response_status_code=flow.response.status_code,
+                response_reason=flow.response.reason,
+                response_headers=None,
+                response_text=flow.response.text,
+                host=host,
+                port=port,
+                method=method,
+                scheme=scheme,
+                authority=authority,
+                path=path,
+                headers=str(headers),
+                content=content,
+                timestamp_start=timestamp_start,
+                timestamp_end=timestamp_end,
+                full_url=full_url,
+                parsed_full_url=str(parsed),
+                parsed_path=path,
+                parsed_url=url
+            )
+
+            proxy_database._add_request(db_session, new_request) # pylint: disable=W0212
+        except Exception as database_exception: # pylint: disable=W0718
+            self._parent_callback_proxy_message(&#34;RESPONSE: database_exception - &#34;, database_exception)
+            print(&#34;Response database exception:&#34;, database_exception)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="src.modules.proxyhelper.ProxyHelper.exclusion_list"><code class="name">var <span class="ident">exclusion_list</span> : list</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.modules.proxyhelper.ProxyHelper.target"><code class="name">var <span class="ident">target</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="src.modules.proxyhelper.ProxyHelper.request"><code class="name flex">
+<span>def <span class="ident">request</span></span>(<span>self, flow: mitmproxy.http.HTTPFlow) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proxy request.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>flow</code></strong></dt>
+<dd>The flow object for the request.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+<dt id="src.modules.proxyhelper.ProxyHelper.response"><code class="name flex">
+<span>def <span class="ident">response</span></span>(<span>self, flow: mitmproxy.http.HTTPFlow) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proxy response.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>flow</code></strong></dt>
+<dd>The flow object for the response.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.modules" href="index.html">src.modules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.modules.proxyhelper.signal_handler" href="#src.modules.proxyhelper.signal_handler">signal_handler</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.modules.proxyhelper.ProxyHelper" href="#src.modules.proxyhelper.ProxyHelper">ProxyHelper</a></code></h4>
+<ul class="">
+<li><code><a title="src.modules.proxyhelper.ProxyHelper.exclusion_list" href="#src.modules.proxyhelper.ProxyHelper.exclusion_list">exclusion_list</a></code></li>
+<li><code><a title="src.modules.proxyhelper.ProxyHelper.request" href="#src.modules.proxyhelper.ProxyHelper.request">request</a></code></li>
+<li><code><a title="src.modules.proxyhelper.ProxyHelper.response" href="#src.modules.proxyhelper.ProxyHelper.response">response</a></code></li>
+<li><code><a title="src.modules.proxyhelper.ProxyHelper.target" href="#src.modules.proxyhelper.ProxyHelper.target">target</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>

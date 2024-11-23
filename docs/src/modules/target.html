@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>src.modules.target API documentation</title>
+<meta name="description" content="target.py">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.modules.target</code></h1>
+</header>
+<section id="section-intro">
+<p>target.py</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.modules.target.Target"><code class="flex name class">
+<span>class <span class="ident">Target</span></span>
+<span>(</span><span>parent_obj, callback_set_target, handle_input, callback_word_completer, get_selected_target, set_previous_menu)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Target.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Target(): # pylint: disable=R0902
+    &#34;&#34;&#34;Target.&#34;&#34;&#34;
+    def __init__(self, parent_obj, callback_set_target, handle_input, # pylint: disable=R0913,R0917
+                 callback_word_completer, get_selected_target, set_previous_menu
+                 ) -&gt; None:
+        self.parent_obj = parent_obj
+        self._parent_callback_set_target = callback_set_target
+        self._parent_callback_word_completer = callback_word_completer
+        self._handle_input = handle_input
+        self._get_selected_target = get_selected_target
+        self._set_previous_meu = set_previous_menu
+        self.name = &#39;target&#39;
+        self.session = PromptSession()
+        self.completer: WordCompleter = word_completer(self)
+        self.targetscope_obj = TargetScope(parent_obj,self, handle_input, get_selected_target, self._set_previous_meu)
+        self.current_target = None
+        self.targets = None
+        self.target_scopes_in: List[TargetModel] = []
+
+    def add(self) -&gt; None:
+        &#34;&#34;&#34;Add a new target.&#34;&#34;&#34;
+        target_name: str = input(&#34;Target Name (leave blank to cancel): &#34;)
+        if &#39;&#39; == target_name:
+            return
+        print(&#34;Target Name &gt;&#34;,target_name)
+        platform_name: str = input(&#34;Platform Name (leave blank to cancel): &#34;)
+        if &#39;&#39; == platform_name:
+            return
+        print(&#34;Platform Name &gt;&#34;,platform_name)
+        try:
+            db = TargetDatabase()
+            db_session: Session = db.session_local()
+
+            existing_record: Query[TargetModel] = db_session.query(TargetModel)\
+                .filter(TargetModel.name.ilike(f&#34;%{target_name}%&#34;)).filter(TargetModel.platform.ilike(f&#34;%{platform_name}&#34;))
+
+            if not existing_record:
+                new_target = TargetModel(
+                    name=target_name,
+                    platform=platform_name,
+                    active=True
+                )
+                result: Literal[0] | Literal[1] = db._add_target(db_session, new_target) # pylint: disable=W0212
+                if result == 0:
+                    print(&#34;Target added to the database.\n&#34;)
+                elif result == 1:
+                    print(&#34;Target already exists.\n&#34;)
+                else:
+                    print(&#34;There was an error trying to add the target.\n&#34;)
+            else:
+                print(&#34;Target already exists.\n&#34;)
+        except Exception as database_exception: # pylint: disable=W0718
+            print(database_exception)
+
+    def _select_target(self, selected_no: int) -&gt; None:
+        &#34;&#34;&#34;Select a target
+
+        Args:
+            selection (int): The number of the selected target in the targets list.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        print(&#34;Select target #:&#34;, selected_no)
+        self._parent_callback_set_target(self.targets[selected_no])
+
+        self.target_scopes_in = []
+        try:
+            target_database = TargetDatabase()
+            db_session: Session = target_database.session_local()
+            records: List[TargetScopeModel] = db_session.query(TargetScopeModel).filter(
+                    TargetScopeModel.active == True,
+                    TargetScopeModel.in_scope_ind == True,
+                    TargetScopeModel.out_of_scope_ind == False,
+                    TargetScopeModel.target_id == self.targets[selected_no][&#39;id&#39;]
+                ).order_by(TargetScopeModel.fqdn, TargetScopeModel.path).all()
+            for record in records:
+                targetscope_record = {
+                    &#39;fqdn&#39;: record.fqdn,
+                    &#39;path&#39;: record.path
+                }
+                self.target_scopes_in.append(targetscope_record)
+            self.parent_obj.selected_target_in_scope = self.target_scopes_in
+            df = pd.DataFrame(self.target_scopes_in)
+            df.index.name = &#39;#&#39;
+            print(&#39;\033[32mIn Scope:\033[0m&#39;)
+            print(tabulate(df, headers=&#39;keys&#39;, tablefmt=&#39;psql&#39;))
+            print(&#34;&#34;)
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+
+
+    def list(self) -&gt; None:
+        &#34;&#34;&#34;List all active targets.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        print(&#34;&#34;)
+        try:
+            db = TargetDatabase()
+            db_session: Session = db.session_local()
+            self.targets: list = db._get_targets(db_session) # pylint: disable=W0212
+            df = pd.DataFrame(self.targets)
+            df.index.name = &#39;#&#39;
+            print(tabulate(df, headers=&#39;keys&#39;, tablefmt=&#39;psql&#39;))
+            selected: str = input(&#34;Select a target by # (leave blank to cancel): &#34;)
+            if &#39;&#39; == selected:
+                return
+            try:
+                selected_no = int(selected)
+                self._select_target(selected_no)
+            except ValueError:
+                print(&#34;ERROR: Invalid input. Input a valid number.&#34;)
+                self._handle_input(self.parent_obj, self, &#39;list&#39;, [], None)
+        except Exception as database_exception: # pylint: disable=W0718
+            print(database_exception)
+
+    def info(self) -&gt; None:
+        &#34;&#34;&#34;Get info about a target by name.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        target_name: str = input(&#34;Target Name (leave blank to cancel): &#34;)
+        if &#39;&#39; == target_name:
+            return
+        print(&#34;Target Name &gt;&#34;,target_name)
+
+    def scope(self) -&gt; None:
+        &#34;&#34;&#34;Manage the scope for a target.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        self._parent_callback_word_completer(TargetScope, &#39;targetscope&#39;, TargetScope)
+
+    def select(self) -&gt; None:
+        &#34;&#34;&#34;Select a target by name.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        target_name: str = input(&#34;Target Name (leave blank to cancel): &#34;)
+        if &#39;&#39; == target_name:
+            return
+        print(&#34;Target Name &gt;&#34;,target_name)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.modules.target.Target.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a new target.</p></div>
+</dd>
+<dt id="src.modules.target.Target.info"><code class="name flex">
+<span>def <span class="ident">info</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get info about a target by name.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+<dt id="src.modules.target.Target.list"><code class="name flex">
+<span>def <span class="ident">list</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List all active targets.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+<dt id="src.modules.target.Target.scope"><code class="name flex">
+<span>def <span class="ident">scope</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Manage the scope for a target.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+<dt id="src.modules.target.Target.select"><code class="name flex">
+<span>def <span class="ident">select</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Select a target by name.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="src.modules.target.TargetScope"><code class="flex name class">
+<span>class <span class="ident">TargetScope</span></span>
+<span>(</span><span>app_obj, parent_obj, handle_input, get_selected_target, set_previous_menu)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Target Scope.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TargetScope: # pylint: disable=R0902
+    &#34;&#34;&#34;Target Scope.&#34;&#34;&#34;
+
+    def __init__(self, app_obj, parent_obj, handle_input, get_selected_target, set_previous_menu) -&gt; None: # pylint: disable=R0917,R0913
+        self.app_obj = app_obj
+        self.parent_obj = parent_obj
+        self._handle_input = handle_input
+        self._get_selected_target = get_selected_target
+        self._set_previous_menu = set_previous_menu
+        self.name = &#39;targetscope&#39;
+        self.session = PromptSession()
+        self.completer: WordCompleter = word_completer(self)
+        self.target_scopes_in: List[TargetModel]
+        self.target_scopes_out: List[TargetModel]
+
+    def _classhelp(self):
+        &#34;&#34;&#34;Help for TargetScope class.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+
+    def add(self) -&gt; None: # pylint: disable=R0914,R0911,R0912,R0915
+        &#34;&#34;&#34;Add an item to the target&#39;s scope and save to the database.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        target_name = self._get_selected_target()
+        if target_name is None or self.app_obj.selected_target_obj is None:
+            print(&#34;\nPlease select a target before using the &#39;scope&#39; option.&#34;)
+            self._set_previous_menu(self.name,&#39;add&#39;)
+            self.app_obj._back() # pylint: disable=W0212
+            self._handle_input(self.app_obj, self.app_obj.target_obj, &#39;list&#39;, [], None)
+            return
+
+        item_in_scope = False
+        item_out_of_scope = False
+        item_wildcard = False
+        item_fqdn = None
+        item_path = None
+
+        scope_item: str = input(&#34;Input the scope item (leave blank to cancel): &#34;)
+        if &#39;&#39; == scope_item:
+            return
+        print(&#34;Scope item &gt;&#34;,scope_item)
+        if &#39;*&#39; in scope_item:
+            item_wildcard = True
+
+        if &#39;/&#39; in scope_item:
+            item_path = scope_item
+        else:
+            item_fqdn = scope_item
+
+        scope_type: str = input(&#34;Is this in scope (`y` or enter == yes; `n` == no)&#34;)
+        valid_scope_type = False
+
+        if &#39;&#39; == scope_type or &#39;y&#39; == scope_type.lower() or &#39;yes&#39; == scope_type.lower():
+            scope_type = &#34;in&#34;
+            valid_scope_type = True
+            item_in_scope = True
+        elif &#39;n&#39; == scope_type.lower().strip() or &#39;no&#39; == scope_type.lower().strip():
+            scope_type = &#34;out&#34;
+            valid_scope_type = True
+            item_out_of_scope = True
+        elif valid_scope_type == False:
+            print(&#34;Invalid scope type.&#34;)
+            self.app_obj._back() # pylint: disable=W0212
+            return
+        else:
+            print(&#34;Other issues. Return...&#34;)
+            return
+
+        print(f&#34;\nTarget name: {target_name}&#34;)
+        print(f&#34;Scope item: {scope_item}&#34;)
+        print(f&#34;Scope type: {scope_type}\n&#34;)
+
+        save_to_database = False
+        confirm = input(&#34;Is this correct? (`y` or enter == yes; `n` == no)&#34;)
+        if &#39;&#39; == confirm or &#39;y&#39; == confirm.lower():
+            save_to_database = True
+
+        if &#39;n&#39; == confirm.lower().strip() or &#39;N&#39; == confirm.lower().strip():
+            print(&#34;Cancel.&#34;)
+            return
+
+        if scope_type not in (&#39;in&#39;, &#39;out&#39;):
+            print(&#34;Cancel for other reason.&#34;)
+            return
+
+        if save_to_database == False:
+            print(&#34;Cancel.&#34;)
+            return
+
+        selected_target = self.app_obj.selected_target_obj
+
+        db = TargetDatabase()
+        db_session: Session = db.session_local()
+
+        existing_record: Query[TargetScopeModel] = db_session.query(TargetScopeModel)\
+            .filter_by(target_id=selected_target[&#39;id&#39;], fqdn=item_fqdn, path=item_path)
+
+        if not existing_record:
+            try:
+                new_target_scope = TargetScopeModel(
+                    target_id = selected_target[&#39;id&#39;],
+                    fqdn = item_fqdn,
+                    path = item_path,
+                    in_scope_ind = item_in_scope,
+                    out_of_scope_ind = item_out_of_scope,
+                    wildcard_ind = item_wildcard
+                )
+                result: Literal[0] | Literal[1] = db._add_targetscope(db_session, new_target_scope) # pylint: disable=W0212
+                if result == 0:
+                    print(&#34;Target scope added to the database.\n&#34;)
+                elif result == 1:
+                    print(&#34;Target scope already exists.\n&#34;)
+                else:
+                    print(&#34;There was an error trying to add the target scope.\n&#34;)
+            except Exception as database_exception: # pylint: disable=W0718
+                print(database_exception)
+        else:
+            print(&#34;Target scope already exists.\n&#34;)
+
+    def list(self) -&gt; None:
+        &#34;&#34;&#34;List all items.&#34;&#34;&#34;
+
+        target_name = self._get_selected_target()
+        if target_name is None or self.app_obj.selected_target_obj is None:
+            print(&#34;\nPlease select a target before using the &#39;scope&#39; option.&#34;)
+            self._set_previous_menu(self.name,&#39;add&#39;)
+            self.app_obj._back() # pylint: disable=W0212
+            self._handle_input(self.app_obj, self.app_obj.target_obj, &#39;list&#39;, [], None)
+            return
+
+        selected_target = self.app_obj.selected_target_obj
+
+        print(&#39;\n\033[31mOut of Scope:\033[0m&#39;)
+        self.target_scopes_out: List[TargetModel] = []
+        try:
+            target_database = TargetDatabase()
+            db_session: Session = target_database.session_local()
+            records: List[TargetScopeModel] = db_session.query(TargetScopeModel).filter(
+                    TargetScopeModel.active == True,
+                    TargetScopeModel.out_of_scope_ind == True,
+                    TargetScopeModel.in_scope_ind == False,
+                    TargetScopeModel.target_id == selected_target[&#39;id&#39;]
+                ).order_by(TargetScopeModel.fqdn, TargetScopeModel.path).all()
+            for record in records:
+                targetscope_record = {
+                    &#39;fqdn&#39;: record.fqdn,
+                    &#39;path&#39;: record.path
+                }
+                self.target_scopes_out.append(targetscope_record)
+            self.app_obj.selected_target_out_of_scope = self.target_scopes_out
+            df = pd.DataFrame(self.target_scopes_out)
+            df.index.name = &#39;#&#39;
+            print(tabulate(df, headers=&#39;keys&#39;, tablefmt=&#39;psql&#39;))
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+
+        print(&#34;&#34;)
+        print(&#39;\033[32mIn Scope:\033[0m&#39;)
+        self.target_scopes_in = []
+        try:
+            target_database = TargetDatabase()
+            db_session: Session = target_database.session_local()
+            records: List[TargetScopeModel] = db_session.query(TargetScopeModel).filter(
+                    TargetScopeModel.active == True,
+                    TargetScopeModel.in_scope_ind == True,
+                    TargetScopeModel.out_of_scope_ind == False,
+                    TargetScopeModel.target_id == selected_target[&#39;id&#39;]
+                ).order_by(TargetScopeModel.fqdn, TargetScopeModel.path).all()
+            for record in records:
+                targetscope_record = {
+                    &#39;fqdn&#39;: record.fqdn,
+                    &#39;path&#39;: record.path
+                }
+                self.target_scopes_in.append(targetscope_record)
+            self.app_obj.selected_target_in_scope = self.target_scopes_in
+            df = pd.DataFrame(self.target_scopes_in)
+            df.index.name = &#39;#&#39;
+            print(tabulate(df, headers=&#39;keys&#39;, tablefmt=&#39;psql&#39;))
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+
+        print(&#34;&#34;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.modules.target.TargetScope.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add an item to the target's scope and save to the database.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+</dd>
+<dt id="src.modules.target.TargetScope.list"><code class="name flex">
+<span>def <span class="ident">list</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List all items.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.modules" href="index.html">src.modules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.modules.target.Target" href="#src.modules.target.Target">Target</a></code></h4>
+<ul class="">
+<li><code><a title="src.modules.target.Target.add" href="#src.modules.target.Target.add">add</a></code></li>
+<li><code><a title="src.modules.target.Target.info" href="#src.modules.target.Target.info">info</a></code></li>
+<li><code><a title="src.modules.target.Target.list" href="#src.modules.target.Target.list">list</a></code></li>
+<li><code><a title="src.modules.target.Target.scope" href="#src.modules.target.Target.scope">scope</a></code></li>
+<li><code><a title="src.modules.target.Target.select" href="#src.modules.target.Target.select">select</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.modules.target.TargetScope" href="#src.modules.target.TargetScope">TargetScope</a></code></h4>
+<ul class="">
+<li><code><a title="src.modules.target.TargetScope.add" href="#src.modules.target.TargetScope.add">add</a></code></li>
+<li><code><a title="src.modules.target.TargetScope.list" href="#src.modules.target.TargetScope.list">list</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>

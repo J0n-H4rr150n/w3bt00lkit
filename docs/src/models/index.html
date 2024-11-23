@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>src.models API documentation</title>
+<meta name="description" content="__init__.py">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.models</code></h1>
+</header>
+<section id="section-intro">
+<p><strong>init</strong>.py</p>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="src.models.setupdata" href="setupdata.html">src.models.setupdata</a></code></dt>
+<dd>
+<div class="desc"><p>setupdata.py</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.models.ChecklistModel"><code class="flex name class">
+<span>class <span class="ident">ChecklistModel</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ChecklistModel.</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChecklistModel(Base): # pylint: disable=R0903
+    &#34;&#34;&#34;ChecklistModel.&#34;&#34;&#34;
+    __tablename__: str = &#39;checklist&#39;
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    checklist_version = Column(String)
+    category = Column(String)
+    category_id = Column(String)
+    category_order = Column(Integer)
+    item_id = Column(String, unique=True)
+    item_name = Column(String)
+    objectives = Column(String)
+    useful_tools = Column(String)
+    link = Column(String)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
+    active = Column(Boolean, default=True)
+
+    Index(&#39;ux_name_version_item&#39;, name, checklist_version, item_id, unique=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>sqlalchemy.orm.decl_api.Base</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="src.models.ChecklistModel.active"><code class="name">var <span class="ident">active</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.category"><code class="name">var <span class="ident">category</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.category_id"><code class="name">var <span class="ident">category_id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.category_order"><code class="name">var <span class="ident">category_order</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.checklist_version"><code class="name">var <span class="ident">checklist_version</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.created_timestamp"><code class="name">var <span class="ident">created_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.id"><code class="name">var <span class="ident">id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.item_id"><code class="name">var <span class="ident">item_id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.item_name"><code class="name">var <span class="ident">item_name</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.link"><code class="name">var <span class="ident">link</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.modified_timestamp"><code class="name">var <span class="ident">modified_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.name"><code class="name">var <span class="ident">name</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.objectives"><code class="name">var <span class="ident">objectives</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ChecklistModel.useful_tools"><code class="name">var <span class="ident">useful_tools</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.models.ProxyModel"><code class="flex name class">
+<span>class <span class="ident">ProxyModel</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ProxyModel.</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProxyModel(Base): # pylint: disable=R0903
+    &#34;&#34;&#34;ProxyModel.&#34;&#34;&#34;
+    __tablename__: str = &#39;proxy&#39;
+
+    id = Column(Integer, primary_key=True)
+    target_id = Column(Integer)
+    name = Column(String)
+    action = Column(String)
+    request = Column(String)
+    host = Column(String)
+    port = Column(Integer)
+    method = Column(String)
+    scheme = Column(String)
+    authority = Column(String)
+    path = Column(String)
+    headers = Column(String)
+    content = Column(String)
+    response_status_code = Column(Integer)
+    response_reason = Column(String)
+    response_headers = Column(String)
+    response_text = Column(String)
+    timestamp_start = Column(BigInteger)
+    timestamp_end = Column(BigInteger)
+    full_url = Column(String)
+    parsed_full_url = Column(String)
+    parsed_path = Column(String)
+    parsed_url =  Column(String)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>sqlalchemy.orm.decl_api.Base</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="src.models.ProxyModel.action"><code class="name">var <span class="ident">action</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.authority"><code class="name">var <span class="ident">authority</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.content"><code class="name">var <span class="ident">content</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.created_timestamp"><code class="name">var <span class="ident">created_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.full_url"><code class="name">var <span class="ident">full_url</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.headers"><code class="name">var <span class="ident">headers</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.host"><code class="name">var <span class="ident">host</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.id"><code class="name">var <span class="ident">id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.method"><code class="name">var <span class="ident">method</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.modified_timestamp"><code class="name">var <span class="ident">modified_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.name"><code class="name">var <span class="ident">name</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.parsed_full_url"><code class="name">var <span class="ident">parsed_full_url</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.parsed_path"><code class="name">var <span class="ident">parsed_path</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.parsed_url"><code class="name">var <span class="ident">parsed_url</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.path"><code class="name">var <span class="ident">path</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.port"><code class="name">var <span class="ident">port</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.request"><code class="name">var <span class="ident">request</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.response_headers"><code class="name">var <span class="ident">response_headers</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.response_reason"><code class="name">var <span class="ident">response_reason</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.response_status_code"><code class="name">var <span class="ident">response_status_code</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.response_text"><code class="name">var <span class="ident">response_text</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.scheme"><code class="name">var <span class="ident">scheme</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.target_id"><code class="name">var <span class="ident">target_id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.timestamp_end"><code class="name">var <span class="ident">timestamp_end</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.ProxyModel.timestamp_start"><code class="name">var <span class="ident">timestamp_start</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.models.TargetModel"><code class="flex name class">
+<span>class <span class="ident">TargetModel</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>TargetModel.</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TargetModel(Base): # pylint: disable=R0903
+    &#34;&#34;&#34;TargetModel.&#34;&#34;&#34;
+    __tablename__: str = &#39;target&#39;
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    platform = Column(String)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>sqlalchemy.orm.decl_api.Base</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="src.models.TargetModel.active"><code class="name">var <span class="ident">active</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetModel.created_timestamp"><code class="name">var <span class="ident">created_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetModel.id"><code class="name">var <span class="ident">id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetModel.modified_timestamp"><code class="name">var <span class="ident">modified_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetModel.name"><code class="name">var <span class="ident">name</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetModel.platform"><code class="name">var <span class="ident">platform</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.models.TargetScopeModel"><code class="flex name class">
+<span>class <span class="ident">TargetScopeModel</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>TargetScopeModel.</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TargetScopeModel(Base): # pylint: disable=R0903
+    &#34;&#34;&#34;TargetScopeModel.&#34;&#34;&#34;
+    __tablename__: str = &#39;targetscope&#39;
+
+    id = Column(Integer, primary_key=True, index=True)
+    target_id = Column(Integer, ForeignKey(&#39;target.id&#39;), index=True)
+    fqdn = Column(String)
+    path = Column(String)
+    wildcard_ind = Column(Boolean)
+    in_scope_ind = Column(Boolean)
+    out_of_scope_ind = Column(Boolean)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
+
+    Index(&#39;ux_target_id_fqdn_path&#39;, target_id, fqdn, path, unique=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>sqlalchemy.orm.decl_api.Base</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="src.models.TargetScopeModel.active"><code class="name">var <span class="ident">active</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.created_timestamp"><code class="name">var <span class="ident">created_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.fqdn"><code class="name">var <span class="ident">fqdn</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.id"><code class="name">var <span class="ident">id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.in_scope_ind"><code class="name">var <span class="ident">in_scope_ind</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.modified_timestamp"><code class="name">var <span class="ident">modified_timestamp</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.out_of_scope_ind"><code class="name">var <span class="ident">out_of_scope_ind</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.path"><code class="name">var <span class="ident">path</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.target_id"><code class="name">var <span class="ident">target_id</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+<dt id="src.models.TargetScopeModel.wildcard_ind"><code class="name">var <span class="ident">wildcard_ind</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="../index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="src.models.setupdata" href="setupdata.html">src.models.setupdata</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.models.ChecklistModel" href="#src.models.ChecklistModel">ChecklistModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="src.models.ChecklistModel.active" href="#src.models.ChecklistModel.active">active</a></code></li>
+<li><code><a title="src.models.ChecklistModel.category" href="#src.models.ChecklistModel.category">category</a></code></li>
+<li><code><a title="src.models.ChecklistModel.category_id" href="#src.models.ChecklistModel.category_id">category_id</a></code></li>
+<li><code><a title="src.models.ChecklistModel.category_order" href="#src.models.ChecklistModel.category_order">category_order</a></code></li>
+<li><code><a title="src.models.ChecklistModel.checklist_version" href="#src.models.ChecklistModel.checklist_version">checklist_version</a></code></li>
+<li><code><a title="src.models.ChecklistModel.created_timestamp" href="#src.models.ChecklistModel.created_timestamp">created_timestamp</a></code></li>
+<li><code><a title="src.models.ChecklistModel.id" href="#src.models.ChecklistModel.id">id</a></code></li>
+<li><code><a title="src.models.ChecklistModel.item_id" href="#src.models.ChecklistModel.item_id">item_id</a></code></li>
+<li><code><a title="src.models.ChecklistModel.item_name" href="#src.models.ChecklistModel.item_name">item_name</a></code></li>
+<li><code><a title="src.models.ChecklistModel.link" href="#src.models.ChecklistModel.link">link</a></code></li>
+<li><code><a title="src.models.ChecklistModel.modified_timestamp" href="#src.models.ChecklistModel.modified_timestamp">modified_timestamp</a></code></li>
+<li><code><a title="src.models.ChecklistModel.name" href="#src.models.ChecklistModel.name">name</a></code></li>
+<li><code><a title="src.models.ChecklistModel.objectives" href="#src.models.ChecklistModel.objectives">objectives</a></code></li>
+<li><code><a title="src.models.ChecklistModel.useful_tools" href="#src.models.ChecklistModel.useful_tools">useful_tools</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.models.ProxyModel" href="#src.models.ProxyModel">ProxyModel</a></code></h4>
+<ul class="">
+<li><code><a title="src.models.ProxyModel.action" href="#src.models.ProxyModel.action">action</a></code></li>
+<li><code><a title="src.models.ProxyModel.authority" href="#src.models.ProxyModel.authority">authority</a></code></li>
+<li><code><a title="src.models.ProxyModel.content" href="#src.models.ProxyModel.content">content</a></code></li>
+<li><code><a title="src.models.ProxyModel.created_timestamp" href="#src.models.ProxyModel.created_timestamp">created_timestamp</a></code></li>
+<li><code><a title="src.models.ProxyModel.full_url" href="#src.models.ProxyModel.full_url">full_url</a></code></li>
+<li><code><a title="src.models.ProxyModel.headers" href="#src.models.ProxyModel.headers">headers</a></code></li>
+<li><code><a title="src.models.ProxyModel.host" href="#src.models.ProxyModel.host">host</a></code></li>
+<li><code><a title="src.models.ProxyModel.id" href="#src.models.ProxyModel.id">id</a></code></li>
+<li><code><a title="src.models.ProxyModel.method" href="#src.models.ProxyModel.method">method</a></code></li>
+<li><code><a title="src.models.ProxyModel.modified_timestamp" href="#src.models.ProxyModel.modified_timestamp">modified_timestamp</a></code></li>
+<li><code><a title="src.models.ProxyModel.name" href="#src.models.ProxyModel.name">name</a></code></li>
+<li><code><a title="src.models.ProxyModel.parsed_full_url" href="#src.models.ProxyModel.parsed_full_url">parsed_full_url</a></code></li>
+<li><code><a title="src.models.ProxyModel.parsed_path" href="#src.models.ProxyModel.parsed_path">parsed_path</a></code></li>
+<li><code><a title="src.models.ProxyModel.parsed_url" href="#src.models.ProxyModel.parsed_url">parsed_url</a></code></li>
+<li><code><a title="src.models.ProxyModel.path" href="#src.models.ProxyModel.path">path</a></code></li>
+<li><code><a title="src.models.ProxyModel.port" href="#src.models.ProxyModel.port">port</a></code></li>
+<li><code><a title="src.models.ProxyModel.request" href="#src.models.ProxyModel.request">request</a></code></li>
+<li><code><a title="src.models.ProxyModel.response_headers" href="#src.models.ProxyModel.response_headers">response_headers</a></code></li>
+<li><code><a title="src.models.ProxyModel.response_reason" href="#src.models.ProxyModel.response_reason">response_reason</a></code></li>
+<li><code><a title="src.models.ProxyModel.response_status_code" href="#src.models.ProxyModel.response_status_code">response_status_code</a></code></li>
+<li><code><a title="src.models.ProxyModel.response_text" href="#src.models.ProxyModel.response_text">response_text</a></code></li>
+<li><code><a title="src.models.ProxyModel.scheme" href="#src.models.ProxyModel.scheme">scheme</a></code></li>
+<li><code><a title="src.models.ProxyModel.target_id" href="#src.models.ProxyModel.target_id">target_id</a></code></li>
+<li><code><a title="src.models.ProxyModel.timestamp_end" href="#src.models.ProxyModel.timestamp_end">timestamp_end</a></code></li>
+<li><code><a title="src.models.ProxyModel.timestamp_start" href="#src.models.ProxyModel.timestamp_start">timestamp_start</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.models.TargetModel" href="#src.models.TargetModel">TargetModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="src.models.TargetModel.active" href="#src.models.TargetModel.active">active</a></code></li>
+<li><code><a title="src.models.TargetModel.created_timestamp" href="#src.models.TargetModel.created_timestamp">created_timestamp</a></code></li>
+<li><code><a title="src.models.TargetModel.id" href="#src.models.TargetModel.id">id</a></code></li>
+<li><code><a title="src.models.TargetModel.modified_timestamp" href="#src.models.TargetModel.modified_timestamp">modified_timestamp</a></code></li>
+<li><code><a title="src.models.TargetModel.name" href="#src.models.TargetModel.name">name</a></code></li>
+<li><code><a title="src.models.TargetModel.platform" href="#src.models.TargetModel.platform">platform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.models.TargetScopeModel" href="#src.models.TargetScopeModel">TargetScopeModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="src.models.TargetScopeModel.active" href="#src.models.TargetScopeModel.active">active</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.created_timestamp" href="#src.models.TargetScopeModel.created_timestamp">created_timestamp</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.fqdn" href="#src.models.TargetScopeModel.fqdn">fqdn</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.id" href="#src.models.TargetScopeModel.id">id</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.in_scope_ind" href="#src.models.TargetScopeModel.in_scope_ind">in_scope_ind</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.modified_timestamp" href="#src.models.TargetScopeModel.modified_timestamp">modified_timestamp</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.out_of_scope_ind" href="#src.models.TargetScopeModel.out_of_scope_ind">out_of_scope_ind</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.path" href="#src.models.TargetScopeModel.path">path</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.target_id" href="#src.models.TargetScopeModel.target_id">target_id</a></code></li>
+<li><code><a title="src.models.TargetScopeModel.wildcard_ind" href="#src.models.TargetScopeModel.wildcard_ind">wildcard_ind</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>

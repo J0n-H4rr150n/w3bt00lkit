@@ -1,0 +1,9 @@
+venv_*
+todo_*
+__pycache__
+.pytest_cache
+*.log
+data
+.vscode
+snyk-linux
+valid_log.txt
