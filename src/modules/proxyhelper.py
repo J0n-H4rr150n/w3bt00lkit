@@ -65,6 +65,7 @@ class ProxyHelper:
         #        return
 
         if self.target is None or self.in_scope is None:
+            self._parent_callback_proxy_message(f"REQUEST: No target selected.")
             return
 
         save_request = False

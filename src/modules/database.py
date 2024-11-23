@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 import pandas as pd
-from models import Base, ChecklistModel, ProxyModel, TargetModel, TargetScopeModel
+from models import Base, ChecklistModel, ProxyModel, TargetModel, TargetNoteModel, TargetScopeModel
 from models.setupdata import SetupData
 from .common import word_completer
 
@@ -15,7 +15,8 @@ from .common import word_completer
 
 class Database():
     """Database."""
-    def __init__(self) -> None:
+    def __init__(self, parent_obj=None) -> None:
+        self.parent_obj = parent_obj
         self.engine: Engine = create_engine('postgresql://w3bt00lkit:w3bt00lkit@localhost:5432/w3bt00lkit')
         self.session_local = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
         self.name = 'database'
@@ -52,7 +53,8 @@ class Database():
             db.commit()
             db.refresh(checklist)
             return 0
-        except IntegrityError:
+        except IntegrityError as integrity_exc:
+            print("IntegrityError:",integrity_exc)
             return 1
         except Exception as exc: # pylint: disable=W0718
             print(exc)
@@ -144,8 +146,126 @@ class Database():
             db.commit()
             db.refresh(targetscope)
             return 0
-        except IntegrityError:
+        except IntegrityError as integrity_exc:
+            print("Integrity Error:", integrity_exc)
             return 1
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+            return 2
+
+    def _add_targetnote(self, db: Session, targetnote: TargetNoteModel) -> Literal[0] | Literal[1]:
+        """Add targetnote to the database.
+        
+        Args:
+            db (Session): The current session to connect to the database.
+            targetnote (TargetNoteModel): The model used with the request.
+
+        Returns:
+            Literal[0] | Literal[1]
+        """
+        try:
+            db.add(targetnote)
+            db.commit()
+            db.refresh(targetnote)
+            return 0
+        except IntegrityError as integrity_exc:
+            print("Integrity Error:", integrity_exc)
+            return 1
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+            return 2
+
+
+    def _get_targetnotesummaries(self, db: Session) -> list:
+        """Get target note summaries from the database.
+        
+        Args:
+            db (Session): The current session to connect to the database.
+
+        Returns:
+            List[TargetNoteModel]
+        """
+        targetnotes: List[TargetNoteModel] = []
+
+        try:
+            if self.parent_obj is not None:
+                selected_target = self.parent_obj.selected_target_obj
+                if selected_target is not None:
+                    records: List[TargetNoteModel] = db.query(TargetNoteModel).filter(TargetNoteModel.active == True)\
+                        .filter_by(target_id=selected_target['id'])\
+                        .order_by(TargetNoteModel.created_timestamp).all()
+                    for record in records:
+                        tmp_full_note = record.full_note
+                        if len(tmp_full_note) > 500:
+                            tmp_full_note = tmp_full_note[:500] + " ..."
+                        targetnote_record = {
+                            'summary': tmp_full_note
+                        }
+                        targetnotes.append(targetnote_record)
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+        return targetnotes
+
+
+    def _get_targetnotes(self, db: Session) -> list:
+        """Get target notes from the database.
+        
+        Args:
+            db (Session): The current session to connect to the database.
+
+        Returns:
+            List[TargetNoteModel]
+        """
+        targetnotes: List[TargetNoteModel] = []
+
+        try:
+            if self.parent_obj is not None:
+                selected_target = self.parent_obj.selected_target_obj
+                if selected_target is not None:
+                    records: List[TargetNoteModel] = db.query(TargetNoteModel).filter(TargetNoteModel.active == True)\
+                        .filter_by(target_id=selected_target['id'])\
+                        .order_by(TargetNoteModel.created_timestamp).all()
+                    for record in records:
+                        tmp_full_note = record.full_note
+                        if len(tmp_full_note) > 500:
+                            tmp_full_note = tmp_full_note[:500] + " ..."
+                        targetnote_record = {
+                            'id': record.id,
+                            'target_id': record.target_id,
+                            'created': record.created_timestamp,
+                            'modified': record.modified_timestamp,
+                            'fqdn': record.fqdn,
+                            'path': record.path,
+                            'url': record.url,
+                            'page': record.page,
+                            'summary': tmp_full_note,
+                            'full_note': record.full_note
+                        }
+                        targetnotes.append(targetnote_record)
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+        return targetnotes
+
+
+    def _delete_targetnote(self, db: Session, targetnote_id) -> Literal[0] | Literal[1]:
+        """Delete a targetnote from the database.
+        
+        Args:
+            db (Session): The current session to connect to the database.
+            targetnote_id: The id of the targetnote.
+
+        Returns:
+            Literal[0] | Literal[1]
+        """
+        try:
+            record_to_delete: TargetNoteModel | None = db.query(TargetNoteModel).filter_by(id=targetnote_id).first()
+            if record_to_delete:
+                db.delete(record_to_delete)
+                db.commit()
+                print("Target note deleted successfully.")
+            else:
+                print("Target note not found.")
+            return 0
         except Exception as exc: # pylint: disable=W0718
             print(exc)
             return 2

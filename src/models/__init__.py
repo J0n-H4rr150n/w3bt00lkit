@@ -86,3 +86,21 @@ class TargetScopeModel(Base): # pylint: disable=R0903
     modified_timestamp = Column(DateTime, nullable=True)
 
     Index('ux_target_id_fqdn_path', target_id, fqdn, path, unique=True)
+
+class TargetNoteModel(Base):
+    """TargetNoteModel."""
+    __tablename__: str = 'targetnote'
+
+    id = Column(Integer, primary_key=True, index=True)
+    target_id = Column(Integer, ForeignKey('target.id'), index=True)
+    title = Column(String)
+    summary = Column(String)
+    short_note = Column(String)
+    full_note = Column(String)
+    fqdn = Column(String)
+    path = Column(String)
+    url = Column(String)
+    page = Column(String)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)

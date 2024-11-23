@@ -169,7 +169,7 @@ class W3bT00lkit: # pylint: disable=R0902
         self.session: PromptSession = PromptSession()
         self.completer: WordCompleter = word_completer(self)
         self.checklist_obj = checklist.Checklist(self, handle_input, self._callback_word_completer)
-        self.database_obj = database.Database()
+        self.database_obj = database.Database(self)
         self.proxy_obj = proxy.Proxy(self, self._get_base_name, self._callback_word_completer, self._callback_proxy_message)
         self.target_obj = target.Target(self, self._callback_set_target, handle_input, self._callback_word_completer,
                                         self._get_selected_target, self._set_previous_menu
@@ -205,7 +205,7 @@ class W3bT00lkit: # pylint: disable=R0902
 
     def _set_previous_menu(self, obj_name, previous_menu) -> str:
         self.previous_menu = {'obj_name': obj_name, 'previous_menu': previous_menu}
-        print("Previous menu set to:",self.previous_menu)
+        #print("Previous menu set to:",self.previous_menu)
 
     def _callback_word_completer(self, obj, function_name, sub_obj=None) -> None: # pylint: disable=W0613
         self.completer: WordCompleter = word_completer(obj)
