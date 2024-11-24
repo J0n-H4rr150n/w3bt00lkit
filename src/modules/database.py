@@ -175,38 +175,6 @@ class Database():
             print(exc)
             return 2
 
-
-    def _get_targetnotesummaries(self, db: Session) -> list:
-        """Get target note summaries from the database.
-        
-        Args:
-            db (Session): The current session to connect to the database.
-
-        Returns:
-            List[TargetNoteModel]
-        """
-        targetnotes: List[TargetNoteModel] = []
-
-        try:
-            if self.parent_obj is not None:
-                selected_target = self.parent_obj.selected_target_obj
-                if selected_target is not None:
-                    records: List[TargetNoteModel] = db.query(TargetNoteModel).filter(TargetNoteModel.active == True)\
-                        .filter_by(target_id=selected_target['id'])\
-                        .order_by(TargetNoteModel.created_timestamp).all()
-                    for record in records:
-                        tmp_full_note = record.full_note
-                        if len(tmp_full_note) > 500:
-                            tmp_full_note = tmp_full_note[:500] + " ..."
-                        targetnote_record = {
-                            'summary': tmp_full_note
-                        }
-                        targetnotes.append(targetnote_record)
-        except Exception as exc: # pylint: disable=W0718
-            print(exc)
-        return targetnotes
-
-
     def _get_targetnotes(self, db: Session) -> list:
         """Get target notes from the database.
         
@@ -246,7 +214,6 @@ class Database():
             print(exc)
         return targetnotes
 
-
     def _delete_targetnote(self, db: Session, targetnote_id) -> Literal[0] | Literal[1]:
         """Delete a targetnote from the database.
         
@@ -270,6 +237,43 @@ class Database():
             print(exc)
             return 2
 
+
+    def _get_proxy_history(self, db: Session) -> list:
+        """Get proxy history for a target from the database.
+        
+        Args:
+            db (Session): The current session to connect to the database.
+
+        Returns:
+            List[ProxyModel]
+        """
+        proxy_histories: List[ProxyModel] = []
+
+        try:
+            if self.parent_obj is not None:
+                selected_target = self.parent_obj.selected_target_obj
+                if selected_target is not None:
+                    hosts = []
+                    in_scope_items = self.parent_obj.selected_target_in_scope
+                    for item in in_scope_items:
+                        hosts.append(item['fqdn'])
+                        records: List[ProxyModel] = db.query(ProxyModel).order_by(ProxyModel.created_timestamp).filter_by(host=item['fqdn']).all()
+                        for record in records:
+                            proxy_record = {
+                                'target': selected_target['id'],
+                                'id': record.id,
+                                'action': record.action,
+                                'status': record.response_status_code,
+                                'method': record.method,
+                                'url':record.full_url,
+                                'content':record.content,
+                                'text':record.response_text
+                            }
+                            proxy_histories.append(proxy_record)
+
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+        return proxy_histories
 
     def tables(self) -> None:
         """Print list of tables in the database.

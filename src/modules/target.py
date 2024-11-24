@@ -1,5 +1,6 @@
 """target.py"""
 import sys
+import json
 from typing import List, Literal, LiteralString
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
@@ -27,6 +28,7 @@ class TargetScope: # pylint: disable=R0902
         self.completer: WordCompleter = word_completer(self)
         self.target_scopes_in: List[TargetModel]
         self.target_scopes_out: List[TargetModel]
+        self.proxy_histories = None
 
     def _classhelp(self):
         """Help for TargetScope class.
@@ -513,3 +515,91 @@ class Target(): # pylint: disable=R0902
                 self._handle_input(self.parent_obj, self, 'list_notes', [], None)
         except Exception as database_exception: # pylint: disable=W0718
             print(database_exception)
+
+
+    def proxy_history(self) -> None:
+        """List proxy history for target.
+
+        Returns:
+            None
+        """
+        target_name = self._get_selected_target()
+
+        if target_name is None or self.parent_obj.selected_target_obj is None:
+            print("\nPlease select a target before using the 'proxy_history' option.")
+            self.parent_obj._set_previous_menu(self.name,'note')
+            self.parent_obj._back() # pylint: disable=W0212
+            self._handle_input(self.parent_obj, self.parent_obj.target_obj, 'list', [], None)
+            return
+
+        self.parent_obj._clear()
+        self.parent_obj._print_output(self.parent_obj.INTRO)
+        print(f"PROXY HISTORY\n")
+        print(f"Target: {self._get_selected_target()}")
+
+        try:
+            db = TargetDatabase(self.parent_obj)
+            db_session: Session = db.session_local()
+            self.proxy_histories = db._get_proxy_history(db_session) # pylint: disable=W0212
+            history_summaries = []
+            for record in self.proxy_histories:
+                history_summaries.append({
+                    'action':record['action'] or '',
+                    'status':record['status'] or '',
+                    'method':record['method'] or '',
+                    'url':record['url'] or ''
+                    })
+            df = pd.DataFrame(history_summaries)
+            df.index.name = '#'
+            print(tabulate(df, headers='keys', tablefmt='psql',  maxcolwidths=[10, 100, 60]))
+
+            selected: str = input("Select a proxy history by # (leave blank to cancel): ")
+            if '' == selected:
+                return
+            try:
+                selected_no = int(selected)
+                self._select_proxyhistory(selected_no, self.proxy_histories)
+            except ValueError:
+                print("ERROR: Invalid input. Input a valid number.")
+                self._handle_input(self.parent_obj, self, 'proxy_history', [], None)
+        except Exception as database_exception: # pylint: disable=W0718
+            print(database_exception)
+
+        # TODO - Only return distinct values here or all? Probably all would be expected...
+
+
+    def _select_proxyhistory(self, selected_no: int, proxy_histories: list) -> None:
+        """Select a proxyhistory
+
+        Args:
+            selection (int): The number of the selected proxy history list.
+
+        Returns:
+            None
+        """
+
+        self.parent_obj._clear()
+        self.parent_obj._print_output(self.parent_obj.INTRO)
+        
+        print(f"PROXY HISTORY\n")
+
+        print(f"Proxy History Id: {proxy_histories[selected_no]['id']}")
+        print(f"Action: {proxy_histories[selected_no]['action']}")
+        print(f"Status Code: {proxy_histories[selected_no]['status']}")
+        print(f"Method: {proxy_histories[selected_no]['method']}")
+        print(f"URL: {proxy_histories[selected_no]['url']}")
+        print("")
+
+        print("************************************************")
+        print("\nCONTENT:\n")
+        print(proxy_histories[selected_no]['content'])
+        print("\n************************************************\n")
+        print("TEXT:\n")
+        if proxy_histories[selected_no]['text'] is not None:
+            history_text = proxy_histories[selected_no]['text']
+            try:
+                history_text_json = json.loads(history_text)
+                print(json.dumps(history_text_json, indent=4))
+            except Exception:
+                print(history_text)
+        print("\n************************************************\n")
