@@ -13,7 +13,29 @@ class AppHelp():
         Returns:
             None
         """
-        print("Main help menu.")
+        message = """
+Usage:
+
+    Press TAB to see available options.
+
+The main commands are:
+
+    add       add something new to the database
+    clear     clear the screen
+    cls       clear the screen
+    help      this help menu
+    select    select something from the database
+    setup     setup the database
+    show      show a list of something
+    stop      stop something
+
+    exit      exit the app
+
+Use "help <command>" to see help information for a specific command.
+
+"""
+
+        print(message)
 
     def database(self, *args) -> None: # pylint: disable=unused-argument
         """Help menu for database.

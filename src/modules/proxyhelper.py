@@ -3,10 +3,12 @@ import sys
 import signal
 from datetime import datetime, timezone
 import warnings
+import chardet
 from urllib.parse import ParseResult, urlparse
 from mitmproxy import http
+from mitmproxy.net.http.http1.assemble import assemble_request, assemble_response
 from sqlalchemy.orm.session import Session
-from modules.database import Database as ProxyDatabase
+from modules.database import Database
 from models import ProxyModel
 
 # pylint: disable=C0121,W0718,R0914
@@ -65,7 +67,7 @@ class ProxyHelper:
         #        return
 
         if self.target is None or self.in_scope is None:
-            self._parent_callback_proxy_message(f"REQUEST: No target selected.")
+            #self._parent_callback_proxy_message(f"REQUEST: No target selected.")
             return
 
         save_request = False
@@ -107,13 +109,16 @@ class ProxyHelper:
         url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
 
         try:
-            proxy_database = ProxyDatabase()
-            db_session: Session = proxy_database.session_local()
-
+            raw_request = assemble_request(flow.request).decode('utf-8')
+            #print(assemble_request(flow.request).decode('utf-8'))
+        except Exception as exc:
+            self._parent_callback_proxy_message("REQUEST:",exc)
+            raw_request = None
+        
+        try:
             headers_string = ", ".join([f"{k}: {v}" for k, v in flow.request.headers.items()])
-
             new_request = ProxyModel(
-                target_id=int(self.target['id']),
+                target_id=int(self.target.id),
                 name=None,
                 request=None,
                 action='Request',
@@ -130,12 +135,18 @@ class ProxyHelper:
                 full_url=full_url,
                 parsed_full_url=str(parsed),
                 parsed_path=path,
-                parsed_url=url
+                parsed_url=url,
+                raw_request=raw_request,
+                raw_response=None,
+                decoded_content=None
             )
 
             #self._parent_callback_proxy_message(new_request.__dict__)
+            with Database._get_db() as db:
+                db.add(new_request)
+                db.commit()
+                db.refresh(new_request)
 
-            proxy_database._add_request(db_session, new_request) # pylint: disable=W0212
         except Exception as database_exception: # pylint: disable=W0718
             self._parent_callback_proxy_message("REQUEST: database_exception - ", database_exception)
             print("Database exception:",database_exception)
@@ -149,11 +160,8 @@ class ProxyHelper:
         Returns:
             None
         """
-
-        #self._parent_callback_proxy_message(flow.request.host)
-
         if self.target is None or self.in_scope is None:
-            self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
+            #self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
             return
 
         save_response = False
@@ -187,6 +195,7 @@ class ProxyHelper:
             content = flow.request.text.replace('\x00', '')
         except Exception as exc:
             self._parent_callback_proxy_message(f"RESPONSE: clean content exception - {exc}")
+            content = None
 
         timestamp_start = flow.request.timestamp_start
         timestamp_end = flow.request.timestamp_end
@@ -195,16 +204,49 @@ class ProxyHelper:
 
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
-        url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
+        url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}' 
 
         try:
-            proxy_database = ProxyDatabase()
-            db_session: Session = proxy_database.session_local()
+            raw_request = assemble_request(flow.request).decode('utf-8')
+        except Exception as exc:
+            self._parent_callback_proxy_message("RESPONSE: raw request - ", exc)
+            raw_request = None
 
+        try:
+            raw_response = assemble_response(flow.response).decode('utf-8')
+        except UnicodeDecodeError as exc:
+            try:
+                raw_response = str(assemble_response(flow.response))
+            except Exception as exc:
+                raw_response = None
+                self._parent_callback_proxy_message(flow.request.pretty_url)
+                self._parent_callback_proxy_message(str(exc))
+                detected_encoding = chardet.detect(byte_string)['encoding']
+                try:
+                    text = byte_string.decode(detected_encoding)
+                except UnicodeDecodeError:
+                    print(f"Failed to decode byte string: {e}")
+                    text = ""  # Or handle the error differently, e.g., log it
+        except Exception as exc:
+            self._parent_callback_proxy_message(flow.request.pretty_url)
+            self._parent_callback_proxy_message(str(exc))
+            raw_response = None
+
+        try:
+            decoded_content = None
+            if flow.response.content:
+                size = len(flow.response.content)
+                size  = min(size, 20)
+                if flow.response.content[0:size] != flow.response.get_decoded_content()[0:size]:
+                    decoded_content = flow.response.get_decoded_content()
+        except Exception as exc:
+            decoded_content = None
+
+        try:
             #headers_string = ", ".join([f"{k}: {v}" for k, v in flow.response.headers.items()])
 
-            new_request = ProxyModel(
-                target_id=int(self.target['id']),
+            new_response = ProxyModel(
+                target_id=int(self.target.id),
                 name=None,
                 request=None,
                 action='Response',
@@ -225,10 +267,17 @@ class ProxyHelper:
                 full_url=full_url,
                 parsed_full_url=str(parsed),
                 parsed_path=path,
-                parsed_url=url
+                parsed_url=url,
+                raw_request=raw_request,
+                raw_response=raw_response,
+                decoded_content=decoded_content
             )
 
-            proxy_database._add_request(db_session, new_request) # pylint: disable=W0212
+            with Database._get_db() as db:
+                db.add(new_response)
+                db.commit()
+                db.refresh(new_response)
+
         except Exception as database_exception: # pylint: disable=W0718
             self._parent_callback_proxy_message("RESPONSE: database_exception - ", database_exception)
             print("Response database exception:", database_exception)

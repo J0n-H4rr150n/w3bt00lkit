@@ -56,6 +56,9 @@ class ProxyModel(Base): # pylint: disable=R0903
     parsed_full_url = Column(String)
     parsed_path = Column(String)
     parsed_url =  Column(String)
+    raw_request = Column(String)
+    raw_response = Column(String)
+    decoded_content = Column(String)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)
 
