@@ -59,6 +59,8 @@ class ProxyModel(Base): # pylint: disable=R0903
     raw_request = Column(String)
     raw_response = Column(String)
     decoded_content = Column(String)
+    flow = Column(String)
+    note = Column(String)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)
 

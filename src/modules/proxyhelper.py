@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import warnings
 import chardet
 from urllib.parse import ParseResult, urlparse
+from mitmproxy import io
 from mitmproxy import http
 from mitmproxy.net.http.http1.assemble import assemble_request, assemble_response
 from sqlalchemy.orm.session import Session
@@ -45,12 +46,6 @@ class ProxyHelper:
         self.target = target
         self.in_scope = in_scope
         self._parent_callback_proxy_message = parent_callback_proxy_message
-        #print("proxyhelper.py >", target)
-        #print("proxyhelper.py > in scope,  > ", in_scope)
-        #if self.in_scope is not None:
-        #    for item in in_scope:
-        #        if item['fqdn'] is not None:
-        #            print(item['fqdn'])
 
     def request(self, flow: http.HTTPFlow) -> None: # pylint: disable=R0914
         """Proxy request.
@@ -138,7 +133,8 @@ class ProxyHelper:
                 parsed_url=url,
                 raw_request=raw_request,
                 raw_response=None,
-                decoded_content=None
+                decoded_content=None,
+                flow=None
             )
 
             #self._parent_callback_proxy_message(new_request.__dict__)
@@ -190,6 +186,32 @@ class ProxyHelper:
         path = flow.request.path
 
         headers = flow.request.headers
+        response_headers = None
+
+        try:
+            response_string = f"HTTP/1.1 {flow.response.status_code}\n"
+            for key, value in flow.response.headers.items():
+                tmp_key = None
+                tmp_value = None
+                if isinstance(key, str):
+                    tmp_key = key
+                elif isinstance(key, bytes):
+                    encoding = chardet.detect(key)['encoding']
+                    tmp_key = key.decode(encoding)
+
+                if isinstance(value, str):
+                    tmp_value = value
+                elif isinstance(value, bytes):
+                    encoding = chardet.detect(key)['encoding']
+                    tmp_value = value.decode(encoding)
+
+                if tmp_key is not None and tmp_value is not None:
+                    response_string += f"{tmp_key}: {tmp_value}"
+                    response_string += "\n"
+                    response_headers = response_string
+        except Exception as exc:
+            self._parent_callback_proxy_message(f"RESPONSE: response headers string - {exc}")
+            response_headers = str(flow.response.headers)
 
         try:
             content = flow.request.text.replace('\x00', '')
@@ -213,7 +235,7 @@ class ProxyHelper:
             raw_request = None
 
         try:
-            raw_response = assemble_response(flow.response).decode('utf-8')
+            raw_response = assemble_response(flow.response).decode('utf-8','replace')
         except UnicodeDecodeError as exc:
             try:
                 raw_response = str(assemble_response(flow.response))
@@ -239,8 +261,16 @@ class ProxyHelper:
                 size  = min(size, 20)
                 if flow.response.content[0:size] != flow.response.get_decoded_content()[0:size]:
                     decoded_content = flow.response.get_decoded_content()
+                else:
+                    decoded_content = flow.response.get_content()
         except Exception as exc:
             decoded_content = None
+
+        try:
+            full_flow = None
+        except Exception as exc:
+            full_flow = None
+            
 
         try:
             #headers_string = ", ".join([f"{k}: {v}" for k, v in flow.response.headers.items()])
@@ -252,7 +282,7 @@ class ProxyHelper:
                 action='Response',
                 response_status_code=flow.response.status_code,
                 response_reason=flow.response.reason,
-                response_headers=None,
+                response_headers=str(response_headers),
                 response_text=flow.response.text,
                 host=host,
                 port=port,
@@ -270,7 +300,8 @@ class ProxyHelper:
                 parsed_url=url,
                 raw_request=raw_request,
                 raw_response=raw_response,
-                decoded_content=decoded_content
+                decoded_content=decoded_content,
+                flow=full_flow
             )
 
             with Database._get_db() as db:

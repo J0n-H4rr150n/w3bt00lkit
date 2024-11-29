@@ -10,13 +10,13 @@ proxy_list: list[str] = ['history','options','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
 #proxy_history_requests: list[str] = ['js','params','no-media']
 #proxy_history_responses: list[str] = ['js','params','no-media']
-proxy_history_requests: list[str] = ['js']
-proxy_history_responses: list[str] = ['js']
+proxy_history_requests: list[str] = ['js','patch','post','put']
+proxy_history_responses: list[str] = ['delete','foobar','get','js','json','options','patch','post','put','trace']
 remove_list: list[str] = ['target']
 start_list: list[str] = ['proxy']
 stop_list: list[str] = ['proxy']
 target_list: list[str] = ['add','remove','select','view']
-view_list: list[str] = ['checklists','notes','proxy-history','scope','targets','workflows']
+view_list: list[str] = ['checklists','notes','scope','targets']
 
 class Completers(Completer):
     """Completers."""

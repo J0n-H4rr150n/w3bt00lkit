@@ -135,7 +135,7 @@ class TargetScope: # pylint: disable=R0902
         item_fqdn = None
         item_path = None
 
-        scope_item: str = input("Input the scope item (leave blank to cancel): ")
+        scope_item: str = input("Input the scope item (leave blank to cancel):\n")
         if '' == scope_item:
             return
         print("Scope item >",scope_item)
@@ -147,7 +147,7 @@ class TargetScope: # pylint: disable=R0902
         else:
             item_fqdn = scope_item
 
-        scope_type: str = input("Is this in scope (`y` or enter == yes; `n` == no)")
+        scope_type: str = input("Is this in scope? (`y` or enter == yes; `n` == no)\n")
         valid_scope_type = False
 
         if '' == scope_type or 'y' == scope_type.lower() or 'yes' == scope_type.lower():
@@ -166,12 +166,12 @@ class TargetScope: # pylint: disable=R0902
             print("Other issues. Return...")
             return
 
-        print(f"\nTarget name: {target_name}")
+        print(f"\nTarget name: {selected_target.name}")
         print(f"Scope item: {scope_item}")
         print(f"Scope type: {scope_type}\n")
 
         save_to_database = False
-        confirm = input("Is this correct? (`y` or enter == yes; `n` == no)")
+        confirm = input("Is this correct? (`y` or enter == yes; `n` == no)\n")
         if '' == confirm or 'y' == confirm.lower():
             save_to_database = True
 
@@ -187,35 +187,27 @@ class TargetScope: # pylint: disable=R0902
             print("Cancel.")
             return
 
-        selected_target = self.app_obj.selected_target_obj
+        with Database._get_db() as db:
+            existing_record: Query[TargetScopeModel] = db.query(TargetScopeModel)\
+                .filter_by(target_id=selected_target.id, fqdn=item_fqdn, path=item_path).first()
 
-        db = TargetDatabase()
-        db_session: Session = db.session_local()
-
-        existing_record: Query[TargetScopeModel] = db_session.query(TargetScopeModel)\
-            .filter_by(target_id=selected_target['id'], fqdn=item_fqdn, path=item_path).first()
-
-        if not existing_record:
-            try:
-                new_target_scope = TargetScopeModel(
-                    target_id = selected_target['id'],
-                    fqdn = item_fqdn,
-                    path = item_path,
-                    in_scope_ind = item_in_scope,
-                    out_of_scope_ind = item_out_of_scope,
-                    wildcard_ind = item_wildcard
-                )
-                result: Literal[0] | Literal[1] = db._add_targetscope(db_session, new_target_scope) # pylint: disable=W0212
-                if result == 0:
-                    print("Target scope added to the database.\n")
-                elif result == 1:
-                    print("Target scope already exists.\n")
-                else:
-                    print("There was an error trying to add the target scope.\n")
-            except Exception as database_exception: # pylint: disable=W0718
-                print(database_exception)
-        else:
-            print("Target scope already exists.\n")
+            if not existing_record:
+                try:
+                    new_target_scope = TargetScopeModel(
+                        target_id = selected_target.id,
+                        fqdn = item_fqdn,
+                        path = item_path,
+                        in_scope_ind = item_in_scope,
+                        out_of_scope_ind = item_out_of_scope,
+                        wildcard_ind = item_wildcard
+                    )
+                    db.add(new_target_scope)
+                    db.commit()
+                    db.refresh(new_target_scope)
+                except Exception as database_exception: # pylint: disable=W0718
+                    print(database_exception)
+            else:
+                print("Target scope already exists.\n")
 
     def view(self) -> None:
         """List all items."""

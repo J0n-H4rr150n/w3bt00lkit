@@ -57,6 +57,11 @@ class W3bT00lkit:
         print(message)
 
     def _callback_set_target(self, target) -> None:
+        try:
+            self.proxy.stop()
+        except Exception as exc:
+            print(exc)
+
         if target is None:
             self.selected_target = None
             self.name = f"{self.base_name} "
