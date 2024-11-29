@@ -1,32 +1,34 @@
 """completers.py"""
-from typing import Any, Generator, Iterable
+from typing import Any, Generator
 from prompt_toolkit.completion import Completer, Completion, WordCompleter
 
-default_list: list[str] = ['add','clear','database','exit','help','proxy','remove','start','stop','view']
+default_list: list[str] = ['add','checklists','clear','database','exit','help','proxy','remove','start','stop','view']
 
 add_list: list[str] = ['note','param','path','scope','target']
+checklist_list: list[str] = ['owasp-wstg']
 database_list: list[str] = ['setup','tables']
 proxy_list: list[str] = ['history','options','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
-#proxy_history_requests: list[str] = ['js','params','no-media']
-#proxy_history_responses: list[str] = ['js','params','no-media']
 proxy_history_requests: list[str] = ['js','patch','post','put']
 proxy_history_responses: list[str] = ['delete','foobar','get','js','json','options','patch','post','put','trace']
 remove_list: list[str] = ['target']
 start_list: list[str] = ['proxy']
 stop_list: list[str] = ['proxy']
 target_list: list[str] = ['add','remove','select','view']
-view_list: list[str] = ['checklists','notes','scope','targets']
+view_list: list[str] = ['notes','scope','targets']
+
 
 class Completers(Completer):
     """Completers."""
     def __init__(self) -> None:
         self.completer = WordCompleter(default_list, ignore_case=True)
 
-    def get_completions(self, document, complete_event) -> Generator[Completion, Any, None]:
+    def get_completions(self, document, complete_event) -> Generator[Completion, Any, None]: # pylint: disable=R0912
         text: str = document.text_before_cursor
         if text.startswith('add '):
             self.completer = WordCompleter(add_list, ignore_case=True)
+        elif text.startswith('checklists '):
+            self.completer = WordCompleter(checklist_list, ignore_case=True)
         elif text.startswith('database '):
             self.completer = WordCompleter(database_list, ignore_case=True)
         elif text.startswith('proxy '):
@@ -51,5 +53,5 @@ class Completers(Completer):
         else:
             self.completer = WordCompleter(default_list, ignore_case=True)
 
-        for completion in self.completer.get_completions(document, complete_event):
+        for completion in self.completer.get_completions(document, complete_event): # pylint: disable=R1737
             yield completion

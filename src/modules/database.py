@@ -5,14 +5,14 @@ from sqlalchemy import Engine, Result, create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
-import pandas as pd
 from rich.console import Console
 from rich.table import Table
-from models import Base, ChecklistModel, ProxyModel
+from models import Base, ChecklistModel, ProxyModel, TargetNoteModel
 from models.setupdata import SetupData
 
-
+# pylint: disable=C0121,C0301,W0718
 CONNECTION_STRING_POSTGRES = 'postgresql://w3bt00lkit:w3bt00lkit@localhost:5432/w3bt00lkit'
+
 
 class Database():
     """Database."""
@@ -52,7 +52,7 @@ class Database():
             else:
                 print('Else: Function is not callable:%s',function_name)
         except AttributeError:
-           return
+            return
         except Exception as exc:
             print(exc)
 
@@ -94,33 +94,6 @@ class Database():
             print(exc)
             return 2
 
-    def _get_checklist(self, db: Session, checklist_name: str) -> list:
-        """Get targets from the database.
-        
-        Args:
-            db (Session): The current session to connect to the database.
-
-        Returns:
-            List[TargetModel]
-        """
-        checklists: List = []
-        try:
-            records: List[ChecklistModel] = db.query(ChecklistModel)\
-                .filter(ChecklistModel.active == True)\
-                .filter_by(name=checklist_name)\
-                .order_by(ChecklistModel.category_order,ChecklistModel.item_id)\
-                .all()
-            for record in records:
-                checklist_record = {
-                    'item_id': record.item_id,
-                    'item_name': record.item_name,
-                    'item_category': record.useful_tools
-                }
-                checklists.append(checklist_record)
-        except Exception as exc: # pylint: disable=W0718
-            print(exc)
-        return checklists
-
     def _delete_targetnote(self, db: Session, targetnote_id) -> Literal[0] | Literal[1]:
         """Delete a targetnote from the database.
         
@@ -157,11 +130,11 @@ class Database():
         proxy_histories: List[ProxyModel] = []
 
         try:
-            if self.parent_obj is not None:
-                selected_target = self.parent_obj.selected_target_obj
+            if self.app_obj is not None:
+                selected_target = self.app_obj.selected_target_obj
                 if selected_target is not None:
                     hosts = []
-                    in_scope_items = self.parent_obj.selected_target_in_scope
+                    in_scope_items = self.app_obj.selected_target_in_scope
                     for item in in_scope_items:
                         hosts.append(item['fqdn'])
                         records: List[ProxyModel] = db.query(ProxyModel).order_by(ProxyModel.created_timestamp).filter_by(host=item['fqdn']).all()
@@ -200,7 +173,7 @@ class Database():
             for record in records:
                 table.add_row(str(counter), record[0])
                 counter += 1
-            
+
             console = Console()
             console.print(table)
             print()
@@ -227,9 +200,8 @@ class Database():
                 except Exception as database_exception: # pylint: disable=W0718
                     if 'UniqueViolation' in str(database_exception):
                         continue
-                    else:
-                        print()
-                        print(counter, database_exception)
+                    print()
+                    print(counter, database_exception)
                 counter += 1
 
         print("\nSetup complete.\n")

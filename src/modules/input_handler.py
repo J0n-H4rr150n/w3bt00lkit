@@ -1,6 +1,5 @@
 """input_handler.py"""
-from modules.proxy import Proxy
-from modules.targets import Targets
+# pylint: disable=R0903,W0212,W0718
 
 
 class InputHandler:
@@ -18,7 +17,8 @@ class InputHandler:
         self.args = self.text.split()
         if len(self.args) == 0:
             return
-        elif len(self.args) == 1:
+
+        if len(self.args) == 1:
             match self.args[0]:
                 case x if x in ['clear','clr']:
                     self.app_obj._clear()
@@ -37,6 +37,8 @@ class InputHandler:
         else:
             try:
                 match self.args[0]:
+                    case 'checklists':
+                        self.obj = self.app_obj.checklist._handle_input(self.args)
                     case 'database':
                         self.obj = self.app_obj.database._handle_input(self.args)
                     case 'proxy':

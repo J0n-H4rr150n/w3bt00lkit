@@ -1,0 +1,224 @@
+************* Module modules.owaspwstg
+src/modules/owaspwstg.py:77:32: C0121: Comparison 'ChecklistModel.active == True' should be 'ChecklistModel.active is True' if checking for the singleton value True, or 'bool(ChecklistModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/owaspwstg.py:5:0: C0411: standard import "typing.Any" should be placed before third party imports "prompt_toolkit.PromptSession", "prompt_toolkit.completion.WordCompleter", "sqlalchemy.orm.session.Session" (wrong-import-order)
+src/modules/owaspwstg.py:4:0: W0611: Unused Session imported from sqlalchemy.orm.session (unused-import)
+src/modules/owaspwstg.py:5:0: W0611: Unused Any imported from typing (unused-import)
+src/modules/owaspwstg.py:5:0: W0611: Unused Generator imported from typing (unused-import)
+src/modules/owaspwstg.py:5:0: W0611: Unused Literal imported from typing (unused-import)
+************* Module modules.target_scope
+src/modules/target_scope.py:33:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
+src/modules/target_scope.py:75:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_scope.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_scope.py:34:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_scope.py:48:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_scope.py:50:24: C0121: Comparison 'TargetScopeModel.active == True' should be 'TargetScopeModel.active is True' if checking for the singleton value True, or 'bool(TargetScopeModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_scope.py:51:24: C0121: Comparison 'TargetScopeModel.in_scope_ind == True' should be 'TargetScopeModel.in_scope_ind is True' if checking for the singleton value True, or 'bool(TargetScopeModel.in_scope_ind)' if testing for truthiness (singleton-comparison)
+src/modules/target_scope.py:52:24: C0121: Comparison 'TargetScopeModel.out_of_scope_ind == False' should be 'TargetScopeModel.out_of_scope_ind is False' if checking for the singleton value False, or 'not TargetScopeModel.out_of_scope_ind' if testing for falsiness (singleton-comparison)
+src/modules/target_scope.py:86:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_scope.py:88:24: C0121: Comparison 'TargetScopeModel.active == True' should be 'TargetScopeModel.active is True' if checking for the singleton value True, or 'bool(TargetScopeModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_scope.py:89:24: C0121: Comparison 'TargetScopeModel.out_of_scope_ind == True' should be 'TargetScopeModel.out_of_scope_ind is True' if checking for the singleton value True, or 'bool(TargetScopeModel.out_of_scope_ind)' if testing for truthiness (singleton-comparison)
+src/modules/target_scope.py:90:24: C0121: Comparison 'TargetScopeModel.in_scope_ind == False' should be 'TargetScopeModel.in_scope_ind is False' if checking for the singleton value False, or 'not TargetScopeModel.in_scope_ind' if testing for falsiness (singleton-comparison)
+src/modules/target_scope.py:127:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_scope.py:161:13: C0121: Comparison 'valid_scope_type == False' should be 'valid_scope_type is False' if checking for the singleton value False, or 'not valid_scope_type' if testing for falsiness (singleton-comparison)
+src/modules/target_scope.py:186:11: C0121: Comparison 'save_to_database == False' should be 'save_to_database is False' if checking for the singleton value False, or 'not save_to_database' if testing for falsiness (singleton-comparison)
+src/modules/target_scope.py:190:13: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_scope.py:215:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_scope.py:3:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
+src/modules/target_scope.py:3:0: W0611: Unused Literal imported from typing (unused-import)
+src/modules/target_scope.py:3:0: W0611: Unused LiteralString imported from typing (unused-import)
+************* Module modules.target_notes
+src/modules/target_notes.py:42:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
+src/modules/target_notes.py:91:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:173:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:43:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:52:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_notes.py:88:11: C0121: Comparison 'save_to_database == False' should be 'save_to_database is False' if checking for the singleton value False, or 'not save_to_database' if testing for falsiness (singleton-comparison)
+src/modules/target_notes.py:92:13: E0602: Undefined variable 'TargetDatabase' (undefined-variable)
+src/modules/target_notes.py:93:20: E0602: Undefined variable 'Session' (undefined-variable)
+src/modules/target_notes.py:111:4: R0914: Too many local variables (20/15) (too-many-locals)
+src/modules/target_notes.py:117:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_notes.py:122:8: W0212: Access to a protected member _clear of a client class (protected-access)
+src/modules/target_notes.py:123:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+src/modules/target_notes.py:128:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:129:82: C0121: Comparison 'TargetNoteModel.active == True' should be 'TargetNoteModel.active is True' if checking for the singleton value True, or 'bool(TargetNoteModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_notes.py:190:8: W0212: Access to a protected member _clear of a client class (protected-access)
+src/modules/target_notes.py:191:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+src/modules/target_notes.py:220:15: R1714: Consider merging these comparisons with 'in' by using 'text in ('', 'no')'. Use a set instead if elements are hashable. (consider-using-in)
+src/modules/target_notes.py:226:25: E0602: Undefined variable 'TargetDatabase' (undefined-variable)
+src/modules/target_notes.py:227:32: E0602: Undefined variable 'Session' (undefined-variable)
+src/modules/target_notes.py:12:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+src/modules/target_notes.py:3:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
+src/modules/target_notes.py:9:0: C0411: third party import "prompt_toolkit.PromptSession" should be placed before first party imports "modules.database.Database", "models.TargetModel"  (wrong-import-order)
+src/modules/target_notes.py:10:0: C0411: standard import "urllib.parse.urlparse" should be placed before third party imports "sqlalchemy.orm.query.Query", "rich.console.Console", "rich.table.Table", "rich.text.Text", "prompt_toolkit.PromptSession" and first party imports "modules.database.Database", "models.TargetModel"  (wrong-import-order)
+src/modules/target_notes.py:2:0: W0611: Unused Query imported from sqlalchemy.orm.query (unused-import)
+************* Module tests.test_common
+src/tests/test_common.py:16:0: C0303: Trailing whitespace (trailing-whitespace)
+src/tests/test_common.py:6:0: C0411: third party import "prompt_toolkit.completion.WordCompleter" should be placed before first party import "src.modules.common"  (wrong-import-order)
+src/tests/test_common.py:3:0: W0611: Unused patch imported from unittest.mock (unused-import)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.database:[44:68]
+==modules.proxy:[120:135]
+                function_name = self.args[1]
+            else:
+                function_name = self.args[0]
+            args = []
+            func = getattr(self, function_name)
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _add_request(self, request: ProxyModel) -> ProxyModel:
+        """Add request to the database.
+
+        Args:
+            db (Session): The current session to connect to the database.
+            request (ProxyModel): The model used with the request.
+
+        Returns:
+           request (ProxyModel): The updated model that was used with the request.
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[32:51]
+==modules.targets:[34:49]
+                case _:
+                    return
+
+            func = getattr(self, function_name) # pylint: disable=W0621
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _add_target(self):
+        """Add a target.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.proxy:[122:135]
+==modules.target_scope:[24:45]
+            function_name = self.args[0]
+            args = []
+            func = getattr(self, function_name)
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+           return
+        except Exception as exc:
+            print(exc)
+
+    def _classhelp(self):
+        """Help for TargetScope class.
+
+        Returns:
+            None
+        """
+
+    def _get_in_scope(self, selected_target):
+        """Get In Scope items.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[14:28]
+==modules.targets:[16:30]
+        self.app_obj = app_obj
+        self.args = args
+
+    def _handle_input(self, args):
+        """Handle Input."""
+        self.args = args
+        if len(self.args) < 2:
+            return
+
+        try:
+            class_name = self.args[1]
+            function_name = self.args[0]
+            args = []
+            match class_name: (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.database:[48:68]
+==modules.target_notes:[35:51]
+            func = getattr(self, function_name)
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _add_request(self, request: ProxyModel) -> ProxyModel:
+        """Add request to the database.
+
+        Args:
+            db (Session): The current session to connect to the database.
+            request (ProxyModel): The model used with the request.
+
+        Returns:
+           request (ProxyModel): The updated model that was used with the request.
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.proxy:[124:135]
+==modules.targets:[37:49]
+                func = getattr(self, function_name)
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+
+    def _get(self, item) -> str: (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.proxy:[108:116]
+==modules.targets:[38:49]
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc) (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.database:[49:68]
+==modules.proxy:[89:97]
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc) (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[42:56]
+==modules.target_scope:[116:131]
+        except Exception as exc: # pylint: disable=W0718
+            print(exc)
+
+
+    def add(self) -> None: # pylint: disable=R0914,R0911,R0912,R0915
+        """Add an item to the target's scope and save to the database.
+
+        Returns:
+            None
+        """
+        selected_target: TargetModel = self.app_obj._get_selected_target()
+        if selected_target is None:
+            print("\nPlease select a target before using the 'scope' option.\n")
+            return
+ (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 9.52/10 (previous run: 9.47/10, +0.05)
+

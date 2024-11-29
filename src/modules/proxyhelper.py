@@ -3,16 +3,14 @@ import sys
 import signal
 from datetime import datetime, timezone
 import warnings
-import chardet
 from urllib.parse import ParseResult, urlparse
-from mitmproxy import io
+import chardet
 from mitmproxy import http
 from mitmproxy.net.http.http1.assemble import assemble_request, assemble_response
-from sqlalchemy.orm.session import Session
 from modules.database import Database
 from models import ProxyModel
 
-# pylint: disable=C0121,W0718,R0914
+# pylint: disable=C0121,W0212,W0718,R0912,R0914,R0915
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -109,7 +107,7 @@ class ProxyHelper:
         except Exception as exc:
             self._parent_callback_proxy_message("REQUEST:",exc)
             raw_request = None
-        
+
         try:
             headers_string = ", ".join([f"{k}: {v}" for k, v in flow.request.headers.items()])
             new_request = ProxyModel(
@@ -226,7 +224,7 @@ class ProxyHelper:
 
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
-        url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}' 
+        url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
 
         try:
             raw_request = assemble_request(flow.request).decode('utf-8')
@@ -239,16 +237,16 @@ class ProxyHelper:
         except UnicodeDecodeError as exc:
             try:
                 raw_response = str(assemble_response(flow.response))
-            except Exception as exc:
+            except Exception as assemble_exc:
                 raw_response = None
                 self._parent_callback_proxy_message(flow.request.pretty_url)
-                self._parent_callback_proxy_message(str(exc))
-                detected_encoding = chardet.detect(byte_string)['encoding']
+                self._parent_callback_proxy_message(str(assemble_exc))
+                detected_encoding = chardet.detect(flow.response)['encoding']
                 try:
-                    text = byte_string.decode(detected_encoding)
-                except UnicodeDecodeError:
-                    print(f"Failed to decode byte string: {e}")
-                    text = ""  # Or handle the error differently, e.g., log it
+                    raw_response = flow.response.decode(detected_encoding)
+                except UnicodeDecodeError as decode_exc:
+                    print(f"Failed to decode byte string: {decode_exc}")
+                    raw_response = ""
         except Exception as exc:
             self._parent_callback_proxy_message(flow.request.pretty_url)
             self._parent_callback_proxy_message(str(exc))
@@ -270,7 +268,6 @@ class ProxyHelper:
             full_flow = None
         except Exception as exc:
             full_flow = None
-            
 
         try:
             #headers_string = ", ".join([f"{k}: {v}" for k, v in flow.response.headers.items()])

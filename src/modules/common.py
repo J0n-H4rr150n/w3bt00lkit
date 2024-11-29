@@ -22,8 +22,6 @@ def get_quote(category=None) -> str:
         quote = f'"{random_quote['quote']}" - {random_quote['author']}\n'
 
     return quote
-    
-
 
 def fix_selection(function_name) -> str:
     """Fix the selection if it is a system command.

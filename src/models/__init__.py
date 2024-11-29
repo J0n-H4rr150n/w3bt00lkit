@@ -92,7 +92,7 @@ class TargetScopeModel(Base): # pylint: disable=R0903
 
     Index('ux_target_id_fqdn_path', target_id, fqdn, path, unique=True)
 
-class TargetNoteModel(Base):
+class TargetNoteModel(Base): # pylint: disable=R0903
     """TargetNoteModel."""
     __tablename__: str = 'targetnote'
 

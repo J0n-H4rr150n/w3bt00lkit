@@ -1,5 +1,7 @@
 """quotes.py"""
 
+# pylint: disable=C0301
+
 QUOTES: list[dict[str, str]] = [
         {"quote":"Amateurs hack systems; professionals hack people.","author":"Bruce Schneier","category":"cybersecurity"},
         {"quote":"Cybersecurity is a continuous cycle of protection, detection, response, and recovery.","author":"Chris Painter","category":"cybersecurity"},

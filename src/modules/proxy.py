@@ -5,7 +5,6 @@ import logging
 from datetime import datetime
 from typing import List
 from prompt_toolkit import PromptSession
-from prompt_toolkit.completion import WordCompleter
 from mitmproxy import options
 from mitmproxy.tools import dump
 from rich.console import Console
@@ -19,8 +18,10 @@ from models import ProxyModel, TargetModel
 BASE_CLASS_NAME = 'W3bT00lkit'
 proxy_running = False # pylint: disable=C0103
 stop_flag = False # pylint: disable=C0103
+# pylint: disable=C0301,R0912,R0914,R0915,W0212,W0718
 
 logging.basicConfig(filename='proxy-error.log', level=logging.ERROR)
+
 
 class ProxyConfig: # pylint: disable=R0902,R0903
     """Proxy Config."""
@@ -51,12 +52,6 @@ class Proxy(): # pylint: disable=R0902
     def __init__(self, app_obj, args) -> None:
         self.app_obj = app_obj
         self.args = args
-        #self.parent_obj = parent_obj
-        #self._parent_callback_get_base_name = callback_get_base_name
-        #self._parent_callback_word_completer = callback_word_completer
-        #self._parent_callback_proxy_message = callback_proxy_message
-        #self.base_name: str = self._parent_callback_get_base_name()
-        #self.name = 'proxy'
         self.session = PromptSession()
         self.loop = asyncio.new_event_loop()
         self.stop_event = None
@@ -72,7 +67,7 @@ class Proxy(): # pylint: disable=R0902
         self.select_an_item = False
         self.selected_no = None
         self.previous_start_index = 0
-        self.previous_start_index = 0
+        self.previous_end_index = 0
         self.start_index = 0
         self.end_index = 0
         self.goto_next_item = False
@@ -84,7 +79,8 @@ class Proxy(): # pylint: disable=R0902
         self.args = args
         if len(self.args) < 2:
             return
-        elif len(self.args) == 3:
+
+        if len(self.args) == 3:
             try:
                 class_name = self.args[0]
                 function_name = self.args[1]
@@ -104,7 +100,7 @@ class Proxy(): # pylint: disable=R0902
                 class_name = self.args[0]
                 function_name = self.args[1]
                 action_name = self.args[2]
-                
+
                 action_filter = self.args[3]
                 args = []
                 args.append(action_filter)
@@ -310,7 +306,7 @@ class Proxy(): # pylint: disable=R0902
 
                     table.add_row(str(self.page_counter), start_timestamp, record.action, record.method, tmp_status_code, record.full_url)
                     self.page_counter += 1
-                
+
                 console = Console()
                 console.print(table)
             except Exception as exc:
@@ -345,11 +341,11 @@ class Proxy(): # pylint: disable=R0902
     def _select_proxy_record(self, selected_no: int, proxy_record: ProxyModel):
         """View Proxy Record"""
         self.app_obj._clear()
-        print(f"\nPROXY RECORD DETAILS:")
+        print("\nPROXY RECORD DETAILS:")
 
         selected_target: TargetModel = self.app_obj._get_selected_target()
         if selected_target:
-         print(f"Target: {selected_target.name}\n")
+            print(f"Target: {selected_target.name}\n")
 
         start_timestamp_obj = datetime.fromtimestamp(proxy_record.timestamp_start)
         start_timestamp = start_timestamp_obj.strftime("%m/%d/%Y %H:%M:%S")
@@ -369,7 +365,7 @@ class Proxy(): # pylint: disable=R0902
         print("REQUEST:")
         print("--------\n")
         print(proxy_record.raw_request)
-        
+
         if proxy_record.action.lower() == 'response':
             print("RESPONSE:")
             print("---------")
@@ -403,7 +399,6 @@ class Proxy(): # pylint: disable=R0902
         print("What would you like to do next ([enter]=next record; [# + enter]=select an item, [r + enter]=view the full response, [n + enter]=add a note, [x + enter]=stop)?")
         prompt_session = PromptSession()
 
-        running = True
         self.prompt_user = True
         self.goto_next_item = False
         self.select_an_item = False
@@ -412,7 +407,6 @@ class Proxy(): # pylint: disable=R0902
             text = prompt_session.prompt(' > ')
             if '' == text:
                 self.prompt_user = False
-                running = False
                 self.select_an_item = False
                 self.goto_next_item = True
                 continue_loop = False
@@ -424,13 +418,11 @@ class Proxy(): # pylint: disable=R0902
                     selected_no = int(text)
                     self.selected_no = selected_no
                     self.prompt_user = False
-                    running = False
                     self.select_an_item = True
                     continue_loop = False
                     print("Number input.")
                 except ValueError:
                     self.prompt_user = False
-                    running = False
                     self.select_an_item = False
                     continue_loop = False
 
@@ -443,8 +435,7 @@ class Proxy(): # pylint: disable=R0902
                 self.selected_no = selected_no
                 if self.selected_no > len(self.proxy_records):
                     return
-                else:
-                    self._select_proxy_record(self.selected_no, self.proxy_records[self.selected_no])
+                self._select_proxy_record(self.selected_no, self.proxy_records[self.selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
 
@@ -647,5 +638,3 @@ class Proxy(): # pylint: disable=R0902
                 self._select_proxy_record(selected_no, self.proxy_records[selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
-            except Exception:
-                return

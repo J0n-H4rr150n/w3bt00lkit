@@ -1,15 +1,18 @@
 """targets.py"""
-from typing import List, Literal, LiteralString
+from typing import List
 from sqlalchemy import func
-from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
-from modules.database import Database
-from models import TargetModel
 from rich.console import Console
 from rich.table import Table
-from models import TargetModel, TargetNoteModel, TargetScopeModel
+from modules.database import Database
+from models import TargetModel
+
+# pylint: disable=C0121,E1102,R0903,W0212,W0718
+
 
 class Targets:
+    """Targets."""
+
     def __init__(self, app_obj, args):
         self.app_obj = app_obj
         self.args = args
@@ -32,13 +35,13 @@ class Targets:
                 case _:
                     return
 
-            func = getattr(self, function_name)
+            func = getattr(self, function_name) # pylint: disable=W0621
             if callable(func):
                 func(*args)
             else:
                 print('Else: Function is not callable:%s',function_name)
         except AttributeError:
-           return
+            return
         except Exception as exc:
             print(exc)
 
@@ -130,7 +133,7 @@ class Targets:
                 for record in records:
                     table.add_row(str(counter), record.name, record.platform)
                     counter += 1
-                
+
                 console = Console()
                 console.print(table)
 
@@ -145,6 +148,6 @@ class Targets:
         except Exception as database_exception: # pylint: disable=W0718
             print("*** EXCEPTION ***")
             print(database_exception)
-    
+
     def _view_target_details(self):
         print("View single target.")

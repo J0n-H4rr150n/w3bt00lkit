@@ -2,9 +2,11 @@
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from sqlalchemy.orm.session import Session
+from typing import Any, Generator, List, Literal
 import pandas as pd
 from tabulate import tabulate
 from modules.database import Database
+from models import ChecklistModel
 from .common import word_completer
 
 # pylint: disable=C0103,W0603,W0212,R0903
@@ -26,7 +28,7 @@ class OWASPWSTG():
         self.completer: WordCompleter = word_completer(self)
         self.checklist_items = None
 
-    def _paginated_print(self, data, page_size=25):
+    def _paginated_print_x(self, data, page_size=25):
         """Prints data in paginated format.
 
         Args:
@@ -67,10 +69,25 @@ class OWASPWSTG():
         """
         print("\nWeb Security Testing Guide (WSTG):")
         try:
-            db = Database()
-            db_session: Session = db.session_local()
             checklist_name = 'OWASP Web Security Testing Guide'
-            self.checklist_items: list = db._get_checklist(db_session, checklist_name)
+            self.checklist_items = []
+            try:
+                with Database._get_db() as db:
+                    records: List[ChecklistModel] = db.query(ChecklistModel)\
+                        .filter(ChecklistModel.active == True)\
+                        .filter_by(name=checklist_name)\
+                        .order_by(ChecklistModel.category_order,ChecklistModel.item_id)\
+                        .all()
+                    for record in records:
+                        checklist_record = {
+                            'item_id': record.item_id,
+                            'item_name': record.item_name,
+                            'item_category': record.useful_tools
+                        }
+                        self.checklist_items.append(checklist_record)
+            except Exception as exc: # pylint: disable=W0718
+                print(exc)
+
             self._paginated_print(self.checklist_items)
             selected: str = input("Select a checklist item by # or item_id (leave blank to cancel): ")
             if '' == selected:

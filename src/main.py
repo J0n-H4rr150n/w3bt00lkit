@@ -2,12 +2,13 @@
 import os
 import sys
 from logging import Logger
-from logger import get_logger
 from prompt_toolkit import PromptSession
 from modules.completers import Completers
 from modules.input_handler import InputHandler
+from logger import get_logger
 from models import TargetModel
-from modules.database import Database
+from modules.checklist import Checklist
+from modules.database import Database # pylint: disable=C0412
 from modules.proxy import Proxy
 from modules.targets import Targets
 from modules.target_notes import TargetNotes
@@ -15,8 +16,8 @@ from modules.target_scope import TargetScope
 from modules.common import get_quote
 
 logger: Logger = get_logger(__name__)
-
 BASE_CLASS_NAME = 'W3bT00lkit'
+# pylint: disable=R0902,R0903,W0212,W0718
 
 
 class W3bT00lkit:
@@ -39,6 +40,7 @@ class W3bT00lkit:
         self.selected_target_in_scope = None
         self.selected_target_out_of_scope = None
         self.session = PromptSession(completer=Completers())
+        self.checklist = Checklist(self, [])
         self.database = Database(self, [])
         self.proxy = Proxy(self, [])
         self.targets = Targets(self, [])
