@@ -49,6 +49,7 @@ class W3bT00lkit:
         self.targetscope = TargetScope(self, [])
         self.vulnerabilities = Vulnerabilities(self, [])
         self.message = None
+        self.proxy_running = False
 
     def _get_base_name(self) -> str:
         return self.base_name
@@ -57,8 +58,21 @@ class W3bT00lkit:
         return self.selected_target
 
     def _callback_proxy_message(self, message) -> None:
-        print("*** PROXY MESSAGE ***")
-        print(message)
+        if "SYSTEM: PROXY STARTED" == message:
+            self.proxy_running = True
+            if self.selected_target is not None:
+                self.name = f"{self.base_name} (proxy) ({self.selected_target.name}) "
+            else:
+                self.name = f"{self.base_name} (proxy) "
+        elif "SYSTEM: PROXY STOPPED" == message:
+            self.proxy_running = False
+            if self.selected_target is not None:
+                self.name = f"{self.base_name} ({self.selected_target.name}) "
+            else:
+                self.name = f"{self.base_name} "
+        else:
+            print("*** PROXY MESSAGE ***")
+            print(message)
 
     def _callback_set_target(self, target) -> None:
         try:
@@ -71,10 +85,16 @@ class W3bT00lkit:
             self.name = f"{self.base_name} "
             self.message = "Target removed.\n"
         else:
-            self.selected_target: TargetModel = target
-            self.name = f"{self.base_name} ({self.selected_target.name}) "
-            self.selected_target_in_scope = None
-            self.selected_target_out_of_scope = None
+            if self.proxy_running:
+                self.selected_target: TargetModel = target
+                self.name = f"{self.base_name} (proxy) ({self.selected_target.name}) "
+                self.selected_target_in_scope = None
+                self.selected_target_out_of_scope = None
+            else:
+                self.selected_target: TargetModel = target
+                self.name = f"{self.base_name} ({self.selected_target.name}) "
+                self.selected_target_in_scope = None
+                self.selected_target_out_of_scope = None
         self._clear()
         self._print_output(self.INTRO)
         print(get_quote())

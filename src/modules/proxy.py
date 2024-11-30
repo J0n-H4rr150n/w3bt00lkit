@@ -2,9 +2,12 @@
 import asyncio
 import threading
 import logging
+import sys
 from datetime import datetime
 from typing import List
 from prompt_toolkit import PromptSession
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.keys import Keys
 from mitmproxy import options
 from mitmproxy.tools import dump
 from rich.console import Console
@@ -29,9 +32,6 @@ class ProxyConfig: # pylint: disable=R0902,R0903
     def __init__(self, app_obj, args) -> None:
         self.app_obj = app_obj
         self.args = args
-        #self.name = 'config'
-        #self.session = PromptSession()
-        #self.completer: WordCompleter = word_completer(self)
         self.loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self.configurations: dict = {}
 
@@ -70,9 +70,43 @@ class Proxy(): # pylint: disable=R0902
         self.previous_end_index = 0
         self.start_index = 0
         self.end_index = 0
+        self.goto_previous_item = False
         self.goto_next_item = False
         self.mark_as_favorite = False
         self.view_full_response = False
+        self.kb = KeyBindings()
+        self.press_left = False
+        self.press_right = False
+        self.prompt_running = False
+        self.continue_loop = False
+        self.details_view = False
+
+        @self.kb.add_binding(Keys.Left)
+        def _(event):
+            self.press_left = True
+            self.press_right = False
+
+            self.goto_previous_item = True
+            self.goto_next_item = False
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
+
+        @self.kb.add_binding(Keys.Right)
+        def _(event):
+            self.press_right = True
+            self.press_left = False
+
+            self.goto_previous_item = False
+            self.goto_next_item = True
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
+            
 
     def _handle_input(self, args):
         """Handle Input."""
@@ -158,13 +192,15 @@ class Proxy(): # pylint: disable=R0902
             if self.threading_task is None:
                 self.threading_task = threading.Thread(target=self._loop_in_thread, args=(self.loop,), daemon=True)
                 self.threading_task.start()
+                self.app_obj._callback_proxy_message("SYSTEM: PROXY STARTED")
                 print("Proxy started...")
             else:
                 global stop_flag # pylint: disable=W0603
                 stop_flag = False
                 self.threading_task = threading.Thread(target=self._loop_in_thread, args=(self.loop,), daemon=True)
                 self.threading_task.start()
-                print("Proxy started again...")
+                print("ERROR: Proxy did not exit properly last time. Exiting...")
+                sys.exit(1)
         else:
             print("*** ERROR: Loop is already running. ***")
             self.app_obj._exit() # pylint: disable=W0212
@@ -224,21 +260,28 @@ class Proxy(): # pylint: disable=R0902
                 if running == False: # pylint: disable=C0121
                     running = True
                     try:
+                        self.app_obj.proxy_running = True
+                        callback_proxy_message("SYSTEM: PROXY STARTED")
                         self.master.addons.add(ProxyHelper(target, in_scope, callback_proxy_message))
                         await self.master.run()
                     except asyncio.CancelledError:
+                        self.app_obj.proxy_running = False
                         print("*** self.master asyncio cancelled ***")
                     except Exception as exc: # pylint: disable=W0718
+                        self.app_obj.proxy_running = False
                         print("*** self.master EXCEPTION ***")
                         print(exc)
                     finally:
+                        self.app_obj.proxy_running = False
                         running = False
 
         except Exception as exc: # pylint: disable=W0718
+            self.app_obj.proxy_running = False
             logging.error(exc)
             print("*** PROXY EXCEPTION ***")
             print(exc)
         finally:
+            self.app_obj._callback_proxy_message("SYSTEM: PROXY STOPPED")
             print("*** Proxy has exited. ***")
 
     def stop(self) -> None:
@@ -256,6 +299,7 @@ class Proxy(): # pylint: disable=R0902
                 global stop_flag # pylint: disable=W0603
                 stop_flag = True
                 self.threading_task.join()
+                self.app_obj.proxy_running = False
             except Exception as exc: # pylint: disable=W0718
                 print(exc)
             print()
@@ -286,7 +330,7 @@ class Proxy(): # pylint: disable=R0902
             self.prompt_user = True
             try:
                 page_data = df.iloc[self.start_index:self.end_index]
-
+                local_counter = self.start_index
                 table = Table()
                 table.add_column('#')
                 table.add_column('created')
@@ -304,8 +348,10 @@ class Proxy(): # pylint: disable=R0902
                     else:
                         tmp_status_code = str(record.response_status_code)
 
-                    table.add_row(str(self.page_counter), start_timestamp, record.action, record.method, tmp_status_code, record.full_url)
-                    self.page_counter += 1
+                    table.add_row(str(local_counter), start_timestamp, record.action, record.method, tmp_status_code, record.full_url)
+                    #self.page_counter += 1
+                    local_counter += 1
+                    self.page_counter = local_counter
 
                 console = Console()
                 console.print(table)
@@ -313,35 +359,52 @@ class Proxy(): # pylint: disable=R0902
                 print(exc)
 
             print("What would you like to do next ([enter]=next page; [# + enter]=select an item, [f + enter]=mark as favorite, [x + enter]=stop)?")
-            prompt_session = PromptSession()
+            prompt_session = PromptSession(key_bindings=self.kb)
+            text = None
             while self.prompt_user:
-                text = prompt_session.prompt(' > ')
-                if '' == text:
-                    self.prompt_user = False
-                    running = True
-                    self.select_an_item = False
-                else:
-                    try:
-                        selected_no = int(text)
-                        self.selected_no = selected_no
+                try:
+                    text = prompt_session.prompt(' > ')
+                    if '' == text:
                         self.prompt_user = False
-                        running = False
-                        self.select_an_item = True
-                    except ValueError:
-                        self.prompt_user = False
-                        running = False
+                        self.prompt_running = True
                         self.select_an_item = False
+                        self.press_right = True
+                        self.press_left = False
+                    else:
+                        self.press_left = False
+                        self.press_right = False
+                        try:
+                            selected_no = int(text)
+                            self.selected_no = selected_no
+                            self.prompt_user = False
+                            self.prompt_running = False
+                            self.select_an_item = True
+                            return
+                        except ValueError:
+                            self.prompt_user = False
+                            self.prompt_running = False
+                            self.select_an_item = False
+                            return
+                except KeyboardInterrupt:
+                    break
 
             self.previous_start_index = self.start_index
             self.previous_end_index = self.end_index
 
-            self.start_index += page_size
-            self.end_index += page_size
+            if self.press_right:
+                self.start_index += page_size
+                self.end_index += page_size
+            elif self.press_left:
+                if self.start_index > 0:
+                    self.start_index -= page_size
+                    self.end_index -= page_size
+                else:
+                    return
 
     def _select_proxy_record(self, selected_no: int, proxy_record: ProxyModel):
         """View Proxy Record"""
         self.app_obj._clear()
-        print("\nPROXY RECORD DETAILS:")
+        print("\nPROXY RECORD DETAILS:\n")
 
         selected_target: TargetModel = self.app_obj._get_selected_target()
         if selected_target:
@@ -351,15 +414,19 @@ class Proxy(): # pylint: disable=R0902
         start_timestamp = start_timestamp_obj.strftime("%m/%d/%Y %H:%M:%S")
 
         table = Table()
+        table.add_column('#')
         table.add_column('id')
         table.add_column('created')
         table.add_column('action')
         table.add_column('method')
         table.add_column('status')
 
-        table.add_row(str(proxy_record.id), start_timestamp, proxy_record.action, proxy_record.method, str(proxy_record.response_status_code or ''))
+        table.add_row(f"{str(selected_no + 1)} of {str(len(self.proxy_records))}", str(proxy_record.id), start_timestamp, proxy_record.action, proxy_record.method, str(proxy_record.response_status_code or ''))
         console = Console()
         console.print(table)
+        print()
+
+        print(proxy_record.full_url)
         print()
 
         print("REQUEST:")
@@ -396,48 +463,73 @@ class Proxy(): # pylint: disable=R0902
 
         print("\n-----------------------------------------\n")
 
-        print("What would you like to do next ([enter]=next record; [# + enter]=select an item, [r + enter]=view the full response, [n + enter]=add a note, [x + enter]=stop)?")
-        prompt_session = PromptSession()
+        print("What would you like to do next ([enter]=next record; [# + enter]=select an item, [v + enter]=view the full response, [n + enter]=add a note, [x + enter]=stop)?")
+        prompt_session = PromptSession(key_bindings=self.kb)
 
         self.prompt_user = True
         self.goto_next_item = False
         self.select_an_item = False
-        continue_loop = True
-        while self.prompt_user and continue_loop:
-            text = prompt_session.prompt(' > ')
-            if '' == text:
-                self.prompt_user = False
-                self.select_an_item = False
-                self.goto_next_item = True
-                continue_loop = False
-            elif text.lower() == 'r':
-                self.view_full_response = True
-                self._select_proxy_record(selected_no, proxy_record)
-            else:
-                try:
-                    selected_no = int(text)
-                    self.selected_no = selected_no
-                    self.prompt_user = False
-                    self.select_an_item = True
-                    continue_loop = False
-                    print("Number input.")
-                except ValueError:
+        self.continue_loop = True
+        self.details_view = True
+        while self.prompt_user and self.continue_loop:
+            try:
+                text = prompt_session.prompt(' > ')
+                if '' == text:
                     self.prompt_user = False
                     self.select_an_item = False
-                    continue_loop = False
+                    self.goto_next_item = True
+                    self.continue_loop = False
+                elif text.lower() == 'v':
+                    self.view_full_response = True
+                    self._select_proxy_record(selected_no, proxy_record)
+                else:
+                    self.press_right = False
+                    self.press_left = False
+                    try:
+                        selected_no = int(text)
+                        self.selected_no = selected_no
+                        self.prompt_user = False
+                        self.select_an_item = True
+                        self.continue_loop = False
+                    except ValueError:
+                        self.prompt_user = False
+                        self.select_an_item = False
+                        self.continue_loop = False
+            except KeyboardInterrupt:
+                break
 
         if self.goto_next_item:
             self.select_an_item = False
             self.goto_next_item = False
+            self.goto_previous_item = False
             try:
                 selected_no = int(self.selected_no)
                 selected_no += 1
                 self.selected_no = selected_no
-                if self.selected_no > len(self.proxy_records):
+                if (self.selected_no +1) > len(self.proxy_records):
                     return
                 self._select_proxy_record(self.selected_no, self.proxy_records[self.selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
+            except Exception:
+                return
+        elif self.goto_previous_item:
+            self.select_an_item = False
+            self.goto_next_item = False
+            self.goto_previous_item = False
+            try:
+                selected_no = int(self.selected_no)
+                selected_no -= 1
+                if selected_no < 0:
+                    return
+                self.selected_no = selected_no
+                if (self.selected_no - 1) < 0:
+                    return
+                self._select_proxy_record(self.selected_no, self.proxy_records[self.selected_no])
+            except ValueError:
+                print("ERROR: Invalid input. Input a valid number.")
+            except Exception:
+                return
 
     def _history_requests(self, args=None) -> None:
         self.proxy_records = []
@@ -638,3 +730,5 @@ class Proxy(): # pylint: disable=R0902
                 self._select_proxy_record(selected_no, self.proxy_records[selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
+            except Exception:
+                return

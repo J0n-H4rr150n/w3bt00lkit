@@ -1,4 +1,5 @@
 """proxyhelper.py"""
+import re
 import sys
 import signal
 from datetime import datetime, timezone
@@ -63,6 +64,8 @@ class ProxyHelper:
             #self._parent_callback_proxy_message(f"REQUEST: No target selected.")
             return
 
+        dynamic_host = None
+        dynamic_fqdn = False
         save_request = False
         for item in self.in_scope:
             if item['fqdn'] is not None:
@@ -72,6 +75,15 @@ class ProxyHelper:
                     tmp_fqdn = item['fqdn'].replace('*','')
                     if flow.request.host.endswith(tmp_fqdn):
                         save_request = True
+                if '{dynamic}' in item['fqdn']:
+                    tmp_fqdn = item['fqdn']
+                    match = re.search(r"{dynamic}(.+)", item['fqdn'])
+                    if match:
+                        tmp_fqdn = match.group(1)
+                        if flow.request.host.endswith(tmp_fqdn):
+                            dynamic_host = item['fqdn']
+                            dynamic_fqdn = True
+                            save_request = True
 
         if save_request == False:
             return
@@ -96,6 +108,9 @@ class ProxyHelper:
         timestamp_end = flow.request.timestamp_end
 
         full_url: str = f'{request.scheme}://{request.host}:{request.port}{request.path}'
+
+        if dynamic_host is not None and dynamic_fqdn:
+            dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
@@ -132,7 +147,9 @@ class ProxyHelper:
                 raw_request=raw_request,
                 raw_response=None,
                 decoded_content=None,
-                flow=None
+                flow=None,
+                dynamic_host=dynamic_host,
+                dynamic_full_url=dynamic_full_url
             )
 
             #self._parent_callback_proxy_message(new_request.__dict__)
@@ -158,6 +175,8 @@ class ProxyHelper:
             #self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
             return
 
+        dynamic_host = None
+        dynamic_fqdn = False
         save_response = False
 
         try:
@@ -169,6 +188,16 @@ class ProxyHelper:
                         tmp_fqdn = item['fqdn'].replace('*','')
                         if flow.request.host.endswith(tmp_fqdn):
                             save_response = True
+                    if '{dynamic}' in item['fqdn']:
+                        tmp_fqdn = item['fqdn']
+                        match = re.search(r"{dynamic}(.+)", item['fqdn'])
+                        if match:
+                            tmp_fqdn = match.group(1)
+                            if flow.request.host.endswith(tmp_fqdn):
+                                dynamic_host = item['fqdn']
+                                dynamic_fqdn = True
+                                save_response = True
+
             if save_response == False:
                 return
         except Exception as exc:
@@ -221,6 +250,9 @@ class ProxyHelper:
         timestamp_end = flow.request.timestamp_end
 
         full_url: str = f'{request.scheme}://{request.host}:{request.port}{request.path}'
+
+        if dynamic_host is not None and dynamic_fqdn:
+            dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
@@ -298,7 +330,9 @@ class ProxyHelper:
                 raw_request=raw_request,
                 raw_response=raw_response,
                 decoded_content=decoded_content,
-                flow=full_flow
+                flow=full_flow,
+                dynamic_host=dynamic_host,
+                dynamic_full_url=dynamic_full_url
             )
 
             with Database._get_db() as db:

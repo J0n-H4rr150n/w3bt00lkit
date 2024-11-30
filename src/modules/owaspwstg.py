@@ -23,7 +23,6 @@ class OWASPWSTG():
         self.parent_obj = parent_obj
         self._parent_callback_word_completer = callback_word_completer
         self._handle_input = handle_input
-        self.name = 'owaspwstg'
         self.session = PromptSession()
         self.completer: WordCompleter = word_completer(self)
         self.checklist_items = None
