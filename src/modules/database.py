@@ -94,30 +94,6 @@ class Database():
             print(exc)
             return 2
 
-    def _delete_targetnote(self, db: Session, targetnote_id) -> Literal[0] | Literal[1]:
-        """Delete a targetnote from the database.
-        
-        Args:
-            db (Session): The current session to connect to the database.
-            targetnote_id: The id of the targetnote.
-
-        Returns:
-            Literal[0] | Literal[1]
-        """
-        try:
-            record_to_delete: TargetNoteModel | None = db.query(TargetNoteModel).filter_by(id=targetnote_id).first()
-            if record_to_delete:
-                db.delete(record_to_delete)
-                db.commit()
-                print("Target note deleted successfully.")
-            else:
-                print("Target note not found.")
-            return 0
-        except Exception as exc: # pylint: disable=W0718
-            print(exc)
-            return 2
-
-
     def _get_proxy_history(self, db: Session) -> list:
         """Get proxy history for a target from the database.
         

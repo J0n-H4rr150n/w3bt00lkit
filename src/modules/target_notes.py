@@ -6,7 +6,8 @@ from rich.table import Table
 from rich.text import Text
 from modules.database import Database
 from models import TargetModel, TargetNoteModel
-from prompt_toolkit import PromptSession
+from prompt_toolkit import PromptSession, print_formatted_text
+from prompt_toolkit.shortcuts import input_dialog
 from urllib.parse import urlparse, parse_qs
 
 class TargetNotes:
@@ -14,6 +15,7 @@ class TargetNotes:
     def __init__(self, app_obj, args):
         self.app_obj = app_obj
         self.args = args
+        self.prompt_user = False
 
     def _handle_input(self, args):
         """Handle Input."""
@@ -51,10 +53,8 @@ class TargetNotes:
         """
         selected_target: TargetModel = self.app_obj._get_selected_target()
         if selected_target is None:
-            print("\nPlease select a target before using the 'scope' option.\n")
+            print("\nPlease select a target before using the 'note' option.\n")
             return
-
-        selected_target = self.app_obj.selected_target_obj
 
         target_path = input("Input the target path for this note (or press enter to leave blank):\n")
         if target_path == '':
@@ -62,18 +62,12 @@ class TargetNotes:
         print("")
 
         print("Input/Paste content, then press CTRL-D or CTRL-Z (on Windows OS) to save it.")
-        lines = []
-        while True:
-            try:
-                line: str = input()
-            except EOFError:
-                break
-            lines.append(line)
 
-        target_note: LiteralString = '\n'.join(lines)
-
+        session = PromptSession()
+        target_note = session.prompt("NOTE DETAILS:\n\n", multiline=True)
+        
         print("\n************************************************\n")
-        print(target_note)
+        print_formatted_text(target_note)
         print("\n************************************************\n")
 
         save_to_database = False
@@ -88,25 +82,19 @@ class TargetNotes:
         if save_to_database == False:
             print("Canceled.")
             return
-        
-        db = TargetDatabase()
-        db_session: Session = db.session_local()
 
-        try:
-            new_target_scope = TargetNoteModel(
-                target_id = selected_target.id,
-                full_note = str(target_note),
-                path = target_path
-            )
-            result: Literal[0] | Literal[1] = db._add_targetnote(db_session, new_target_scope) # pylint: disable=W0212
-            if result == 0:
-                print("Target note added to the database.\n")
-            elif result == 1:
-                print("Target note already exists.\n")
-            else:
-                print("There was an error trying to add the target note scope.\n")
-        except Exception as database_exception: # pylint: disable=W0718
-            print(database_exception)
+        with Database._get_db() as db:
+            try:
+                new_target_scope = TargetNoteModel(
+                    target_id = selected_target.id,
+                    full_note = str(target_note),
+                    path = target_path
+                )
+                db.add(new_target_scope)
+                db.commit()
+                db.refresh(new_target_scope)
+            except Exception as database_exception: # pylint: disable=W0718
+                print(database_exception)
 
     def _view_notes(self) -> None:
         """List all active notes.
@@ -126,7 +114,8 @@ class TargetNotes:
         try:
             targetnotes: List[TargetNoteModel] = []
             with Database._get_db() as db:
-                records: List[TargetNoteModel] = db.query(TargetNoteModel).filter(TargetNoteModel.active == True)\
+                records: List[TargetNoteModel] = db.query(TargetNoteModel)\
+                    .filter(TargetNoteModel.active == True)\
                     .filter_by(target_id=selected_target.id)\
                     .order_by(TargetNoteModel.created_timestamp).all()
                 for record in records:
@@ -185,31 +174,33 @@ class TargetNotes:
         except Exception as database_exception: # pylint: disable=W0718
             print(database_exception)
 
-    def _select_note(self, selected_target: TargetModel, selected_no, targetnotes: TargetNoteModel):
+    def _select_note(self, selected_target: TargetModel, selected_no, targetnotes: List[TargetNoteModel]):
         """View Note"""
         self.app_obj._clear()
         print(f"TARGET NOTE\n")
 
+        selected_note: TargetNoteModel = targetnotes[selected_no]
+
         print(f"Target: {selected_target.name}\n")
-        print(f"Note Id: {targetnotes[selected_no].id}")
-        print(f"Note Created: {targetnotes[selected_no].created_timestamp}")
+        print(f"Note Id: {selected_note.id}")
+        print(f"Note Created: {selected_note.created_timestamp}")
         print("")
 
-        if targetnotes[selected_no].url is not None:
-            print(f"URL: {targetnotes[selected_no].url}")
-            parsed_url = urlparse(targetnotes[selected_no].url)
+        if selected_note.url is not None:
+            print(f"URL: {selected_note.url}")
+            parsed_url = urlparse(selected_note.url)
             query_params = parse_qs(parsed_url.query)
             if len(query_params) > 0:
                 print("\nURL Params:")
                 for param, value in query_params.items():
                     print(f"{param}: {value}")
 
-        if targetnotes[selected_no].path is not None:
-            print(f"\nPath: {targetnotes[selected_no].path}")
+        if selected_note.path is not None:
+            print(f"\nPath: {selected_note.path}")
             print("")
 
         print("************************************************\n")
-        print(targetnotes[selected_no].full_note)
+        print(selected_note.full_note)
         print("\n************************************************\n")
 
         print("Do you want to delete this note (`yes`/`no`) ?")
@@ -223,9 +214,16 @@ class TargetNotes:
                 prompt_user = False
                 confirm = input("Are you sure you want to delete (`yes`/`no`) ?")
                 if 'yes' == confirm:
-                    db = TargetDatabase()
-                    db_session: Session = db.session_local()
-                    db._delete_targetnote(db_session,targetnotes[selected_no]['id']) # pylint: disable=W0212
-                    print("Note deleted!")
+                    with Database._get_db() as db:
+                        try:
+                            record_to_delete: TargetNoteModel | None = db.query(TargetNoteModel).filter_by(id=selected_note.id).first()
+                            if record_to_delete:
+                                db.delete(record_to_delete)
+                                db.commit()
+                                print("Target note deleted successfully.")
+                            else:
+                                print("Target note not found.")
+                        except Exception as exc:
+                            print(exc)
                 else:
                     return
