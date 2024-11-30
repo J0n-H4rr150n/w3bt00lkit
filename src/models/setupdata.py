@@ -1,7 +1,8 @@
 """setupdata.py"""
 import os
 import json
-from models import ChecklistModel
+from typing import List
+from models import ChecklistModel, VulnerabilityModel
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class SetupData: # pylint: disable=R0903
@@ -57,3 +58,33 @@ class SetupData: # pylint: disable=R0903
             category_order += 1
 
         return data
+
+    def get_vulnerabilities(self):
+        """Get vulnerabilities data."""
+        with open(f'{BASE_PATH}/vulnerabilities.json', mode='r', encoding='utf-8') as f:
+            raw_data = json.load(f)
+
+        records: List[VulnerabilityModel] = []
+
+        for record in raw_data:
+            vulnerability: VulnerabilityModel = VulnerabilityModel(
+                vuln_category_id = record['vuln_category_id'],
+                parent_category_id = record['parent_category_id'],
+                category_name = record['category_name'],
+                category_acronym = record['category_acronym'],
+                cwe_id = record['cwe_id'],
+                cwe_name = record['cwe_name'],
+                cwe_link = record['cwe_link'],
+                capec_id = record['capec_id'],
+                capec_name = record['capec_name'],
+                capec_link = record['capec_link'],
+                kev_link = record['kev_link'],
+                references = record['references'],
+                cheatsheets = record['cheatsheets'],
+                tools = record['tools'],
+                payload_lists = record['payload_lists'],
+                tests = record['tests']
+            )
+            records.append(vulnerability)
+
+        return records

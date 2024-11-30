@@ -15,7 +15,7 @@ remove_list: list[str] = ['target']
 start_list: list[str] = ['proxy']
 stop_list: list[str] = ['proxy']
 target_list: list[str] = ['add','remove','select','view']
-view_list: list[str] = ['notes','scope','targets']
+view_list: list[str] = ['notes','scope','targets','vulnerabilities']
 
 
 class Completers(Completer):

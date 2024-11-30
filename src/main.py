@@ -13,6 +13,7 @@ from modules.proxy import Proxy
 from modules.targets import Targets
 from modules.target_notes import TargetNotes
 from modules.target_scope import TargetScope
+from modules.vulnerabilities import Vulnerabilities
 from modules.common import get_quote
 
 logger: Logger = get_logger(__name__)
@@ -46,6 +47,7 @@ class W3bT00lkit:
         self.targets = Targets(self, [])
         self.targetnotes = TargetNotes(self, [])
         self.targetscope = TargetScope(self, [])
+        self.vulnerabilities = Vulnerabilities(self, [])
         self.message = None
 
     def _get_base_name(self) -> str:

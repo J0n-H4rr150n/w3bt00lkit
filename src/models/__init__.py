@@ -1,9 +1,11 @@
 """__init__.py"""
+import hashlib
 from typing import Any
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Boolean, BigInteger, Column, DateTime, func, Index, Integer, ForeignKey, String,TIMESTAMP
+from sqlalchemy import Boolean, BigInteger, Column, DateTime, ForeignKey, func, Index, Integer, String, TIMESTAMP, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.relationships import _RelationshipDeclared
+from sqlalchemy.dialects.postgresql import JSONB
 
 Base = declarative_base()
 
@@ -28,6 +30,31 @@ class ChecklistModel(Base): # pylint: disable=R0903
     active = Column(Boolean, default=True)
 
     Index('ux_name_version_item', name, checklist_version, item_id, unique=True)
+
+class VulnerabilityModel(Base):
+    """VulnerabilityModel."""
+    __tablename__ = 'vulnerability'
+
+    id = Column(Integer, primary_key=True)
+    vuln_category_id = Column(String, unique=True)
+    parent_category_id = Column(String)
+    category_name = Column(String)
+    category_acronym = Column(String)
+    cwe_id = Column(String)
+    cwe_name = Column(String)
+    cwe_link = Column(String)
+    capec_id = Column(String)
+    capec_name = Column(String)
+    capec_link = Column(String)
+    kev_link = Column(String)
+    references = Column(JSONB)
+    cheatsheets = Column(JSONB)
+    tools = Column(JSONB)
+    payload_lists = Column(JSONB)
+    tests = Column(JSONB)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
 
 class ProxyModel(Base): # pylint: disable=R0903
     """ProxyModel."""
@@ -61,6 +88,14 @@ class ProxyModel(Base): # pylint: disable=R0903
     decoded_content = Column(String)
     flow = Column(String)
     note = Column(String)
+    favorite_ind = Column(Boolean)
+    params_ind = Column(Boolean)
+    comments_ind = Column(Boolean)
+    interesting_ind = Column(Boolean)
+    needs_testing_ind = Column(Boolean)
+    finding_ind = Column(Boolean)
+    finding_note = Column(String)
+    finding_category = Column(String)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)
 

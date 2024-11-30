@@ -7,7 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from rich.console import Console
 from rich.table import Table
-from models import Base, ChecklistModel, ProxyModel, TargetNoteModel
+from models import Base, ChecklistModel, ProxyModel, TargetNoteModel, VulnerabilityModel
 from models.setupdata import SetupData
 
 # pylint: disable=C0121,C0301,W0718
@@ -188,20 +188,38 @@ class Database():
 
         data: list[ChecklistModel] = SetupData().get_owasp_wstg_checklist()
 
-        with Database._get_db() as db:
-            counter = 0
-            for checklist_item in data:
-                try:
-                    db.add(checklist_item)
-                    db.commit()
-                    db.refresh(checklist_item)
-                except IntegrityError:
-                    continue
-                except Exception as database_exception: # pylint: disable=W0718
-                    if 'UniqueViolation' in str(database_exception):
+        if data is not None:
+            with Database._get_db() as db:
+                counter = 0
+                for checklist_item in data:
+                    try:
+                        db.add(checklist_item)
+                        db.commit()
+                        db.refresh(checklist_item)
+                    except IntegrityError:
                         continue
-                    print()
-                    print(counter, database_exception)
-                counter += 1
+                    except Exception as database_exception: # pylint: disable=W0718
+                        if 'UniqueViolation' in str(database_exception):
+                            continue
+                        print()
+                        print(counter, database_exception)
+                    counter += 1
+
+        vulnerabilities: List[VulnerabilityModel] = SetupData().get_vulnerabilities()
+
+        if vulnerabilities is not None:
+            with Database._get_db() as db:
+                for vulnerability in vulnerabilities:
+                    try:
+                        db.add(vulnerability)
+                        db.commit()
+                        db.refresh(vulnerability)
+                    except IntegrityError:
+                        continue
+                    except Exception as database_exception: # pylint: disable=W0718
+                        if 'UniqueViolation' in str(database_exception):
+                            continue
+                        print()
+                        print(database_exception)
 
         print("\nSetup complete.\n")

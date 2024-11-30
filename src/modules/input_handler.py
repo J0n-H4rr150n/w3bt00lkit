@@ -53,6 +53,8 @@ class InputHandler:
                         self.obj = self.app_obj.targets._handle_input(self.args)
                     case 'proxy':
                         self.obj = self.app_obj.proxy._handle_input(self.args)
+                    case 'vulnerabilities':
+                        self.obj = self.app_obj.vulnerabilities._handle_input(self.args)
                     case _:
                         return
             except IndexError:

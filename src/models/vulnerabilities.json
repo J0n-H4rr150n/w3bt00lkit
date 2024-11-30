@@ -1,0 +1,75 @@
+[
+    {
+        "vuln_category_id":"VULN-XSS",
+        "parent_category_id":"",
+        "category_name":"Cross-Site Scripting",
+        "category_acronym":"XSS",
+        "cwe_id":"CWE-79",
+        "cwe_name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "cwe_link": "https://cwe.mitre.org/data/definitions/79.html",
+        "capec_id": "CAPEC-63",
+        "capec_name": "Cross-Site Scripting (XSS)",
+        "capec_link": "https://capec.mitre.org/data/definitions/63.html",
+        "kev_link": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "references":[
+            {"name":"XSS (Cross Site Scripting) - Hacktricks","link":"https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting"}
+        ],
+        "cheatsheets": [
+            {"name":"Cross-site scripting (XSS) cheat sheet","link":"https://portswigger.net/web-security/cross-site-scripting/cheat-sheet"}
+        ],
+        "tools": [
+            {"name":"Dalfox","link":"https://github.com/hahwul/dalfox"},
+            {"name":"XSSHunter","link":"https://github.com/trufflesecurity/xsshunter"}
+        ],
+        "payload_lists": [
+            {"name":"XSS Injection - PayloadsAllTheThings","link":"https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection"}
+        ],
+        "tests":[
+            {
+            "name":"Check for HTML tags",
+            "id":"VULN-XSS-001",
+            "examples":[
+                {"source":"","notes":[""],"payloads":[
+                    "<h1>",
+                    "<h1>Hello</h1>",
+                    "<h1>Hello"
+                    ]}
+            ],
+            "objectives":[
+                ""
+                ]
+            },
+            {
+                "name":"Check script tag",
+                "id":"VULN-XSS-002",
+                "examples":[
+                    {"source":"","notes":[""],"payloads":[
+                        "<script>",
+                        "<script>alert(1)</script>",
+                        "<script>alert(1)"
+                        ]}
+                ],
+                "reference":"",
+                "objectives":[
+                    ""
+                    ]
+            },
+            {
+                "name":"Check script tag",
+                "id":"VULN-XSS-002",
+                "examples":[
+                    {"source":"","notes":[""],"payloads":[
+                        "<script>",
+                        "<script>alert(1)</script>",
+                        "<script>alert(1)"
+                        ]
+                    }
+                ],
+                "reference":"",
+                "objectives":[
+                    ""
+                    ]
+            }
+        ]
+    }
+]
