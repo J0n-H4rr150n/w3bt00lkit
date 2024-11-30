@@ -24,6 +24,8 @@ class InputHandler:
                     self.app_obj._clear()
                 case 'exit':
                     self.app_obj._exit()
+                case 'help':
+                    self.obj = self.app_obj.apphelp._handle_input(self.args)
         elif len(self.args) == 3:
             match self.args[0]:
                 case 'proxy':
@@ -41,6 +43,8 @@ class InputHandler:
                         self.obj = self.app_obj.checklist._handle_input(self.args)
                     case 'database':
                         self.obj = self.app_obj.database._handle_input(self.args)
+                    case 'help':
+                        self.obj = self.app_obj.apphelp._handle_input(self.args)
                     case 'proxy':
                         self.obj = self.app_obj.proxy._handle_input(self.args)
 

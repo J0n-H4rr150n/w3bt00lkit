@@ -1,31 +1,7 @@
 # w3bt00lkit
 Command-line web application security toolkit.  
 
-## Install
-
-1. Clone the repo
-2. Create a python virtual environment
-3. Install requirements
-4. Create an `alias` to load the virtual environment and then the `main.py` script in the `src` folder.
-5. Make sure `PostgreSQL` is running locally and the necessary permissions are added.
-6. Install the [mitmproxy](https://docs.mitmproxy.org/stable/concepts-certificates/) certificate in the browser you will use with the proxy.
-7. Install [FoxProxy](https://getfoxyproxy.org/) or similar tool and set it to the port `8085`.
-8. Run the toolkit with the `alias`
-9. Create the database tables and insert initial data to the database.
-    - `w3bt00lkit` > `database`
-    - `w3bt00lkit (database)` > `setup`
-
-### Style and Syntax  
-`pylint ./src --output=pylint.txt ; cat pylint.txt`  
-
-### Units Tests and Code Coverage  
-`coverage run -m unittest discover -s src/tests/ && coverage report`  
-
-### Generate Documentation  
-From the `src` folder:  
-`pdoc --html . --output-dir ../docs`  
-
-Then go to `docs/src/index.html` to view the generated documentation.  
+![w3bt00lkit](w3bt00lkit.png)
 
 ## Features
 
@@ -61,3 +37,33 @@ Then go to `docs/src/index.html` to view the generated documentation.
 - Update the proxy code to store additional information in the database.
 - Integrate existing tools into the w3bt00lkit and store the results in the database.
 - TBD...
+
+## Install
+
+1. Clone the repo
+2. Create a python virtual environment
+3. Install requirements
+4. Create an `alias` to load the virtual environment and then the `main.py` script in the `src` folder.
+5. Make sure `PostgreSQL` is running locally and the necessary permissions are added.
+6. Install the [mitmproxy](https://docs.mitmproxy.org/stable/concepts-certificates/) certificate in the browser you will use with the proxy.
+7. Install [FoxProxy](https://getfoxyproxy.org/) or similar tool and set it to the port `8085`.
+8. Run the toolkit with the `alias`
+9. Create the database tables and insert initial data to the database.
+    - `w3bt00lkit` > `database`
+    - `w3bt00lkit (database)` > `setup`
+
+### Style and Syntax  
+`pylint ./src --output=pylint.txt ; cat pylint.txt`  
+
+### Units Tests and Code Coverage  
+`coverage run -m unittest discover -s src/tests/ && coverage report`  
+
+### Generate Documentation  
+From the `src` folder:  
+`pdoc --html . --output-dir ../docs`  
+
+Then go to `docs/src/index.html` to view the generated documentation.  
+
+## DISCLAIMER
+
+The w3bt00lkit is intended for educational purposes only and is provided without warranty. Use of this w3bt00lkit is at your own risk. The author is not responsible for any damages or liabilities incurred as a result of the use or misuse of this w3bt00lkit. Always adhere to legal and ethical guidelines.

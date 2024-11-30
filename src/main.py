@@ -7,6 +7,7 @@ from modules.completers import Completers
 from modules.input_handler import InputHandler
 from logger import get_logger
 from models import TargetModel
+from modules.apphelp import AppHelp
 from modules.checklist import Checklist
 from modules.database import Database # pylint: disable=C0412
 from modules.proxy import Proxy
@@ -41,6 +42,7 @@ class W3bT00lkit:
         self.selected_target_in_scope = None
         self.selected_target_out_of_scope = None
         self.session = PromptSession(completer=Completers())
+        self.apphelp = AppHelp(self, [])
         self.checklist = Checklist(self, [])
         self.database = Database(self, [])
         self.proxy = Proxy(self, [])
@@ -115,16 +117,32 @@ class W3bT00lkit:
     def _run(self) -> None:
         self._print_output(self.INTRO)
         print(get_quote())
-        while True:
-            try:
-                # https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.shortcuts.PromptSession
-                text: str = self.session.prompt(message=f'{self.name}> ')
-                handler = InputHandler(self, text)
-                handler._handle_input()
-            except KeyboardInterrupt:
-                continue
-            except EOFError:
-                break
+        args = sys.argv
+        if len(args) > 1:
+            if args[1].lower() == '-h' or args[1].lower() == '--help':
+                apphelp = AppHelp(self, [])
+                apphelp._handle_input(['help'])
+            while True:
+                try:
+                    # https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.shortcuts.PromptSession
+                    text: str = self.session.prompt(message=f'{self.name}> ')
+                    handler = InputHandler(self, text)
+                    handler._handle_input()
+                except KeyboardInterrupt:
+                    continue
+                except EOFError:
+                    break
+        else:
+            while True:
+                try:
+                    # https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.shortcuts.PromptSession
+                    text: str = self.session.prompt(message=f'{self.name}> ')
+                    handler = InputHandler(self, text)
+                    handler._handle_input()
+                except KeyboardInterrupt:
+                    continue
+                except EOFError:
+                    break
 
     def _clear(self) -> None:
         """Clear the screen."""

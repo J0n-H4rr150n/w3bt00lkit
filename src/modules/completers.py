@@ -7,6 +7,7 @@ default_list: list[str] = ['add','checklists','clear','database','exit','help','
 add_list: list[str] = ['note','param','path','scope','target']
 checklist_list: list[str] = ['owasp-wstg']
 database_list: list[str] = ['setup','tables']
+help_list: list[str] = ['checklists','database','proxy','targets']
 proxy_list: list[str] = ['history','options','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
 proxy_history_requests: list[str] = ['js','patch','post','put']
@@ -31,6 +32,8 @@ class Completers(Completer):
             self.completer = WordCompleter(checklist_list, ignore_case=True)
         elif text.startswith('database '):
             self.completer = WordCompleter(database_list, ignore_case=True)
+        elif text.startswith('help '):
+            self.completer = WordCompleter(help_list, ignore_case=True)
         elif text.startswith('proxy '):
             if 'history' in text:
                 self.completer = WordCompleter(proxy_history_list, ignore_case=True)
