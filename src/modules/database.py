@@ -1,4 +1,5 @@
 """db.py"""
+import os
 from contextlib import contextmanager
 from typing import Any, Generator, List, Literal
 from sqlalchemy import Engine, Result, create_engine
@@ -11,21 +12,32 @@ from models import Base, ChecklistModel, ProxyModel, TargetNoteModel, Vulnerabil
 from models.setupdata import SetupData
 
 # pylint: disable=C0121,C0301,W0718
-CONNECTION_STRING_POSTGRES = 'postgresql://w3bt00lkit:w3bt00lkit@localhost:5432/w3bt00lkit'
-
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+CONNECTION_STRING_POSTGRES = 'postgresql://w3bt00lkit:w3bt00lkit@localhost:5432/w3bt00lkit?gssencmode=disable'
+CONNECTION_STRING_SQLITE = f'sqlite:///{BASE_PATH}w3bt00lkit.db'
+#CONNECTION_OPTION = 'sqlite'
+CONNECTION_OPTION = 'postgres'
 
 class Database():
     """Database."""
     def __init__(self, app_obj, args) -> None:
         self.app_obj = app_obj
         self.args = args
-        self.engine: Engine = create_engine(CONNECTION_STRING_POSTGRES, connect_args={'options': '-c statement_timeout=5000'})
+        self.engine_postgres: Engine = create_engine(CONNECTION_STRING_POSTGRES, connect_args={'options': '-c statement_timeout=5000'})
+        self.engine_sqlite: Engine = create_engine(CONNECTION_STRING_SQLITE)
+        if CONNECTION_OPTION == 'sqlite':
+            self.engine = self.engine_sqlite
+        else:
+            self.engine = self.engine_postgres
         self.db_session = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     @contextmanager
     def _get_db() -> Generator[Session, Any, None]: # pylint: disable=E0211
         """Get database."""
-        engine: Engine = create_engine(CONNECTION_STRING_POSTGRES, connect_args={'options': '-c statement_timeout=5000'})
+        if CONNECTION_OPTION == 'sqlite':
+            engine: Engine = create_engine(CONNECTION_STRING_SQLITE)
+        else:
+            engine: Engine = create_engine(CONNECTION_STRING_POSTGRES, connect_args={'options': '-c statement_timeout=5000'})
         session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         db = session()
         try:

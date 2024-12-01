@@ -8,6 +8,8 @@ from sqlalchemy.orm.relationships import _RelationshipDeclared
 from sqlalchemy.dialects.postgresql import JSONB
 
 Base = declarative_base()
+# CONNECTION_OPTION = 'sqlite'
+CONNECTION_OPTION = 'postgres'
 
 
 class ChecklistModel(Base): # pylint: disable=R0903
@@ -47,11 +49,20 @@ class VulnerabilityModel(Base):
     capec_name = Column(String)
     capec_link = Column(String)
     kev_link = Column(String)
-    references = Column(JSONB)
-    cheatsheets = Column(JSONB)
-    tools = Column(JSONB)
-    payload_lists = Column(JSONB)
-    tests = Column(JSONB)
+
+    if CONNECTION_OPTION == 'sqlite':
+        references = Column(String)
+        cheatsheets = Column(String)
+        tools = Column(String)
+        payload_lists = Column(String)
+        tests = Column(String)
+    else:
+        references = Column(JSONB)
+        cheatsheets = Column(JSONB)
+        tools = Column(JSONB)
+        payload_lists = Column(JSONB)
+        tests = Column(JSONB)
+
     active = Column(Boolean, default=True)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)

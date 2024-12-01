@@ -64,8 +64,12 @@ class ProxyHelper:
             #self._parent_callback_proxy_message(f"REQUEST: No target selected.")
             return
 
+        #self._parent_callback_proxy_message(f"REQUEST: {flow.request.pretty_url}")
+
         dynamic_host = None
         dynamic_fqdn = False
+        dynamic_full_url = None
+        
         save_request = False
         for item in self.in_scope:
             if item['fqdn'] is not None:
@@ -88,8 +92,6 @@ class ProxyHelper:
         if save_request == False:
             return
 
-        #self._parent_callback_proxy_message(f"REQUEST: {flow.request.pretty_url}")
-
         request = flow.request
 
         host = flow.request.host
@@ -109,12 +111,20 @@ class ProxyHelper:
 
         full_url: str = f'{request.scheme}://{request.host}:{request.port}{request.path}'
 
+        self._parent_callback_proxy_message(f"REQUEST (CHECK): {flow.request.pretty_url}")
+
         if dynamic_host is not None and dynamic_fqdn:
             dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
-        parsed: ParseResult = urlparse(full_url)
-        path: str = parsed.path
-        url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
+        try:
+            parsed: ParseResult = urlparse(full_url)
+            path: str = parsed.path
+            url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
+        except Exception as exc:
+            parsed = None
+            path = None
+            url = None
+            self._parent_callback_proxy_message(f"REQUEST (CHECK EXC): {exc}")
 
         try:
             raw_request = assemble_request(flow.request).decode('utf-8')
@@ -125,6 +135,11 @@ class ProxyHelper:
 
         try:
             headers_string = ", ".join([f"{k}: {v}" for k, v in flow.request.headers.items()])
+        except Exception as exc:
+            headers_string = None
+
+        try:
+            # self._parent_callback_proxy_message(f"self.target.id: {self.target.id}")
             new_request = ProxyModel(
                 target_id=int(self.target.id),
                 name=None,
@@ -159,8 +174,10 @@ class ProxyHelper:
                 db.refresh(new_request)
 
         except Exception as database_exception: # pylint: disable=W0718
-            self._parent_callback_proxy_message("REQUEST: database_exception - ", database_exception)
-            print("Database exception:",database_exception)
+            self._parent_callback_proxy_message("REQUEST: database_exception...")
+            self._parent_callback_proxy_message(str(database_exception))
+            #self._parent_callback_proxy_message("REQUEST: database_exception - ", database_exception)
+            #print("Database exception:",database_exception)
 
     def response(self, flow: http.HTTPFlow) -> None:
         """Proxy response.
@@ -177,6 +194,8 @@ class ProxyHelper:
 
         dynamic_host = None
         dynamic_fqdn = False
+        dynamic_full_url = None
+
         save_response = False
 
         try:

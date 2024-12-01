@@ -8,3 +8,4 @@ data
 snyk-linux
 valid_log.txt
 examples
+*.db
