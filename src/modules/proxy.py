@@ -12,7 +12,7 @@ from mitmproxy import options
 from mitmproxy.tools import dump
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 import pandas as pd
 from modules.proxyhelper import ProxyHelper
 from modules.database import Database
@@ -111,44 +111,11 @@ class Proxy(): # pylint: disable=R0902
     def _handle_input(self, args):
         """Handle Input."""
         self.args = args
+        #print("handle proxy input:",self.args)
         if len(self.args) < 2:
             return
 
-        if len(self.args) == 3:
-            try:
-                class_name = self.args[0]
-                function_name = self.args[1]
-                action_name = self.args[2]
-                args = []
-                func = getattr(self, f"_{function_name}_{action_name}")
-                if callable(func):
-                    func(*args)
-                else:
-                    print('Else: Function is not callable:%s',function_name)
-            except AttributeError:
-                return
-            except Exception as exc:
-                print(exc)
-        elif len(self.args) == 4:
-            try:
-                class_name = self.args[0]
-                function_name = self.args[1]
-                action_name = self.args[2]
-
-                action_filter = self.args[3]
-                args = []
-                args.append(action_filter)
-
-                func = getattr(self, f"_{function_name}_{action_name}")
-                if callable(func):
-                    func(*args)
-                else:
-                    print('Else: Function is not callable:%s',function_name)
-            except AttributeError:
-                return
-            except Exception as exc:
-                print(exc)
-        else:
+        if len(self.args) == 2:
             try:
                 class_name = self.args[0]
                 if class_name == 'proxy':
@@ -159,6 +126,58 @@ class Proxy(): # pylint: disable=R0902
                 func = getattr(self, function_name)
                 if callable(func):
                     func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+        elif len(self.args) == 3:
+            try:
+                class_name = self.args[0]
+                function_name = self.args[1]
+                action_name = self.args[2]
+                args = []
+                func = getattr(self, f"_{function_name}_{action_name}")
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+        #elif len(self.args) == 4:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
+
+        #        action_filter = self.args[3]
+        #        args = []
+        #        args.append(action_filter)
+
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc)
+        else:
+            #print("args > 4:", self.args)
+            try:
+                class_name = self.args[0]
+                function_name = self.args[1]
+                action_name = self.args[2]
+
+                args = self.args
+
+                func = getattr(self, f"_{function_name}_{action_name}_dynamic")
+                if callable(func):
+                    func(args=args)
                 else:
                     print('Else: Function is not callable:%s',function_name)
             except AttributeError:
@@ -523,8 +542,6 @@ class Proxy(): # pylint: disable=R0902
                 if selected_no < 0:
                     return
                 self.selected_no = selected_no
-                if (self.selected_no - 1) < 0:
-                    return
                 self._select_proxy_record(self.selected_no, self.proxy_records[self.selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
@@ -578,6 +595,110 @@ class Proxy(): # pylint: disable=R0902
                 case _:
                     return
 
+    def _history_responses_dynamic(self, args=None) -> None:
+        print("history responses dynamic:",args)
+        actions = args[3:]
+
+        http_methods = ['CONNECT','DELETE','FOOBAR','GET','HEAD','OPTIONS','PATCH','POST','PUT','TRACE']
+        allowed_strings = ['ASC','DESC','DISTINCT']
+        filter_criteria_and = []
+        filter_criteria_or = []
+        filter_criteria_numbers_or = []
+        filter_criteria_methods_or = []
+        or_conditions = []
+        #order_by_init_list = [ProxyModel.timestamp_start]
+        order_by_list = [ProxyModel.full_url]
+        distinct_list = [ProxyModel.full_url]
+        methods_list = set()
+        numbers_list = set()
+        use_distinct = False
+        use_api_filter = False
+
+        filter_criteria_api_or = []
+        filter_criteria_api_or.append(ProxyModel.path.contains('/api/'))
+        filter_criteria_api_or.append(ProxyModel.path.contains('/rest/'))
+        filter_criteria_api_or.append(ProxyModel.path.contains('/v1/'))
+        filter_criteria_api_or.append(ProxyModel.path.contains('/v2/'))
+        filter_criteria_api_or.append(ProxyModel.path.contains('/v3/'))
+        filter_criteria_api_or = or_(*filter_criteria_api_or)
+
+        # TODO - filter for `.js`
+        # TODO - filter for json
+
+        try:
+
+            for action in actions:
+                try:
+                    number_value = int(action)
+                    numbers_list.add(number_value)
+                except ValueError:
+                    if action.upper() in http_methods:
+                        methods_list.add(action.upper())
+                    elif 'DISTINCT' == action.upper():
+                        use_distinct = True
+                    elif 'API' == action.upper():
+                        use_api_filter = True
+
+            if len(numbers_list) == 1:
+                filter_criteria_and.append(ProxyModel.response_status_code==list(numbers_list)[0])
+            elif len(numbers_list) > 1:
+                for item in numbers_list:
+                    filter_criteria_numbers_or.append(ProxyModel.response_status_code==item)
+            
+            if len(methods_list) == 1:
+                filter_criteria_and.append(ProxyModel.method==list(methods_list)[0])
+            elif len(methods_list) > 1:
+                for item in methods_list:
+                    filter_criteria_methods_or.append(ProxyModel.method==item)
+
+            filter_criteria_or = or_(*filter_criteria_methods_or,*filter_criteria_numbers_or)
+
+            #filter_criteria_or = or_(*or_conditions)
+            filter_criteria_and.append(ProxyModel.action=='Response')
+
+        except Exception as exc:
+            print("criteria exception:",exc)
+
+        with Database._get_db() as db:
+
+            filtered_records: List[ProxyModel] = []
+
+            try:
+                if self.app_obj.selected_target is not None:
+                    filter_criteria_and.append(ProxyModel.target_id==self.app_obj.selected_target.id) 
+
+                query = db.query(ProxyModel)\
+                    .order_by(desc(*order_by_list))
+
+                if use_api_filter:
+                    query = db.query(ProxyModel)\
+                        .filter(*filter_criteria_and,filter_criteria_or,filter_criteria_api_or)
+                else:
+                    query = db.query(ProxyModel)\
+                        .filter(*filter_criteria_and,filter_criteria_or)
+
+                if use_distinct:
+                    filtered_records = query.distinct(*distinct_list).all()
+                else:
+                    filtered_records = query.all()
+            except Exception as exc:
+                print(exc)
+
+            for record in filtered_records:
+                proxy_record = ProxyModel(
+                    id=record.id,
+                    target_id=record.target_id,
+                    action=record.action,
+                    timestamp_start=record.timestamp_start,
+                    method=record.method,
+                    response_status_code=record.response_status_code,
+                    full_url=record.full_url,
+                    raw_request=record.raw_request,
+                    raw_response=record.raw_response
+                )
+                self.proxy_records.append(proxy_record)
+        self.history(filtered_records)
+
     def _history_responses(self, args=None) -> None:
         self.proxy_records = []
         filtered_records: List[ProxyModel] = []
@@ -607,6 +728,45 @@ class Proxy(): # pylint: disable=R0902
             self.history(filtered_records)
         else:
             match args:
+                case 'api':
+                    with Database._get_db() as db:
+                        if self.app_obj.selected_target is not None:
+                            filtered_records: List[ProxyModel] = db.query(ProxyModel)\
+                                .filter(ProxyModel.target_id==self.app_obj.selected_target.id)\
+                                .filter(ProxyModel.action=='Response')\
+                                .filter(
+                                    (ProxyModel.path.contains('/api/')) | 
+                                    (ProxyModel.path.contains('/rest/')) | 
+                                    (ProxyModel.path.contains('/v1/')) | 
+                                    (ProxyModel.path.contains('/v2/')) | 
+                                    (ProxyModel.path.contains('/v3/'))
+                                    )\
+                                .order_by(desc(ProxyModel.timestamp_start)).all()
+                        else:
+                            filtered_records: List[ProxyModel] = db.query(ProxyModel)\
+                                .filter(ProxyModel.action=='Response')\
+                                .filter(
+                                    (ProxyModel.path.contains('/api/')) | 
+                                    (ProxyModel.path.contains('/rest/')) | 
+                                    (ProxyModel.path.contains('/v1/')) | 
+                                    (ProxyModel.path.contains('/v2/')) | 
+                                    (ProxyModel.path.contains('/v3/'))
+                                    )\
+                                .order_by(desc(ProxyModel.timestamp_start)).all()
+
+                        for record in filtered_records:
+                            proxy_record = ProxyModel(
+                                id=record.id,
+                                action=record.action,
+                                timestamp_start=record.timestamp_start,
+                                method=record.method,
+                                response_status_code=record.response_status_code,
+                                full_url=record.full_url,
+                                raw_request=record.raw_request,
+                                raw_response=record.raw_response
+                            )
+                            self.proxy_records.append(proxy_record)
+                    self.history(filtered_records)
                 case 'js':
                     with Database._get_db() as db:
                         if self.app_obj.selected_target is not None:

@@ -10,8 +10,13 @@ database_list: list[str] = ['setup','tables']
 help_list: list[str] = ['checklists','database','proxy','targets']
 proxy_list: list[str] = ['history','options','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
-proxy_history_requests: list[str] = ['js','patch','post','put']
-proxy_history_responses: list[str] = ['delete','foobar','get','js','json','options','patch','post','put','trace']
+
+requests_responses_list = ['100','101','200','201','202','204','301','302','304','400','401','403','404','405','409','418','429','500','502','503','504',
+                                    'api','asc','delete','desc','distinct','foobar','get','head','js','json','options','patch',
+                                    'post','put','trace']
+proxy_history_requests: list[str] = requests_responses_list
+proxy_history_responses: list[str] = requests_responses_list
+
 remove_list: list[str] = ['target']
 start_list: list[str] = ['proxy']
 stop_list: list[str] = ['proxy']

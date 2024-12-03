@@ -33,40 +33,6 @@ class ChecklistModel(Base): # pylint: disable=R0903
 
     Index('ux_name_version_item', name, checklist_version, item_id, unique=True)
 
-class VulnerabilityModel(Base):
-    """VulnerabilityModel."""
-    __tablename__ = 'vulnerability'
-
-    id = Column(Integer, primary_key=True)
-    vuln_category_id = Column(String, unique=True)
-    parent_category_id = Column(String)
-    category_name = Column(String)
-    category_acronym = Column(String)
-    cwe_id = Column(String)
-    cwe_name = Column(String)
-    cwe_link = Column(String)
-    capec_id = Column(String)
-    capec_name = Column(String)
-    capec_link = Column(String)
-    kev_link = Column(String)
-
-    if CONNECTION_OPTION == 'sqlite':
-        references = Column(String)
-        cheatsheets = Column(String)
-        tools = Column(String)
-        payload_lists = Column(String)
-        tests = Column(String)
-    else:
-        references = Column(JSONB)
-        cheatsheets = Column(JSONB)
-        tools = Column(JSONB)
-        payload_lists = Column(JSONB)
-        tests = Column(JSONB)
-
-    active = Column(Boolean, default=True)
-    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
-    modified_timestamp = Column(DateTime, nullable=True)
-
 class ProxyModel(Base): # pylint: disable=R0903
     """ProxyModel."""
     __tablename__: str = 'proxy'
@@ -112,6 +78,35 @@ class ProxyModel(Base): # pylint: disable=R0903
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)
 
+class SynackTargetModel(Base): # pylint: disable=R0903
+    """SynackTargetModel."""
+    __tablename__: str = 'synacktarget'
+
+    id = Column(Integer, primary_key=True, index=True)
+    target_id = Column(String, unique=True, index=True)
+    target_name = Column(String)
+    target_type = Column(String)
+    auth_ind = Column(Boolean)
+    creds_ind = Column(Boolean)
+    note = Column(String)
+    settings = Column(String)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
+
+class SynackMissionModel(Base): # pylint: disable=R0903
+    """SynackMissionModel."""
+    __tablename__: str = 'synackmission'
+
+    id = Column(Integer, primary_key=True, index=True)
+    target_id = Column(String)
+    target_name = Column(String)
+    note = Column(String)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
+
+
 class TargetModel(Base): # pylint: disable=R0903
     """TargetModel."""
     __tablename__: str = 'target'
@@ -154,6 +149,41 @@ class TargetNoteModel(Base): # pylint: disable=R0903
     path = Column(String)
     url = Column(String)
     page = Column(String)
+    active = Column(Boolean, default=True)
+    created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
+    modified_timestamp = Column(DateTime, nullable=True)
+
+
+class VulnerabilityModel(Base):
+    """VulnerabilityModel."""
+    __tablename__ = 'vulnerability'
+
+    id = Column(Integer, primary_key=True)
+    vuln_category_id = Column(String, unique=True)
+    parent_category_id = Column(String)
+    category_name = Column(String)
+    category_acronym = Column(String)
+    cwe_id = Column(String)
+    cwe_name = Column(String)
+    cwe_link = Column(String)
+    capec_id = Column(String)
+    capec_name = Column(String)
+    capec_link = Column(String)
+    kev_link = Column(String)
+
+    if CONNECTION_OPTION == 'sqlite':
+        references = Column(String)
+        cheatsheets = Column(String)
+        tools = Column(String)
+        payload_lists = Column(String)
+        tests = Column(String)
+    else:
+        references = Column(JSONB)
+        cheatsheets = Column(JSONB)
+        tools = Column(JSONB)
+        payload_lists = Column(JSONB)
+        tests = Column(JSONB)
+
     active = Column(Boolean, default=True)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)

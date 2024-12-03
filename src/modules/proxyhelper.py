@@ -2,6 +2,7 @@
 import re
 import sys
 import signal
+import traceback
 from datetime import datetime, timezone
 import warnings
 from urllib.parse import ParseResult, urlparse
@@ -43,8 +44,24 @@ class ProxyHelper:
 
     def __init__(self, target, in_scope, parent_callback_proxy_message) -> None:
         self.target = target
+        self.synack_target = False
         self.in_scope = in_scope
         self._parent_callback_proxy_message = parent_callback_proxy_message
+        if target is not None and target.name.lower() == 'synack' and target.platform.lower() == 'synack':
+            self.synack_target = True
+        self.request_count = 0
+        self.response_count = 0
+
+    def clean_string(self, string_value):
+        if string_value is not None:
+            try:
+                if isinstance(string_value, str):
+                    string_value = string_value.replace('\x00','')
+                elif isinstance(string_value, bytes):
+                    string_value = string_value.replace(b'\x00', b'')
+            except Exception as exc:
+                print(exc)
+        return string_value
 
     def request(self, flow: http.HTTPFlow) -> None: # pylint: disable=R0914
         """Proxy request.
@@ -65,6 +82,8 @@ class ProxyHelper:
             return
 
         #self._parent_callback_proxy_message(f"REQUEST: {flow.request.pretty_url}")
+
+        self.request_count = self.request_count + 1
 
         dynamic_host = None
         dynamic_fqdn = False
@@ -111,7 +130,7 @@ class ProxyHelper:
 
         full_url: str = f'{request.scheme}://{request.host}:{request.port}{request.path}'
 
-        self._parent_callback_proxy_message(f"REQUEST (CHECK): {flow.request.pretty_url}")
+        #self._parent_callback_proxy_message(f"REQUEST (CHECK): {flow.request.pretty_url}")
 
         if dynamic_host is not None and dynamic_fqdn:
             dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
@@ -167,7 +186,6 @@ class ProxyHelper:
                 dynamic_full_url=dynamic_full_url
             )
 
-            #self._parent_callback_proxy_message(new_request.__dict__)
             with Database._get_db() as db:
                 db.add(new_request)
                 db.commit()
@@ -176,8 +194,10 @@ class ProxyHelper:
         except Exception as database_exception: # pylint: disable=W0718
             self._parent_callback_proxy_message("REQUEST: database_exception...")
             self._parent_callback_proxy_message(str(database_exception))
-            #self._parent_callback_proxy_message("REQUEST: database_exception - ", database_exception)
-            #print("Database exception:",database_exception)
+
+        #if self.synack_target:
+        #   self._parent_callback_proxy_message(f"REQUEST (SYNACK): {flow.request.pretty_url}")
+
 
     def response(self, flow: http.HTTPFlow) -> None:
         """Proxy response.
@@ -188,8 +208,12 @@ class ProxyHelper:
         Returns:
             None
         """
+
+        self.response_count = self.response_count + 1
+        #self._parent_callback_proxy_message(f"RESPONSE: {self.response_count} out of {self.request_count} requests")
+
         if self.target is None or self.in_scope is None:
-            #self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
+            self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
             return
 
         dynamic_host = None
@@ -273,6 +297,8 @@ class ProxyHelper:
         if dynamic_host is not None and dynamic_fqdn:
             dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
+        #self._parent_callback_proxy_message(f"RESPONSE (SAVE): {request.pretty_url}")
+
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
         url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
@@ -322,16 +348,16 @@ class ProxyHelper:
 
         try:
             #headers_string = ", ".join([f"{k}: {v}" for k, v in flow.response.headers.items()])
-
+            #self._parent_callback_proxy_message(f"RESPONSE (ABOUT TO SAVE): {request.pretty_url}")
             new_response = ProxyModel(
                 target_id=int(self.target.id),
                 name=None,
                 request=None,
                 action='Response',
                 response_status_code=flow.response.status_code,
-                response_reason=flow.response.reason,
+                response_reason=str(flow.response.reason),
                 response_headers=str(response_headers),
-                response_text=flow.response.text,
+                response_text=self.clean_string(flow.response.text),
                 host=host,
                 port=port,
                 method=method,
@@ -339,16 +365,16 @@ class ProxyHelper:
                 authority=authority,
                 path=path,
                 headers=str(headers),
-                content=content,
+                content=self.clean_string(content),
                 timestamp_start=timestamp_start,
                 timestamp_end=timestamp_end,
                 full_url=full_url,
-                parsed_full_url=str(parsed),
+                parsed_full_url=parsed,
                 parsed_path=path,
                 parsed_url=url,
-                raw_request=raw_request,
-                raw_response=raw_response,
-                decoded_content=decoded_content,
+                raw_request=self.clean_string(raw_request),
+                raw_response=self.clean_string(raw_response),
+                decoded_content=self.clean_string(decoded_content),
                 flow=full_flow,
                 dynamic_host=dynamic_host,
                 dynamic_full_url=dynamic_full_url
@@ -360,5 +386,15 @@ class ProxyHelper:
                 db.refresh(new_response)
 
         except Exception as database_exception: # pylint: disable=W0718
-            self._parent_callback_proxy_message("RESPONSE: database_exception - ", database_exception)
-            print("Response database exception:", database_exception)
+            self._parent_callback_proxy_message("RESPONSE: database_exception...")
+            self._parent_callback_proxy_message(database_exception)
+            self._parent_callback_proxy_message(traceback.print_exc())
+
+
+        #if self.synack_target:
+        #    self._parent_callback_proxy_message(f"RESPONSE (SYNACK): [{flow.response.status_code}] {flow.request.pretty_url}")
+            # save accepted missions
+            # save target analytics
+            # save vulns accepted
+            # Try to claim a mission
+            # get bearer token
