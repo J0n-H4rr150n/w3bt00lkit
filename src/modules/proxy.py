@@ -123,7 +123,8 @@ class Proxy(): # pylint: disable=R0902
                 else:
                     function_name = self.args[0]
                 args = []
-                func = getattr(self, function_name)
+                print(class_name, function_name)
+                func = getattr(self, f"_{function_name}")
                 if callable(func):
                     func(*args)
                 else:
@@ -132,21 +133,21 @@ class Proxy(): # pylint: disable=R0902
                 return
             except Exception as exc:
                 print(exc)
-        elif len(self.args) == 3:
-            try:
-                class_name = self.args[0]
-                function_name = self.args[1]
-                action_name = self.args[2]
-                args = []
-                func = getattr(self, f"_{function_name}_{action_name}")
-                if callable(func):
-                    func(*args)
-                else:
-                    print('Else: Function is not callable:%s',function_name)
-            except AttributeError:
-                return
-            except Exception as exc:
-                print(exc)
+        #elif len(self.args) == 3:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
+        #        args = []
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc)
         #elif len(self.args) == 4:
         #    try:
         #        class_name = self.args[0]
@@ -171,11 +172,12 @@ class Proxy(): # pylint: disable=R0902
             try:
                 class_name = self.args[0]
                 function_name = self.args[1]
-                action_name = self.args[2]
+                #action_name = self.args[2]
 
                 args = self.args
 
-                func = getattr(self, f"_{function_name}_{action_name}_dynamic")
+                #func = getattr(self, f"_{function_name}_{action_name}_dynamic")
+                func = getattr(self, f"_{function_name}_dynamic")
                 if callable(func):
                     func(args=args)
                 else:
@@ -263,14 +265,14 @@ class Proxy(): # pylint: disable=R0902
         try:
             if enable_upstream:
                 upstream: list[str] = [f'upstream:http://{upstream_host}:{upstream_port}']
-                opts = options.Options(listen_host=host, listen_port=port, mode=upstream, ssl_insecure=True)
+                opts = options.Options(listen_host=host, listen_port=port, mode=upstream, ssl_insecure=True, http2=False)
             else:
-                opts = options.Options(listen_host=host, listen_port=port, ssl_insecure=True)
+                opts = options.Options(listen_host=host, listen_port=port, ssl_insecure=True, http2=False)
 
             self.master = dump.DumpMaster(
                 opts,
                 with_termlog=False,
-                with_dumper=False,
+                with_dumper=False
             )
 
             running = False
@@ -548,7 +550,7 @@ class Proxy(): # pylint: disable=R0902
             except Exception:
                 return
 
-    def _history_requests(self, args=None) -> None:
+    def _requests(self, args=None) -> None:
         self.proxy_records = []
         filtered_records: List[ProxyModel] = []
         if args is None:
@@ -595,9 +597,9 @@ class Proxy(): # pylint: disable=R0902
                 case _:
                     return
 
-    def _history_responses_dynamic(self, args=None) -> None:
+    def _responses_dynamic(self, args=None) -> None:
         print("history responses dynamic:",args)
-        actions = args[3:]
+        actions = args[2:]
 
         http_methods = ['CONNECT','DELETE','FOOBAR','GET','HEAD','OPTIONS','PATCH','POST','PUT','TRACE']
         allowed_strings = ['ASC','DESC','DISTINCT']
@@ -699,7 +701,8 @@ class Proxy(): # pylint: disable=R0902
                 self.proxy_records.append(proxy_record)
         self.history(filtered_records)
 
-    def _history_responses(self, args=None) -> None:
+    def _responses(self, args=None) -> None:
+        print("responses...")
         self.proxy_records = []
         filtered_records: List[ProxyModel] = []
         if args is None:

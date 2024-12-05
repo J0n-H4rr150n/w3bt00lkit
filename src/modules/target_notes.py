@@ -203,14 +203,15 @@ class TargetNotes:
         print(selected_note.full_note)
         print("\n************************************************\n")
 
-        print("Do you want to delete this note (`yes`/`no`) ?")
+        #print("Do you want to delete this note (`yes`/`no`) ?")
+        print("What do you want to do next ('edit', 'delete', enter = CANCEL) ?")
         prompt_session = PromptSession()
         prompt_user = True
         while prompt_user:
             text = prompt_session.prompt(' > ')
             if '' == text or 'no' == text:
                 prompt_user = False
-            elif 'yes' == text:
+            elif 'delete' == text:
                 prompt_user = False
                 confirm = input("Are you sure you want to delete (`yes`/`no`) ?")
                 if 'yes' == confirm:
@@ -227,3 +228,84 @@ class TargetNotes:
                             print(exc)
                 else:
                     return
+            elif 'edit' == text:
+                updated_data = None
+                while True:
+                    try:
+                        prompt_user = False
+                        session = PromptSession()
+                        formatted_data = f"[[TITLE:]]\n{selected_note.url}\n[[NOTE:]]\n{selected_note.full_note}"
+                        updated_data = session.prompt("Edit the note:\n\n", default=formatted_data, multiline=True)
+                        break
+                    except KeyboardInterrupt:
+                        break
+                    except EOFError:
+                        break
+                    except Exception as exc:
+                        print(exc)
+                        break
+
+                new_url = None
+                new_full_note = None
+                if updated_data is not None:
+                    lines = updated_data.splitlines()
+                    url_start = 0
+                    note_start = 0
+                    num_lines = 0
+                    for i, line in enumerate(lines):
+                        if '[[TITLE:]]' == line:
+                            url_start = i
+                        elif '\n[[NOTE:]]' == line:
+                            note_start = i
+                        num_lines = i + 1
+                    for i, line in enumerate(lines):
+                        if i > url_start and i < note_start:
+                            if new_url is None:
+                                new_url = line
+                            else:
+                                new_url = new_url + "\n" + line
+                        if i > note_start and i <= len(lines):
+                            if new_full_note is None:
+                                new_full_note = line
+                            else:
+                                new_full_note = new_full_note + "\n" + line
+
+                    print()
+                    console = Console()
+                    console.print("NEW URL:", style="underline")
+                    print()
+                    print(new_url)
+                    print()
+
+                    console.print("NEW NOTE:", style="underline")
+                    print()
+                    print(new_full_note)
+                    print()
+
+                    print("---------------------------------------------")
+                    confirm = input("Save this update? \n('y','yes' == SAVE; enter,'n','no' == CANCEL)")
+                    if confirm.lower() in ('','n','no'):
+                        return
+                    
+                    with Database._get_db() as db:
+                        try:
+                            existing_record = db.query(TargetNoteModel).filter_by(id=selected_note.id).first()
+                            if existing_record:
+                                if new_url is not None and '' != new_url and new_full_note is not None and new_full_note != '':
+                                    print("Updating the existing record...")
+                                    existing_record.url = new_url
+                                    existing_record.full_note = new_full_note
+                                    db.commit()
+                                    db.refresh(existing_record)
+                                elif new_full_note is not None and new_full_note != '':
+                                    print("Updating the existing record (note only)...")
+                                    existing_record.full_note = new_full_note
+                                    db.commit()
+                                    db.refresh(existing_record)
+                                else:
+                                    print("Blank data. Cancel.")
+                            else:
+                                print("Existing record not found.")
+                        except Exception as exc:
+                            print(exc)
+

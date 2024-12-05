@@ -8,7 +8,7 @@ add_list: list[str] = ['note','param','path','scope','target']
 checklist_list: list[str] = ['owasp-wstg']
 database_list: list[str] = ['setup','tables']
 help_list: list[str] = ['checklists','database','proxy','targets']
-proxy_list: list[str] = ['history','options','start','stop']
+proxy_list: list[str] = ['options','requests','responses','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
 
 requests_responses_list = ['100','101','200','201','202','204','301','302','304','400','401','403','404','405','409','418','429','500','502','503','504',
@@ -40,12 +40,16 @@ class Completers(Completer):
         elif text.startswith('help '):
             self.completer = WordCompleter(help_list, ignore_case=True)
         elif text.startswith('proxy '):
-            if 'history' in text:
-                self.completer = WordCompleter(proxy_history_list, ignore_case=True)
-                if 'requests' in text:
-                    self.completer = WordCompleter(proxy_history_requests, ignore_case=True)
-                elif 'responses' in text:
-                    self.completer = WordCompleter(proxy_history_responses, ignore_case=True)
+            #if 'history' in text:
+            #    self.completer = WordCompleter(proxy_history_list, ignore_case=True)
+            #    if 'requests' in text:
+            #        self.completer = WordCompleter(proxy_history_requests, ignore_case=True)
+            #    elif 'responses' in text:
+            #        self.completer = WordCompleter(proxy_history_responses, ignore_case=True)
+            if 'requests' in text:
+                self.completer = WordCompleter(proxy_history_requests, ignore_case=True)
+            elif 'responses' in text:
+                self.completer = WordCompleter(proxy_history_responses, ignore_case=True)
             else:
                 self.completer = WordCompleter(proxy_list, ignore_case=True)
         elif text.startswith('remove '):
