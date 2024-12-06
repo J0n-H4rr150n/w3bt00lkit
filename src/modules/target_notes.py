@@ -1,11 +1,12 @@
 """target_notes.py"""
+import re
 from sqlalchemy.orm.query import Query
 from typing import List, Literal, LiteralString
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 from modules.database import Database
-from models import TargetModel, TargetNoteModel
+from models import ChecklistModel, TargetModel, TargetNoteModel
 from prompt_toolkit import PromptSession, print_formatted_text
 from prompt_toolkit.shortcuts import input_dialog
 from urllib.parse import urlparse, parse_qs
@@ -23,29 +24,38 @@ class TargetNotes:
         if len(self.args) < 2:
             return
 
-        try:
-            class_name = self.args[1]
-            function_name = self.args[0]
-            args = []
-            match class_name:
-                case 'note':
-                    function_name = f"_{function_name}_note"
-                case 'notes':
-                    function_name = f"_{function_name}_notes"
-                case _:
-                    return
-
-            func = getattr(self, function_name)
-            if callable(func):
-                func(*args)
+        if len(self.args) == 3:
+            checklist_item_id = None
+            match = re.search(r"\[\[item_id=(.*?)\]\]", self.args[2])
+            if match:
+                checklist_item_id = match.group(1)
+                self._add_note(checklist_item_id)
             else:
-                print('Else: Function is not callable:%s',function_name)
-        except AttributeError:
-           return
-        except Exception as exc:
-            print(exc)
+                return
+        else:
+            try:
+                class_name = self.args[1]
+                function_name = self.args[0]
+                args = []
+                match class_name:
+                    case 'note':
+                        function_name = f"_{function_name}_note"
+                    case 'notes':
+                        function_name = f"_{function_name}_notes"
+                    case _:
+                        return
 
-    def _add_note(self) -> None:
+                func = getattr(self, function_name)
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+
+    def _add_note(self, checklist_item_id=None) -> None:
         """Add a note about the target.
 
         Returns:
@@ -88,6 +98,7 @@ class TargetNotes:
                 new_target_scope = TargetNoteModel(
                     target_id = selected_target.id,
                     full_note = str(target_note),
+                    checklist_item_id=checklist_item_id,
                     path = target_path
                 )
                 db.add(new_target_scope)
@@ -118,6 +129,7 @@ class TargetNotes:
                     .filter(TargetNoteModel.active == True)\
                     .filter_by(target_id=selected_target.id)\
                     .order_by(TargetNoteModel.created_timestamp).all()
+
                 for record in records:
                     tmp_full_note = record.full_note
                     if len(tmp_full_note) > 400:
@@ -133,33 +145,45 @@ class TargetNotes:
                         url=record.path,
                         page=record.page,
                         summary=tmp_full_note,
-                        full_note=record.full_note
+                        full_note=record.full_note,
+                        checklist_item_id=record.checklist_item_id
                     )
                     targetnotes.append(targetnote_record)
 
                 target_summaries = []
+                has_checklist_item = False
                 for note in targetnotes:
-                    target_summaries.append({'summary':note.summary or '','path':note.path or ''})
-
-                table = Table(show_lines=True)
-                table.add_column('#')
-                table.add_column('summary', width=80)
-                table.add_column('path')
-
-                counter = 0
-                for target in targetnotes:
-                    if target.path is not None:
-                        if len(target.path) > 80:
-                            segments = [target.path[i:i+75] for i in range(0, len(target.path), 75)]
-                            text_segments = [Text(segment) for segment in segments]
-                            wrapped_path = Text("\n".join(str(segment) for segment in text_segments))
-                            table.add_row(str(counter), target.summary, wrapped_path)
-                        else:
-                            table.add_row(str(counter), Text(target.summary), Text(target.path))
+                    if note.checklist_item_id is not None:
+                        has_checklist_item = True
+                    if has_checklist_item:
+                        target_summaries.append({'checklist_item_id':note.checklist_item_id or '','summary':note.summary or '','path':note.path or ''})
                     else:
-                        table.add_row(str(counter), target.summary, target.path)
-                    counter += 1
+                        target_summaries.append({'summary':note.summary or '','path':note.path or ''})
+
+                if has_checklist_item:
+                    table = Table(show_lines=True)
+                    table.add_column('#', width=15)
+                    table.add_column('checklist_item', width=20)
+                    table.add_column('summary', width=70)
+                    table.add_column('path', width=80)
+
+                    counter = 0
+                    for target in targetnotes:
+                        table.add_row(str(counter), Text(target.checklist_item_id or ''), Text(target.summary or '', overflow="clip", no_wrap=False), Text(target.path or '', overflow="clip", no_wrap=False))
+                        counter += 1
+                else:
+                    print("no checklist")
+                    table = Table(show_lines=True)
+                    table.add_column('#', width=10)
+                    table.add_column('summary', width=70)
+                    table.add_column('path', width=80)
+
+                    counter = 0
+                    for target in targetnotes:
+                        table.add_row(str(counter), Text(target.summary or '', overflow="clip", no_wrap=False), Text(target.path or '', overflow="clip", no_wrap=False))
+                        counter += 1
                 
+                print("now print the table...")
                 console = Console()
                 console.print(table)
 
@@ -174,6 +198,54 @@ class TargetNotes:
         except Exception as database_exception: # pylint: disable=W0718
             print(database_exception)
 
+    def _get_checklist_notes(self, selected_target: TargetModel, checklist_record: ChecklistModel):
+        targetnotes: List[TargetNoteModel] = []
+        try:
+            with Database._get_db() as db:
+                records: List[TargetNoteModel] = db.query(TargetNoteModel)\
+                    .filter(TargetNoteModel.active == True)\
+                    .filter_by(target_id=selected_target.id)\
+                    .filter_by(checklist_item_id=checklist_record.item_id)\
+                    .order_by(TargetNoteModel.created_timestamp).all()
+                for record in records:
+                    tmp_full_note = record.full_note
+                    if len(tmp_full_note) > 400:
+                        tmp_full_note = tmp_full_note[:400] + " ..."
+
+                    targetnote_record = TargetNoteModel(
+                        id=record.id,
+                        target_id=record.target_id,
+                        created_timestamp=record.created_timestamp,
+                        modified_timestamp=record.modified_timestamp,
+                        fqdn=record.fqdn,
+                        path=record.path,
+                        url=record.path,
+                        page=record.page,
+                        summary=tmp_full_note,
+                        full_note=record.full_note,
+                        checklist_item_id=record.checklist_item_id
+                    )
+                    targetnotes.append(targetnote_record)   
+
+            if targetnotes:
+                table = Table(show_lines=True, title=f"Notes for {selected_target.name}")
+                table.add_column('#', width=20)
+                table.add_column('checklist_item', width=20)
+                table.add_column('summary', width=50)
+                table.add_column('path', width=100)
+
+                counter = 0
+                for target in targetnotes:
+                    table.add_row(str(counter), Text(target.checklist_item_id), Text(target.summary, overflow="clip", no_wrap=False), Text(target.path, overflow="clip", no_wrap=False))
+                    counter += 1
+
+                console = Console()
+                print()
+                console.print(table)
+
+        except Exception as exc:
+            print(exc)
+
     def _select_note(self, selected_target: TargetModel, selected_no, targetnotes: List[TargetNoteModel]):
         """View Note"""
         self.app_obj._clear()
@@ -184,6 +256,9 @@ class TargetNotes:
         print(f"Target: {selected_target.name}\n")
         print(f"Note Id: {selected_note.id}")
         print(f"Note Created: {selected_note.created_timestamp}")
+
+        if selected_note.checklist_item_id is not None:
+            print(f"Checklist Item Id: {selected_note.checklist_item_id}")
         print("")
 
         if selected_note.url is not None:

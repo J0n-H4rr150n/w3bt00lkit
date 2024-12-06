@@ -5,6 +5,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from modules.owaspwstg import OWASPWSTG
 from modules.database import Database
+from modules.input_handler import InputHandler
 from models import ChecklistModel, TargetModel
 import pandas as pd
 from rich.console import Console
@@ -30,7 +31,7 @@ class Checklist(): # pylint: disable=R0903
     def _handle_input(self, args):
         """Handle Input."""
         self.args = args
-        print("checklist:",self.args)
+
         if len(self.args) < 2:
             return
 
@@ -120,6 +121,11 @@ class Checklist(): # pylint: disable=R0903
     def _get_checklist(self, checklist_name):
         """Get checklist."""
         checklists: List = []
+        self.start_index = 0
+        self.end_index = 0
+        self.previous_start_index = 0
+        self.previous_end_index = 0
+        self.page_counter = 0
         try:
             with Database._get_db() as db:
                 records: List[ChecklistModel] = db.query(ChecklistModel)\
@@ -176,8 +182,14 @@ class Checklist(): # pylint: disable=R0903
             useful_tools = checklist_record.useful_tools.split(";")
             for tool in useful_tools:
                 print(f"- {tool}")
-        print("\n-----------------------------------------\n")
 
+        if selected_target:
+            try:
+                self.app_obj.targetnotes._get_checklist_notes(selected_target, checklist_record)
+            except Exception as exc:
+                pass
+
+        print()
         if selected_target:
             print("What would you like to do next ([enter]=next record; [n + enter]=add a note; [x + enter]=stop)?")
         else:
@@ -196,6 +208,13 @@ class Checklist(): # pylint: disable=R0903
                 self.select_an_item = False
                 self.goto_next_item = True
                 continue_loop = False
+            elif 'n' == text.lower():
+                try:
+                    text = f'note add [[item_id={checklist_record.item_id}]]'
+                    handler = InputHandler(self.app_obj, text)
+                    handler._handle_input()
+                except Exception as exc:
+                    print(exc)
             else:
                 try:
                     selected_no = int(text)

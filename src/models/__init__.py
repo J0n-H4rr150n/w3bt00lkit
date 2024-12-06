@@ -149,6 +149,7 @@ class TargetNoteModel(Base): # pylint: disable=R0903
     path = Column(String)
     url = Column(String)
     page = Column(String)
+    checklist_item_id = Column(String)
     active = Column(Boolean, default=True)
     created_timestamp = Column(DateTime, default=func.now()) # pylint: disable=E1102
     modified_timestamp = Column(DateTime, nullable=True)

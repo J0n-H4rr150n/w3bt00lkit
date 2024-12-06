@@ -12,6 +12,7 @@ from mitmproxy import options
 from mitmproxy.tools import dump
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 from sqlalchemy import desc, or_
 import pandas as pd
 from modules.proxyhelper import ProxyHelper
@@ -123,8 +124,10 @@ class Proxy(): # pylint: disable=R0902
                 else:
                     function_name = self.args[0]
                 args = []
-                print(class_name, function_name)
-                func = getattr(self, f"_{function_name}")
+                if function_name.lower() in ['start','stop','options']:
+                    func = getattr(self, function_name)
+                else:
+                    func = getattr(self, f"_{function_name}")
                 if callable(func):
                     func(*args)
                 else:
@@ -369,7 +372,7 @@ class Proxy(): # pylint: disable=R0902
                     else:
                         tmp_status_code = str(record.response_status_code)
 
-                    table.add_row(str(local_counter), start_timestamp, record.action, record.method, tmp_status_code, record.full_url)
+                    table.add_row(str(local_counter), start_timestamp, record.action, record.method, tmp_status_code, Text(record.full_url, overflow="clip", no_wrap=False))
                     #self.page_counter += 1
                     local_counter += 1
                     self.page_counter = local_counter
@@ -450,39 +453,72 @@ class Proxy(): # pylint: disable=R0902
         print(proxy_record.full_url)
         print()
 
-        print("REQUEST:")
-        print("--------\n")
-        print(proxy_record.raw_request)
+        table = Table()
+        table.add_column('request', width=100)
+        table.add_column('response', width=100)
 
-        if proxy_record.action.lower() == 'response':
-            print("RESPONSE:")
-            print("---------")
-            if proxy_record.response_headers is not None:
-                print(proxy_record.response_headers)
-
-            if self.view_full_response:
-                self.view_full_response = False
-                if proxy_record.response_text is not None:
-                    print(proxy_record.response_text)
-            else:
-                if proxy_record.response_text is not None:
-                    if len(proxy_record.response_text) > 500:
-                        tmp_response = proxy_record.response_text[:500]
-                        if len(tmp_response.splitlines()) > 10:
-                            lines = tmp_response.splitlines()
-                            print('\n'.join(lines[:10]))
-                            print("\n[...SNIPPED...]")
-                        else:
-                            print(f"{tmp_response} \n\n [...SNIPPED...] \n")
+        if self.view_full_response:
+            self.view_full_response = False
+            if proxy_record.response_text is not None:
+                response_output = proxy_record.response_text
+        else:
+            if proxy_record.response_text is not None:
+                if len(proxy_record.response_text) > 500:
+                    tmp_response = proxy_record.response_text[:500]
+                    if len(tmp_response.splitlines()) > 10:
+                        lines = tmp_response.splitlines()
+                        #print('\n'.join(lines[:10]))
+                        #print("\n[...SNIPPED...]")
+                        response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
                     else:
-                        if len(proxy_record.response_text.splitlines()) > 10:
-                            lines = proxy_record.response_text.splitlines()
-                            print('\n'.join(lines[:10]))
-                            print("\n[...SNIPPED...]")
-                        else:
-                            print(proxy_record.response_text)
+                        #print(f"{tmp_response} \n\n [...SNIPPED...] \n")
+                        response_output = f"{tmp_response} \n\n [...SNIPPED...] \n"
+                else:
+                    if len(proxy_record.response_text.splitlines()) > 10:
+                        lines = proxy_record.response_text.splitlines()
+                        #print('\n'.join(lines[:10]))
+                        #print("\n[...SNIPPED...]")
+                        response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
+                    else:
+                        #print(proxy_record.response_text)
+                        response_output = proxy_record.response_text
 
-        print("\n-----------------------------------------\n")
+        table.add_row(Text(proxy_record.raw_request, overflow="clip", no_wrap=False), Text(proxy_record.response_headers + "\n" + response_output, overflow="clip", no_wrap=False))
+        console.print(table)
+
+        #print("REQUEST:")
+        #print("--------\n")
+        #print(proxy_record.raw_request)
+
+        #if proxy_record.action.lower() == 'response':
+        #    print("RESPONSE:")
+        #    print("---------")
+        #    if proxy_record.response_headers is not None:
+        #        print(proxy_record.response_headers)#
+
+        #    if self.view_full_response:
+        #        self.view_full_response = False
+        #        if proxy_record.response_text is not None:
+        #            print(proxy_record.response_text)
+        #    else:
+        #        if proxy_record.response_text is not None:
+        #            if len(proxy_record.response_text) > 500:
+        #                tmp_response = proxy_record.response_text[:500]
+        #                if len(tmp_response.splitlines()) > 10:
+        #                    lines = tmp_response.splitlines()
+        #                    print('\n'.join(lines[:10]))
+        #                    print("\n[...SNIPPED...]")
+        #                else:
+        #                    print(f"{tmp_response} \n\n [...SNIPPED...] \n")
+        #            else:
+        #                if len(proxy_record.response_text.splitlines()) > 10:
+        #                    lines = proxy_record.response_text.splitlines()
+        #                    print('\n'.join(lines[:10]))
+        #                    print("\n[...SNIPPED...]")
+        #                else:
+        #                    print(proxy_record.response_text)
+
+        #print("\n-----------------------------------------\n")
 
         print("What would you like to do next ([enter]=next record; [# + enter]=select an item, [v + enter]=view the full response, [n + enter]=add a note, [x + enter]=stop)?")
         prompt_session = PromptSession(key_bindings=self.kb)
@@ -555,7 +591,13 @@ class Proxy(): # pylint: disable=R0902
         filtered_records: List[ProxyModel] = []
         if args is None:
             with Database._get_db() as db:
-                filtered_records: List[ProxyModel] = db.query(ProxyModel).filter(ProxyModel.action=='Request').order_by(desc(ProxyModel.timestamp_start)).all()
+                if self.app_obj.selected_target is not None:
+                    filtered_records: List[ProxyModel] = db.query(ProxyModel)\
+                        .filter(ProxyModel.target_id==self.app_obj.selected_target.id)\
+                        .filter(ProxyModel.action=='Request').order_by(desc(ProxyModel.timestamp_start)).all()
+                else:
+                    filtered_records: List[ProxyModel] = db.query(ProxyModel)\
+                        .filter(ProxyModel.action=='Request').order_by(desc(ProxyModel.timestamp_start)).all()    
                 for record in filtered_records:
                     proxy_record = ProxyModel(
                         id=record.id,
@@ -598,7 +640,7 @@ class Proxy(): # pylint: disable=R0902
                     return
 
     def _responses_dynamic(self, args=None) -> None:
-        print("history responses dynamic:",args)
+        #print("history responses dynamic:",args)
         actions = args[2:]
 
         http_methods = ['CONNECT','DELETE','FOOBAR','GET','HEAD','OPTIONS','PATCH','POST','PUT','TRACE']

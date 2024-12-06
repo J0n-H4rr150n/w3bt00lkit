@@ -12,6 +12,7 @@ class InputHandler:
 
     def _handle_input(self):
         """Handle input."""
+
         if len(self.text) == 0:
             return
         self.args = self.text.split()
@@ -30,6 +31,8 @@ class InputHandler:
             match self.args[0]:
                 case 'proxy':
                     self.obj = self.app_obj.proxy._handle_input(self.args)
+                case 'note':
+                    self.obj = self.app_obj.targetnotes._handle_input(self.args)
             return
         elif len(self.args) == 4:
             match self.args[0]:
