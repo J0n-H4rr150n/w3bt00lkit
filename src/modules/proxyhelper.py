@@ -1,16 +1,25 @@
 """proxyhelper.py"""
+import os
 import re
+import random
+import requests
+import string
 import sys
 import signal
+import threading
 import traceback
+import time
 from datetime import datetime, timezone
 import warnings
 from urllib.parse import ParseResult, urlparse
 import chardet
 from mitmproxy import http
 from mitmproxy.net.http.http1.assemble import assemble_request, assemble_response
+from dotenv import load_dotenv
 from modules.database import Database
 from models import ProxyModel
+
+load_dotenv()
 
 # pylint: disable=C0121,W0212,W0718,R0912,R0914,R0915
 
@@ -42,7 +51,8 @@ class ProxyHelper:
     target: str = ''
     exclusion_list: list = []
 
-    def __init__(self, target, in_scope, parent_callback_proxy_message) -> None:
+    def __init__(self, app_obj, target, in_scope, parent_callback_proxy_message) -> None:
+        self.app_obj = app_obj
         self.target = target
         self.synack_target = False
         self.in_scope = in_scope
@@ -51,6 +61,19 @@ class ProxyHelper:
             self.synack_target = True
         self.request_count = 0
         self.response_count = 0
+        self.auth_token = None
+        self.auth_token_created_timestamp = None
+        self.auth_token_created_timestamp_str = None
+        self.synack_base = os.environ.get("SYNACK_BASE")
+        self.synack_api = os.environ.get("SYNACK_API")
+        self.slack_url = os.environ.get("SLACK_URL")
+        self.slack_slug = os.environ.get("SLACK_SLUG")
+        self.missions_running = False
+
+    def random_string(self, length):
+        letters = string.ascii_letters
+        result_str = ''.join(random.choice(letters) for i in range(length))
+        return result_str
 
     def clean_string(self, string_value):
         if string_value is not None:
@@ -63,6 +86,332 @@ class ProxyHelper:
                 print(exc)
         return string_value
 
+    def post_request(self, url: str) -> str:
+        #vars = {}
+        #with open('.env', 'r') as f:
+        #    for line in f:
+        #        key, value = line.strip().split('=', 1)
+        #        vars[key] = value
+        
+        # 'Authorization': f'Bearer {vars["auth_token"]}',
+
+        if self.auth_token is not None:
+            max_retries = 3
+            current_retries = 0
+            cookies = {}
+            headers = {
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Authorization': f'Bearer {self.auth_token}',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+                'Pragma': 'no-cache',
+                'Referer': f'{self.synack_base}/',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+                'sec-ch-ua': '"Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Linux"'
+            }
+            data = ''
+            response = requests.get(url, headers=headers)
+            try:
+                if response.status_code == 401:
+                    print("\nNeed to refresh credentials.")
+                    if current_retries > max_retries:
+                        print("Process halted!")
+                    else:
+                        print("Waiting to see if mitmproxy will refresh...")
+                        current_retries += 1
+                        time.sleep(30)
+                elif response.status_code == 200:
+                    json = response.json()
+                    print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                    print(json)
+                    return json
+                else:
+                    print(response)
+            except Exception as exc:
+                print(exc)
+
+    def get_request(self, vars, url):
+        max_retries = 3
+        current_retries = 0
+        cookies = {}
+        headers = {
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Authorization': f'Bearer {self.auth_token}',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Pragma': 'no-cache',
+            'Referer': f'{self.synack_base}/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+            'sec-ch-ua': '"Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Linux"'
+        }
+        data = ''
+        response = requests.get(url, headers=headers)
+
+        try:
+            if response.status_code == 401:
+                print("\nNeed to refresh credentials.")
+                if current_retries > max_retries:
+                    print("Process halted!")
+                else:
+                    print("Waiting to see if mitmproxy will refresh...")
+                    current_retries = current_retries + 1
+                    time.sleep(30)
+            elif response.status_code == 200:
+                json = response.json()
+                print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                if json is not None and len(json) > 0:
+                    print(json)
+                    print("--------\n")
+                return json
+            else:
+                print(response.status_code)
+                print(response)
+                print("Process halted!")
+        except Exception as exc:
+            print(exc)
+            print("\nProcess halted!\n")
+
+
+    def put_request(self, vars: dict, url: str, payload):
+        max_retries = 3
+        current_retries = 0
+        cookies = {}
+        headers = {
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Authorization': f'Bearer {self.auth_token}',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/json',
+            'Content-Length': '27',
+            'Pragma': 'no-cache',
+            'Referer': f'{self.synack_base}/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Origin': self.synack_base,
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+            'sec-ch-ua': '"Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Linux"',
+            'Connection': 'close'
+        }
+
+        # /api/launchpoint
+        # print(url)
+        response = requests.put(url, headers=headers, data=payload)
+        try:
+            if response.status_code == 401:
+                print("\nNeed to refresh credentials.")
+                if current_retries > max_retries:
+                    print("Process halted!")
+                    #sys.exit(0)
+                else:
+                    print("Waiting to see if mitmproxy will refresh...")
+                    current_retries = current_retries + 1
+                    time.sleep(30)
+            elif response.status_code == 400:
+                print("BAD REQUEST:")
+                print(response.__dict__)
+
+                headers = {
+                        'Accept': '*/*',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                        'Authorization': f'Bearer {self.auth_token}',
+                        'Cache-Control': 'no-cache',
+                        'Connection': 'keep-alive',
+                        'Pragma': 'no-cache',
+                        'Referer': f'{self.synack_base}/',
+                        'Sec-Fetch-Dest': 'empty',
+                        'Sec-Fetch-Mode': 'cors',
+                        'Sec-Fetch-Site': 'same-origin',
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+                        'sec-ch-ua': '"Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"',
+                        'sec-ch-ua-mobile': '?0',
+                        'sec-ch-ua-platform': '"Linux"'
+                    }
+
+                print("")
+                response_two = requests.get(url, headers=headers)
+                print(response_two.status_code)
+                print(response_two.text)
+                print("")
+
+            elif response.status_code == 200:
+                #print(response.__dict__)
+                json = response.json()
+                print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                #print(json)
+                #print("--------\n")
+                return json
+            else:
+                print(url, headers)
+                print("------")
+                print(response)
+                print("------")
+                print("Need to refresh credentials? Proxy stopped working?")
+                print("Process halted! [PH0001]")
+                #sys.exit(0)
+        except Exception as exc:
+            print(exc)
+            print("\nProcess halted! [EXCPH0001]\n")
+            #sys.exit(0)
+
+    def claim_mission(self, mission):
+        print(str(mission))
+
+        data = {
+            "type": "CLAIM"
+        }
+
+        title = mission["title"]
+        desc = mission["description"]
+        campaignName = mission["campaignName"]
+        orgId = mission["organizationUid"]
+        listingId = mission["listingUid"]
+        listingCodename = mission["listingCodename"]
+        campaignId = mission["campaignUid"]
+        taskId = mission["id"]
+        payout = str(mission["payout"]["amount"])
+
+        url = f'{self.synack_base}/api/tasks/v1/organizations/{orgId}/listings/{listingId}/campaigns/{campaignId}/tasks/{taskId}/transitions'
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
+
+        print("url:")
+        print(url)
+
+        headers = {
+            'Content-Length': '16',
+            'Sec-Ch-Ua': '\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"',
+            'Content-Type': 'application/json',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Authorization': self.auth_token,
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Sec-Ch-Ua-Platform': '\"Linux\"',
+            'Accept': '*/*',
+            'Origin': self.synack_base,
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': f'{self.synack_base}/missions?status=PUBLISHED',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'close'
+        }
+
+        #results = get_request(vars, url, data)
+        try:
+            #data = '{"type":"CLAIM"}'
+            data = '{\"type\":\"CLAIM\"}'
+            claim_request = requests.post(url, headers=headers, data=data)
+            print("")
+            print("Claim request text:")
+            print(claim_request.text)
+            print("*******************")
+            print(headers)
+            print("+++++++++++++++++++")
+            print(data)
+
+            if claim_request.status_code == 201:
+                try:
+                    headers = {
+                        'Accept': '*/*',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                        'Content-type': 'application/json'
+                    }
+                    slack_url = self.slack_url
+                    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S:%f")
+                    slack_message = '{"text":"Mission claimed at ' + str(timestamp) + ' ' + self.slack_slug + '!"}'
+                    slack_request = requests.post(slack_url, headers=headers, data=slack_message)
+                    print(slack_request.text)
+                except Exception as slack_exc:
+                    print("SLACK Exception for mission claim:")
+                    print(slack_exc)
+
+            elif claim_request.status_code == 400:
+                print("[400] Malformed request...")
+            elif claim_request.status_code == 403:
+                print("[403] You are not authorized to access this resource or perform this operation.")
+            else:
+                print("Other claim_request status code!")
+
+            time.sleep(3)
+            return claim_request
+        except Exception as slack_exc:
+            print("Failed to claim a mission!")
+            print(slack_exc)
+            time.sleep(3)
+            return None
+
+    def get_missions(self, stop_event, random_string):
+        while self.app_obj.missions_running and not stop_event.is_set() and self.app_obj.proxy_running:
+            #self._parent_callback_proxy_message(f"REQUEST: In loop...{random_string}")
+            #print("In mission loop...", random_string)
+            time.sleep(30)
+            if self.auth_token is not None and self.synack_api is not None:
+                vars = []
+                url = f"{self.synack_api}tasks?perPage=20&viewed=true&page=1&status=PUBLISHED&sort=CLAIMABLE&sortDir=DESC&includeAssignedBySynackUser=true"
+                results = self.get_request(vars, url)
+                if results:
+                    print(results)
+                    self._parent_callback_proxy_message(f"REQUEST: Mission results... {results}")
+
+                    # TODO - Save to database
+
+                    try:
+                        headers = {
+                            'Accept': '*/*',
+                            'Accept-Language': 'en-US,en;q=0.9',
+                            'Content-type': 'application/json'
+                        }
+                        slack_url = self.slack_url
+                        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S:%f")
+                        slack_message = '{"text":"New mission(s) at ' + str(timestamp) + ' ' + self.slack_slug + '!"}'
+                        slack_request = requests.post(slack_url, headers=headers, data=slack_message)
+                        print(slack_request.text)
+                    except Exception as slack_exc:
+                        print(slack_exc)
+
+                    for result in results:
+                        claim_this = True
+                        try:
+                            amount = result['payout']['amount']
+                            print("Payout amount:", amount)
+                            #if int(amount) < 20:
+                            #    claim_this = False
+                        except Exception as payout_exc:
+                            print(payout_exc)
+
+                        if claim_this:
+                            #claim_results = self.claimMission(vars, result)
+                            claim_results = self.claim_mission(result)
+                            print("Mission Claim Results:")
+                            print(claim_results)
+                            print("\n----------")
+                            print(result)
+                            print("----------")
+                            #if print_output:
+                else:
+                    print("No missions.")
+
+        #print("app obj:", self.app_obj.missions_running)
+        #print("stop event:", stop_event.is_set())
+        print("Mission thread exiting...", random_string)
+        self.app_obj.missions_running = False
+
+
     def request(self, flow: http.HTTPFlow) -> None: # pylint: disable=R0914
         """Proxy request.
         
@@ -72,6 +421,56 @@ class ProxyHelper:
         Returns:
             None
         """
+
+        headers = flow.request.headers
+
+        if 'synack' in flow.request.host:
+            for header in headers:
+                if "authorization" == header or "Authorization" == header:
+                    try:
+                        now = datetime.now(timezone.utc)
+                        if self.auth_token_created_timestamp is None and headers[header].startswith("Bearer"):
+                            print("\n\n***** AUTHORIZATION TOKEN *****")
+                            self.auth_token = headers[header].replace("Bearer ","")
+                            self.auth_token_created_timestamp = datetime.now(timezone.utc)
+                            self.auth_token_created_timestamp_str = self.auth_token_created_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                            #print(self.auth_token_created_timestamp_str,'->', self.auth_token)
+                            print(self.auth_token_created_timestamp_str,'->', '[auth_token]')
+                            print("-------------------------------\n")
+                        else:
+                            new_auth_token = headers[header].replace("Bearer ","")
+                            previous_auth_token = self.auth_token
+                            if new_auth_token != previous_auth_token and new_auth_token.startswith("Bearer"):
+                                print("\n\n***** NEW AUTHORIZATION TOKEN *****")
+                                self.auth_token = headers[header].replace("Bearer ","")
+                                self.auth_token_created_timestamp = datetime.now(timezone.utc)
+                                self.auth_token_created_timestamp_str = self.auth_token_created_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                                diff = now - auth_token_created_timestamp
+                                print("Diff (minutes):", (diff.seconds / 60))
+                                #print(self.auth_token_created_timestamp_str,'->', self.auth_token)
+                                print(self.auth_token_created_timestamp_str,'->', '[auth_token]')
+                                print("-----------------------------------\n")
+                    except Exception as exc:
+                        print("\nAUTHORIZATION EXCEPTION:")
+                        print(exc)
+                        print("")
+
+            if self.auth_token is not None and self.synack_api is not None:
+                if self.app_obj.missions_running == False:
+                    self.missions_running = True
+                    self.app_obj.missions_running = True
+                    stop_event = threading.Event()
+                    try:
+                        #print("Create mission thread...")
+                        #self.get_missions()
+                        self.missions_thread = threading.Thread(target=self.get_missions, args=(stop_event,self.random_string(10)))
+                        self.missions_thread.daemon = True
+                        self.missions_thread.start()
+                    except Exception as exc:
+                        print(exc)
+                        self._parent_callback_proxy_message(f"REQUEST: {exc}")
+                        stop_event.set()
+
         #for exclusion in self.exclusion_list:
         #    if exclusion in flow.request.host:
         #        print("Skip: %s", exclusion)

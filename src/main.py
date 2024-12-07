@@ -53,6 +53,7 @@ class W3bT00lkit:
         self.vulnerabilities = Vulnerabilities(self, [])
         self.message = None
         self.proxy_running = False
+        self.missions_running = False
 
     def _get_base_name(self) -> str:
         return self.base_name

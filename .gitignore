@@ -10,3 +10,4 @@ valid_log.txt
 examples
 *.db
 .env
+analysis/*

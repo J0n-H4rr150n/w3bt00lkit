@@ -13,7 +13,7 @@ from mitmproxy.tools import dump
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from sqlalchemy import desc, or_
+from sqlalchemy import desc, or_, select, func
 import pandas as pd
 from modules.proxyhelper import ProxyHelper
 from modules.database import Database
@@ -75,6 +75,8 @@ class Proxy(): # pylint: disable=R0902
         self.goto_next_item = False
         self.mark_as_favorite = False
         self.view_full_response = False
+        self.view_only_request = False
+        self.view_only_response = False
         self.kb = KeyBindings()
         self.press_left = False
         self.press_right = False
@@ -124,7 +126,7 @@ class Proxy(): # pylint: disable=R0902
                 else:
                     function_name = self.args[0]
                 args = []
-                if function_name.lower() in ['start','stop','options']:
+                if function_name.lower() in ['comments','start','stop','options']:
                     func = getattr(self, function_name)
                 else:
                     func = getattr(self, f"_{function_name}")
@@ -179,6 +181,8 @@ class Proxy(): # pylint: disable=R0902
 
                 args = self.args
 
+                if '-' in function_name:
+                    function_name = function_name.replace('-','_')
                 #func = getattr(self, f"_{function_name}_{action_name}_dynamic")
                 func = getattr(self, f"_{function_name}_dynamic")
                 if callable(func):
@@ -286,7 +290,7 @@ class Proxy(): # pylint: disable=R0902
                     try:
                         self.app_obj.proxy_running = True
                         callback_proxy_message("SYSTEM: PROXY STARTED")
-                        self.master.addons.add(ProxyHelper(target, in_scope, callback_proxy_message))
+                        self.master.addons.add(ProxyHelper(self.app_obj, target, in_scope, callback_proxy_message))
                         await self.master.run()
                     except asyncio.CancelledError:
                         self.app_obj.proxy_running = False
@@ -453,74 +457,64 @@ class Proxy(): # pylint: disable=R0902
         print(proxy_record.full_url)
         print()
 
-        table = Table()
-        table.add_column('request', width=100)
-        table.add_column('response', width=100)
 
-        if self.view_full_response:
-            self.view_full_response = False
-            if proxy_record.response_text is not None:
-                response_output = proxy_record.response_text
+        if self.view_only_request or self.view_only_response:
+            if self.view_only_request:
+                print("REQUEST:")
+                print("------------------------------------------------------------------\n")
+                console = Console()
+                console.print(Text(proxy_record.raw_request, overflow="clip", no_wrap=False))
+                print("\n------------------------------------------------------------------\n")
+            elif self.view_only_response:
+                print("RESPONSE:")
+                print("------------------------------------------------------------------\n")
+                console = Console()
+                console.print(Text(proxy_record.response_headers + "\n" + proxy_record.response_text, overflow="clip", no_wrap=False))
+                print("\n------------------------------------------------------------------\n")
         else:
-            if proxy_record.response_text is not None:
-                if len(proxy_record.response_text) > 500:
-                    tmp_response = proxy_record.response_text[:500]
-                    if len(tmp_response.splitlines()) > 10:
-                        lines = tmp_response.splitlines()
-                        #print('\n'.join(lines[:10]))
-                        #print("\n[...SNIPPED...]")
-                        response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
-                    else:
-                        #print(f"{tmp_response} \n\n [...SNIPPED...] \n")
-                        response_output = f"{tmp_response} \n\n [...SNIPPED...] \n"
-                else:
-                    if len(proxy_record.response_text.splitlines()) > 10:
-                        lines = proxy_record.response_text.splitlines()
-                        #print('\n'.join(lines[:10]))
-                        #print("\n[...SNIPPED...]")
-                        response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
-                    else:
-                        #print(proxy_record.response_text)
+
+            try:
+                table = Table()
+                table.add_column('request', width=100)
+                table.add_column('response', width=100)
+                response_output = ''
+                response_headers = ''
+
+                if proxy_record.response_headers is not None:
+                    response_headers = proxy_record.response_headers
+
+                if self.view_full_response:
+                    self.view_full_response = False
+                    if proxy_record.response_text is not None:
                         response_output = proxy_record.response_text
+                    else:
+                        proxy_record.response_text = ''
+                else:
+                    if proxy_record.response_text is not None:
+                        if len(proxy_record.response_text) > 500:
+                            tmp_response = proxy_record.response_text[:500]
+                            if len(tmp_response.splitlines()) > 10:
+                                lines = tmp_response.splitlines()
+                                response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
+                            else:
+                                response_output = f"{tmp_response} \n\n [...SNIPPED...] \n"
+                        else:
+                            if len(proxy_record.response_text.splitlines()) > 10:
+                                lines = proxy_record.response_text.splitlines()
+                                response_output = '\n'.join(lines[:10]) + "\n[...SNIPPED...]"
+                            else:
+                                response_output = proxy_record.response_text
 
-        table.add_row(Text(proxy_record.raw_request, overflow="clip", no_wrap=False), Text(proxy_record.response_headers + "\n" + response_output, overflow="clip", no_wrap=False))
-        console.print(table)
+                table.add_row(Text(proxy_record.raw_request, overflow="clip", no_wrap=False), Text(response_headers + "\n" + response_output, overflow="clip", no_wrap=False))
+                console.print(table)
+            except Exception as exc:
+                print(exc)
 
-        #print("REQUEST:")
-        #print("--------\n")
-        #print(proxy_record.raw_request)
+        print("\n-----------------------------------------\n")
 
-        #if proxy_record.action.lower() == 'response':
-        #    print("RESPONSE:")
-        #    print("---------")
-        #    if proxy_record.response_headers is not None:
-        #        print(proxy_record.response_headers)#
-
-        #    if self.view_full_response:
-        #        self.view_full_response = False
-        #        if proxy_record.response_text is not None:
-        #            print(proxy_record.response_text)
-        #    else:
-        #        if proxy_record.response_text is not None:
-        #            if len(proxy_record.response_text) > 500:
-        #                tmp_response = proxy_record.response_text[:500]
-        #                if len(tmp_response.splitlines()) > 10:
-        #                    lines = tmp_response.splitlines()
-        #                    print('\n'.join(lines[:10]))
-        #                    print("\n[...SNIPPED...]")
-        #                else:
-        #                    print(f"{tmp_response} \n\n [...SNIPPED...] \n")
-        #            else:
-        #                if len(proxy_record.response_text.splitlines()) > 10:
-        #                    lines = proxy_record.response_text.splitlines()
-        #                    print('\n'.join(lines[:10]))
-        #                    print("\n[...SNIPPED...]")
-        #                else:
-        #                    print(proxy_record.response_text)
-
-        #print("\n-----------------------------------------\n")
-
-        print("What would you like to do next ([enter]=next record; [# + enter]=select an item, [v + enter]=view the full response, [n + enter]=add a note, [x + enter]=stop)?")
+        print("What would you like to do next...")
+        print("[enter]=next record; [# + enter]=select an item [n + enter]=add a note; [x + enter]=stop")
+        print("[v + enter]=view the full response; [oreq + enter]=only request; [ores + enter]=only response")
         prompt_session = PromptSession(key_bindings=self.kb)
 
         self.prompt_user = True
@@ -528,6 +522,8 @@ class Proxy(): # pylint: disable=R0902
         self.select_an_item = False
         self.continue_loop = True
         self.details_view = True
+        self.view_only_request = False
+        self.view_only_response = False
         while self.prompt_user and self.continue_loop:
             try:
                 text = prompt_session.prompt(' > ')
@@ -538,6 +534,18 @@ class Proxy(): # pylint: disable=R0902
                     self.continue_loop = False
                 elif text.lower() == 'v':
                     self.view_full_response = True
+                    self.view_only_request = False
+                    self.view_only_response = False
+                    self._select_proxy_record(selected_no, proxy_record)
+                elif text.lower() == 'oreq':
+                    self.view_full_response = False
+                    self.view_only_request = True
+                    self.view_only_response = False
+                    self._select_proxy_record(selected_no, proxy_record)
+                elif text.lower() == 'ores':
+                    self.view_full_response = False
+                    self.view_only_request = False
+                    self.view_only_response = True
                     self._select_proxy_record(selected_no, proxy_record)
                 else:
                     self.press_right = False
@@ -927,6 +935,126 @@ class Proxy(): # pylint: disable=R0902
                         response_headers=record.response_headers
                     )
                     self.proxy_records.append(proxy_record)
+        self.page_counter = 0
+        self._paginated_print(self.proxy_records)
+        if self.select_an_item and self.selected_no is not None:
+            try:
+                selected_no = int(self.selected_no)
+                self._select_proxy_record(selected_no, self.proxy_records[selected_no])
+            except ValueError:
+                print("ERROR: Invalid input. Input a valid number.")
+            except Exception:
+                return
+
+    def comments(self, filtered_records=None) -> None:
+        """Proxy history comments."""
+        self.proxy_records = []
+        with Database._get_db() as db:
+            try:
+                #query = select(ProxyModel).where(ProxyModel.response_text.like('%//%'))
+                #records = db.execute(query).scalars().all()
+                if self.app_obj.selected_target is not None:
+                    records: List[ProxyModel] = db.query(ProxyModel)\
+                        .filter(ProxyModel.target_id==self.app_obj.selected_target.id)\
+                        .filter(ProxyModel.response_text.like('%// %'))\
+                        .order_by(desc(ProxyModel.timestamp_start)).all()
+                else:
+                    records: List[ProxyModel] = db.query(ProxyModel)\
+                    .filter(ProxyModel.response_text.like('%// %'))\
+                    .order_by(desc(ProxyModel.timestamp_start)).all()
+                for record in records:
+                    proxy_record = ProxyModel(
+                        id=record.id,
+                        action=record.action,
+                        timestamp_start=record.timestamp_start,
+                        method=record.method,
+                        response_status_code=record.response_status_code,
+                        full_url=record.full_url,
+                        raw_request=record.raw_request,
+                        raw_response=record.raw_response,
+                        response_text=record.response_text,
+                        response_headers=record.response_headers
+                    )
+                    self.proxy_records.append(proxy_record)
+            except Exception as exc:
+                print(exc)
+
+        self.page_counter = 0
+        self._paginated_print(self.proxy_records)
+        if self.select_an_item and self.selected_no is not None:
+            try:
+                selected_no = int(self.selected_no)
+                self._select_proxy_record(selected_no, self.proxy_records[selected_no])
+            except ValueError:
+                print("ERROR: Invalid input. Input a valid number.")
+            except Exception:
+                return
+
+    def _search_requests_dynamic(self, args=None) -> None:
+        self._search_dynamic(args, True, False)
+
+    def _search_responses_dynamic(self, args=None) -> None:
+        self._search_dynamic(args, False, True)
+
+    def _search_dynamic(self, args=None, search_requests=True, search_responses=True) -> None:
+        """Proxy history search."""
+        if len(args) < 3:
+            return
+
+        filter_criteria_actions = []
+        if search_requests and search_responses == False:
+            filter_criteria_actions.append(ProxyModel.action=='Request')
+        elif search_requests == False and search_responses:
+            filter_criteria_actions.append(ProxyModel.action=='Response')
+        else:
+            filter_criteria_actions.append(ProxyModel.action=='Request')
+            filter_criteria_actions.append(ProxyModel.action=='Response')
+
+        filter_criteria_actions_or = or_(*filter_criteria_actions)
+
+        filter_criteria_search_terms_or = []
+        for arg in args[2:]:
+            print(arg)
+            # proxy_record.raw_request
+            # response_headers
+            filter_criteria_search_terms_or.append(ProxyModel.raw_request.like(f'%{arg}%'))
+            filter_criteria_search_terms_or.append(ProxyModel.response_headers.like(f'%{arg}%'))
+            filter_criteria_search_terms_or.append(ProxyModel.full_url.like(f'%{arg}%'))
+            filter_criteria_search_terms_or.append(ProxyModel.response_text.like(f'%{arg}%'))
+
+        filter_criteria_or = or_(*filter_criteria_search_terms_or)
+
+        self.proxy_records = []
+        with Database._get_db() as db:
+            try:
+                #query = select(ProxyModel).where(ProxyModel.response_text.like('%//%'))
+                #records = db.execute(query).scalars().all()
+                if self.app_obj.selected_target is not None:
+                    records: List[ProxyModel] = db.query(ProxyModel)\
+                        .filter(ProxyModel.target_id==self.app_obj.selected_target.id)\
+                        .filter(filter_criteria_actions_or, filter_criteria_or)\
+                        .order_by(desc(ProxyModel.timestamp_start)).all()
+                else:
+                    records: List[ProxyModel] = db.query(ProxyModel)\
+                    .filter(filter_criteria_actions_or, filter_criteria_or)\
+                    .order_by(desc(ProxyModel.timestamp_start)).all()
+                for record in records:
+                    proxy_record = ProxyModel(
+                        id=record.id,
+                        action=record.action,
+                        timestamp_start=record.timestamp_start,
+                        method=record.method,
+                        response_status_code=record.response_status_code,
+                        full_url=record.full_url,
+                        raw_request=record.raw_request,
+                        raw_response=record.raw_response,
+                        response_text=record.response_text,
+                        response_headers=record.response_headers
+                    )
+                    self.proxy_records.append(proxy_record)
+            except Exception as exc:
+                print(exc)
+
         self.page_counter = 0
         self._paginated_print(self.proxy_records)
         if self.select_an_item and self.selected_no is not None:

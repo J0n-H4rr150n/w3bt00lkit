@@ -8,7 +8,7 @@ add_list: list[str] = ['note','param','path','scope','target']
 checklist_list: list[str] = ['owasp-wstg']
 database_list: list[str] = ['setup','tables']
 help_list: list[str] = ['checklists','database','proxy','targets']
-proxy_list: list[str] = ['options','requests','responses','start','stop']
+proxy_list: list[str] = ['comments','options','requests','responses','search','search-requests','search-responses','start','stop']
 proxy_history_list: list[str] = ['requests','responses']
 
 requests_responses_list = ['100','101','200','201','202','204','301','302','304','400','401','403','404','405','409','418','429','500','502','503','504',

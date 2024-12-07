@@ -200,7 +200,7 @@ class TargetNotes:
 
     def _get_checklist_notes(self, selected_target: TargetModel, checklist_record: ChecklistModel):
         targetnotes: List[TargetNoteModel] = []
-        if checklist_record.id is None:
+        if checklist_record.item_id is None:
             try:
                 with Database._get_db() as db:
                     records: List[TargetNoteModel] = db.query(TargetNoteModel)\
@@ -276,13 +276,12 @@ class TargetNotes:
                 if targetnotes:
                     table = Table(show_lines=True, title=f"Notes for {selected_target.name}")
                     table.add_column('#', width=20)
-                    table.add_column('checklist_item', width=20)
                     table.add_column('summary', width=50)
                     table.add_column('path', width=100)
 
                     counter = 0
                     for target in targetnotes:
-                        table.add_row(str(counter), Text(target.checklist_item_id), Text(target.summary, overflow="clip", no_wrap=False), Text(target.path, overflow="clip", no_wrap=False))
+                        table.add_row(str(counter), Text(target.summary, overflow="clip", no_wrap=False), Text(target.path, overflow="clip", no_wrap=False))
                         counter += 1
 
                     console = Console()
