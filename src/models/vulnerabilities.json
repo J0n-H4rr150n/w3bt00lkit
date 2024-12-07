@@ -1,5 +1,58 @@
 [
     {
+        "vuln_category_id":"VULN-OPEN-REDIRECT",
+        "parent_category_id":"",
+        "category_name":"Open Redirect",
+        "category_acronym":"OR",
+        "cwe_id":"CWE-601",
+        "cwe_name": "URL Redirection to Untrusted Site ('Open Redirect')",
+        "cwe_link": "https://cwe.mitre.org/data/definitions/601.html",
+        "capec_id": "",
+        "capec_name": "",
+        "capec_link": "",
+        "kev_link": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "references":[
+            {"name":"Learning about Open Url Redirects - BugBountyHunter.com","link":"https://www.bugbountyhunter.com/vulnerability/?type=open_redirect"},
+            {"name":"Open Redirect - HackTricks","link":"https://book.hacktricks.xyz/pentesting-web/open-redirect"}
+        ],
+        "cheatsheets": [
+            {"name":"","link":""}
+        ],
+        "tools": [
+            {"name":"","link":""}
+        ],
+        "payload_lists": [
+            {"name":"","link":""}
+        ],
+        "tests":[
+            {
+            "name":"Check for common redirect params inurl",
+            "id":"VULN-OPEN-REDIRECT-001",
+            "examples":[
+                {"source":"https://www.bugbountyhunter.com/vulnerability/?type=open_redirect","notes":[""],"payloads":[
+                    "go",
+                    "return",
+                    "r_url",
+                    "returnUrl",
+                    "returnUri",
+                    "locationUrl",
+                    "goTo",
+                    "return_url",
+                    "return_uri",
+                    "ref=",
+                    "referrer=",
+                    "backUrl",
+                    "returnTo",
+                    "successUrl"
+                    ]}
+            ],
+            "objectives":[
+                ""
+                ]
+            }
+        ]
+    },
+    {
         "vuln_category_id":"VULN-XSS",
         "parent_category_id":"",
         "category_name":"Cross-Site Scripting",

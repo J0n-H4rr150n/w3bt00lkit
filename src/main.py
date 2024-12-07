@@ -8,6 +8,7 @@ from modules.input_handler import InputHandler
 from logger import get_logger
 from models import TargetModel
 from modules.apphelp import AppHelp
+from models import ChecklistModel
 from modules.checklist import Checklist
 from modules.database import Database # pylint: disable=C0412
 from modules.proxy import Proxy
@@ -101,7 +102,8 @@ class W3bT00lkit:
         self._print_output(self.INTRO)
         print(get_quote())
         self.targetscope._get_in_scope(target)
-        print()
+        checklist_record = ChecklistModel()
+        self.targetnotes._get_checklist_notes(target, checklist_record)
         if self.message is not None:
             print(self.message)
             self.message = None

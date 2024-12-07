@@ -200,51 +200,97 @@ class TargetNotes:
 
     def _get_checklist_notes(self, selected_target: TargetModel, checklist_record: ChecklistModel):
         targetnotes: List[TargetNoteModel] = []
-        try:
-            with Database._get_db() as db:
-                records: List[TargetNoteModel] = db.query(TargetNoteModel)\
-                    .filter(TargetNoteModel.active == True)\
-                    .filter_by(target_id=selected_target.id)\
-                    .filter_by(checklist_item_id=checklist_record.item_id)\
-                    .order_by(TargetNoteModel.created_timestamp).all()
-                for record in records:
-                    tmp_full_note = record.full_note
-                    if len(tmp_full_note) > 400:
-                        tmp_full_note = tmp_full_note[:400] + " ..."
+        if checklist_record.id is None:
+            try:
+                with Database._get_db() as db:
+                    records: List[TargetNoteModel] = db.query(TargetNoteModel)\
+                        .filter(TargetNoteModel.active == True)\
+                        .filter_by(target_id=selected_target.id)\
+                        .filter(TargetNoteModel.checklist_item_id.is_not(None))\
+                        .order_by(TargetNoteModel.checklist_item_id).all()
+                    for record in records:
+                        tmp_full_note = record.full_note
+                        if len(tmp_full_note) > 400:
+                            tmp_full_note = tmp_full_note[:400] + " ..."
 
-                    targetnote_record = TargetNoteModel(
-                        id=record.id,
-                        target_id=record.target_id,
-                        created_timestamp=record.created_timestamp,
-                        modified_timestamp=record.modified_timestamp,
-                        fqdn=record.fqdn,
-                        path=record.path,
-                        url=record.path,
-                        page=record.page,
-                        summary=tmp_full_note,
-                        full_note=record.full_note,
-                        checklist_item_id=record.checklist_item_id
-                    )
-                    targetnotes.append(targetnote_record)   
+                        targetnote_record = TargetNoteModel(
+                            id=record.id,
+                            target_id=record.target_id,
+                            created_timestamp=record.created_timestamp,
+                            modified_timestamp=record.modified_timestamp,
+                            fqdn=record.fqdn,
+                            path=record.path,
+                            url=record.path,
+                            page=record.page,
+                            summary=tmp_full_note,
+                            full_note=record.full_note,
+                            checklist_item_id=record.checklist_item_id
+                        )
+                        targetnotes.append(targetnote_record)   
 
-            if targetnotes:
-                table = Table(show_lines=True, title=f"Notes for {selected_target.name}")
-                table.add_column('#', width=20)
-                table.add_column('checklist_item', width=20)
-                table.add_column('summary', width=50)
-                table.add_column('path', width=100)
+                if targetnotes:
+                    table = Table(show_lines=True, title=f"Findings for {selected_target.name}")
+                    table.add_column('#', width=20)
+                    table.add_column('checklist_item', width=20)
+                    table.add_column('path', width=100)
 
-                counter = 0
-                for target in targetnotes:
-                    table.add_row(str(counter), Text(target.checklist_item_id), Text(target.summary, overflow="clip", no_wrap=False), Text(target.path, overflow="clip", no_wrap=False))
-                    counter += 1
+                    counter = 0
+                    for target in targetnotes:
+                        table.add_row(str(counter), Text(target.checklist_item_id), Text(target.path, overflow="clip", no_wrap=False))
+                        counter += 1
 
-                console = Console()
-                print()
-                console.print(table)
+                    console = Console()
+                    print()
+                    console.print(table)
 
-        except Exception as exc:
-            print(exc)
+            except Exception as exc:
+                print(exc)
+        else:
+            try:
+                with Database._get_db() as db:
+                    records: List[TargetNoteModel] = db.query(TargetNoteModel)\
+                        .filter(TargetNoteModel.active == True)\
+                        .filter_by(target_id=selected_target.id)\
+                        .filter_by(checklist_item_id=checklist_record.item_id)\
+                        .order_by(TargetNoteModel.created_timestamp).all()
+                    for record in records:
+                        tmp_full_note = record.full_note
+                        if len(tmp_full_note) > 400:
+                            tmp_full_note = tmp_full_note[:400] + " ..."
+
+                        targetnote_record = TargetNoteModel(
+                            id=record.id,
+                            target_id=record.target_id,
+                            created_timestamp=record.created_timestamp,
+                            modified_timestamp=record.modified_timestamp,
+                            fqdn=record.fqdn,
+                            path=record.path,
+                            url=record.path,
+                            page=record.page,
+                            summary=tmp_full_note,
+                            full_note=record.full_note,
+                            checklist_item_id=record.checklist_item_id
+                        )
+                        targetnotes.append(targetnote_record)   
+
+                if targetnotes:
+                    table = Table(show_lines=True, title=f"Notes for {selected_target.name}")
+                    table.add_column('#', width=20)
+                    table.add_column('checklist_item', width=20)
+                    table.add_column('summary', width=50)
+                    table.add_column('path', width=100)
+
+                    counter = 0
+                    for target in targetnotes:
+                        table.add_row(str(counter), Text(target.checklist_item_id), Text(target.summary, overflow="clip", no_wrap=False), Text(target.path, overflow="clip", no_wrap=False))
+                        counter += 1
+
+                    console = Console()
+                    print()
+                    console.print(table)
+
+            except Exception as exc:
+                print(exc)
 
     def _select_note(self, selected_target: TargetModel, selected_no, targetnotes: List[TargetNoteModel]):
         """View Note"""
@@ -330,7 +376,7 @@ class TargetNotes:
                     for i, line in enumerate(lines):
                         if '[[TITLE:]]' == line:
                             url_start = i
-                        elif '\n[[NOTE:]]' == line:
+                        elif '[[NOTE:]]' == line:
                             note_start = i
                         num_lines = i + 1
                     for i, line in enumerate(lines):

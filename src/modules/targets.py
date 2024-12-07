@@ -148,6 +148,3 @@ class Targets:
         except Exception as database_exception: # pylint: disable=W0718
             print("*** EXCEPTION ***")
             print(database_exception)
-
-    def _view_target_details(self):
-        print("View single target.")
