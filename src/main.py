@@ -1,6 +1,7 @@
 """w3bt00lkit"""
 import os
 import sys
+import subprocess
 from logging import Logger
 from prompt_toolkit import PromptSession
 from modules.completers import Completers
@@ -12,9 +13,11 @@ from models import ChecklistModel
 from modules.checklist import Checklist
 from modules.database import Database # pylint: disable=C0412
 from modules.proxy import Proxy
+from modules.synack import Synack
 from modules.targets import Targets
 from modules.target_notes import TargetNotes
 from modules.target_scope import TargetScope
+from modules.tools import Tools
 from modules.vulnerabilities import Vulnerabilities
 from modules.common import get_quote
 
@@ -47,9 +50,11 @@ class W3bT00lkit:
         self.checklist = Checklist(self, [])
         self.database = Database(self, [])
         self.proxy = Proxy(self, [])
+        self.synack = Synack(self, [])
         self.targets = Targets(self, [])
         self.targetnotes = TargetNotes(self, [])
         self.targetscope = TargetScope(self, [])
+        self.tools = Tools(self, [])
         self.vulnerabilities = Vulnerabilities(self, [])
         self.message = None
         self.proxy_running = False
@@ -146,6 +151,11 @@ class W3bT00lkit:
                     continue
                 except EOFError:
                     break
+
+    def _pwd(self) -> None:
+        result = subprocess.run(['pwd'], stdout=subprocess.PIPE)
+        if result.returncode == 0:
+            print(result.stdout.decode('utf-8').strip())
 
     def _clear(self) -> None:
         """Clear the screen."""

@@ -2,7 +2,7 @@
 from typing import Any, Generator
 from prompt_toolkit.completion import Completer, Completion, WordCompleter
 
-default_list: list[str] = ['add','checklists','clear','database','exit','help','proxy','remove','start','stop','view']
+default_list: list[str] = ['add','checklists','clear','database','exit','help','proxy','pwd','remove','run','start','stop','tools','view']
 
 add_list: list[str] = ['note','param','path','scope','target']
 checklist_list: list[str] = ['owasp-wstg']
@@ -16,11 +16,13 @@ requests_responses_list = ['100','101','200','201','202','204','301','302','304'
                                     'post','put','trace']
 proxy_history_requests: list[str] = requests_responses_list
 proxy_history_responses: list[str] = requests_responses_list
+synack_list: list[str] = ['targets']
 
 remove_list: list[str] = ['target']
 start_list: list[str] = ['proxy']
 stop_list: list[str] = ['proxy']
 target_list: list[str] = ['add','remove','select','view']
+tools_list: list[str] = ['katana']
 view_list: list[str] = ['notes','scope','targets','vulnerabilities']
 
 
@@ -40,12 +42,7 @@ class Completers(Completer):
         elif text.startswith('help '):
             self.completer = WordCompleter(help_list, ignore_case=True)
         elif text.startswith('proxy '):
-            #if 'history' in text:
-            #    self.completer = WordCompleter(proxy_history_list, ignore_case=True)
-            #    if 'requests' in text:
-            #        self.completer = WordCompleter(proxy_history_requests, ignore_case=True)
-            #    elif 'responses' in text:
-            #        self.completer = WordCompleter(proxy_history_responses, ignore_case=True)
+            self.completer = WordCompleter(proxy_list, ignore_case=True)
             if 'requests' in text:
                 self.completer = WordCompleter(proxy_history_requests, ignore_case=True)
             elif 'responses' in text:
@@ -56,6 +53,8 @@ class Completers(Completer):
             self.completer = WordCompleter(remove_list, ignore_case=True)
         elif text.startswith('start '):
             self.completer = WordCompleter(start_list, ignore_case=True)
+        elif text.startswith('synack '):
+            self.completer = WordCompleter(synack_list, ignore_case=True)
         elif text.startswith('stop '):
             self.completer = WordCompleter(stop_list, ignore_case=True)
         elif text.startswith('view '):
@@ -63,7 +62,9 @@ class Completers(Completer):
         elif ' ' in text:
             return
         else:
-            self.completer = WordCompleter(default_list, ignore_case=True)
+            main_list = set(default_list + tools_list)
+            main_list = list(sorted(main_list))
+            self.completer = WordCompleter(main_list, ignore_case=True)
 
         for completion in self.completer.get_completions(document, complete_event): # pylint: disable=R1737
             yield completion

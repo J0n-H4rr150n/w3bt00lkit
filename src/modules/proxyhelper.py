@@ -1,5 +1,6 @@
 """proxyhelper.py"""
 import os
+import json
 import re
 import random
 import requests
@@ -17,7 +18,7 @@ from mitmproxy import http
 from mitmproxy.net.http.http1.assemble import assemble_request, assemble_response
 from dotenv import load_dotenv
 from modules.database import Database
-from models import ProxyModel
+from models import ProxyModel, SynackTargetModel
 
 load_dotenv()
 
@@ -128,8 +129,10 @@ class ProxyHelper:
                         time.sleep(30)
                 elif response.status_code == 200:
                     json = response.json()
-                    print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
-                    print(json)
+                    if json is not None and len(json) > 0:
+                        print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                        print(json)
+                        print("+++")
                     return json
                 else:
                     print(response)
@@ -170,8 +173,8 @@ class ProxyHelper:
                     time.sleep(30)
             elif response.status_code == 200:
                 json = response.json()
-                print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
                 if json is not None and len(json) > 0:
+                    print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
                     print(json)
                     print("--------\n")
                 return json
@@ -253,8 +256,8 @@ class ProxyHelper:
                 #print(response.__dict__)
                 json = response.json()
                 print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
-                #print(json)
-                #print("--------\n")
+                print(json)
+                print("+--------\n")
                 return json
             else:
                 print(url, headers)
@@ -403,8 +406,6 @@ class ProxyHelper:
                             print(result)
                             print("----------")
                             #if print_output:
-                else:
-                    print("No missions.")
 
         #print("app obj:", self.app_obj.missions_running)
         #print("stop event:", stop_event.is_set())
@@ -454,22 +455,6 @@ class ProxyHelper:
                         print("\nAUTHORIZATION EXCEPTION:")
                         print(exc)
                         print("")
-
-            if self.auth_token is not None and self.synack_api is not None:
-                if self.app_obj.missions_running == False:
-                    self.missions_running = True
-                    self.app_obj.missions_running = True
-                    stop_event = threading.Event()
-                    try:
-                        #print("Create mission thread...")
-                        #self.get_missions()
-                        self.missions_thread = threading.Thread(target=self.get_missions, args=(stop_event,self.random_string(10)))
-                        self.missions_thread.daemon = True
-                        self.missions_thread.start()
-                    except Exception as exc:
-                        print(exc)
-                        self._parent_callback_proxy_message(f"REQUEST: {exc}")
-                        stop_event.set()
 
         #for exclusion in self.exclusion_list:
         #    if exclusion in flow.request.host:
@@ -594,9 +579,21 @@ class ProxyHelper:
             self._parent_callback_proxy_message("REQUEST: database_exception...")
             self._parent_callback_proxy_message(str(database_exception))
 
-        #if self.synack_target:
-        #   self._parent_callback_proxy_message(f"REQUEST (SYNACK): {flow.request.pretty_url}")
-
+        if self.auth_token is not None and self.synack_api is not None:
+            if self.app_obj.missions_running == False:
+                self.missions_running = True
+                self.app_obj.missions_running = True
+                stop_event = threading.Event()
+                try:
+                    print("\nStart polling for missions...\n")
+                    #self.get_missions()
+                    self.missions_thread = threading.Thread(target=self.get_missions, args=(stop_event,self.random_string(10)))
+                    self.missions_thread.daemon = True
+                    self.missions_thread.start()
+                except Exception as exc:
+                    print(exc)
+                    self._parent_callback_proxy_message(f"REQUEST: {exc}")
+                    stop_event.set()
 
     def response(self, flow: http.HTTPFlow) -> None:
         """Proxy response.
@@ -789,11 +786,26 @@ class ProxyHelper:
             self._parent_callback_proxy_message(database_exception)
             self._parent_callback_proxy_message(traceback.print_exc())
 
+        if self.auth_token is not None and self.synack_api is not None:
+            
+            if flow.request.pretty_url.startswith(self.synack_base) and '/api/targets/registered_summary' == flow.request.path:
+                self._parent_callback_proxy_message(f"RESPONSE: {flow.request.pretty_url}")
+                targets = json.loads(self.clean_string(flow.response.text))
 
-        #if self.synack_target:
-        #    self._parent_callback_proxy_message(f"RESPONSE (SYNACK): [{flow.response.status_code}] {flow.request.pretty_url}")
-            # save accepted missions
-            # save target analytics
-            # save vulns accepted
-            # Try to claim a mission
-            # get bearer token
+                for target in targets:
+                    new_target = SynackTargetModel(
+                        target_id = target['id'],
+                        target_codename = target['codename'],
+                        target_org_id = target['organization_id'],
+                        activated_at = target['activated_at'],
+                        target_name = target['name'],
+                        category = str(target['category']),
+                        outage_windows = str(target['outage_windows']),
+                        vulnerability_discovery = target['vulnerability_discovery'],
+                        collaboration_criteria = str(target['collaboration_criteria'])
+                    )
+
+                    with Database._get_db() as db:
+                        db.add(new_target)
+                        db.commit()
+                        db.refresh(new_target)

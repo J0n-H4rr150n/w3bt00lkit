@@ -1,0 +1,33 @@
+[
+    {
+        "tool_category_id":"TOOL-RECON",
+        "parent_category_id":"",
+        "category_name":"Recon",
+        "category_acronym":"RECON",
+        "references":[
+            {
+                "name":"katana",
+                "link":"https://github.com/projectdiscovery/katana",
+                "description":"A next-generation crawling and spidering framework.",
+                "install_cmd":"CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest"
+            }
+        ],
+        "cheatsheets": [
+            {"name":"","link":""}
+        ],
+        "examples":[
+            {
+            "name":"Send results to an upstream proxy",
+            "id":"TOOL-KATANA-001",
+            "examples":[
+                {   "source":"",
+                    "notes":[""],
+                    "commands":[
+                        "katana -u https://www.cisa.gov/ --proxy http://127.0.0.1:8085",
+                        "katana -jc -jsl -fx -td -rl 1 -u https://www.cisa.gov/ --proxy http://127.0.0.1:8085 "
+                    ]
+                }
+            ]
+        }]
+    }
+]

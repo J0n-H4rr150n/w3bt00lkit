@@ -114,7 +114,7 @@ class Proxy(): # pylint: disable=R0902
     def _handle_input(self, args):
         """Handle Input."""
         self.args = args
-        #print("handle proxy input:",self.args)
+        print("handle proxy input:",self.args)
         if len(self.args) < 2:
             return
 
@@ -386,7 +386,7 @@ class Proxy(): # pylint: disable=R0902
             except Exception as exc:
                 print(exc)
 
-            print("What would you like to do next ([enter]=next page; [# + enter]=select an item, [f + enter]=mark as favorite, [x + enter]=stop)?")
+            print("What would you like to do next ([enter]=next page; [# + enter]=select an item, [f + enter]=mark as favorite, [x + enter]=stop, left, right)?")
             prompt_session = PromptSession(key_bindings=self.kb)
             text = None
             while self.prompt_user:
