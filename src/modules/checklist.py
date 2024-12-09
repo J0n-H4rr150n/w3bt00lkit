@@ -6,7 +6,6 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from sqlalchemy import text
-from modules.owaspwstg import OWASPWSTG
 from modules.database import Database
 from modules.input_handler import InputHandler
 from models import ChecklistModel, TargetModel
@@ -109,7 +108,7 @@ class Checklist(): # pylint: disable=R0903
             self.prompt_user = True
             try:
                 page_data = df.iloc[self.start_index:self.end_index]
-
+                local_counter = self.start_index
                 table = Table()
                 table.add_column('#')
                 table.add_column('id')
@@ -117,41 +116,55 @@ class Checklist(): # pylint: disable=R0903
                 table.add_column('# Notes')
 
                 for record in page_data[0]:
-                    table.add_row(str(self.page_counter), record.item_id, record.item_name, str('' if record.note_count == 0 else record.note_count))
-                    self.page_counter += 1
+                    table.add_row(str(local_counter), record.item_id, record.item_name, str('' if (record.note_count == 0 or record.note_count is None) else record.note_count))
+                    #self.page_counter += 1
+                    local_counter += 1
+                    self.page_counter = local_counter
 
                 console = Console()
                 console.print(table)
             except Exception as exc:
                 print(exc)
 
-            print("What would you like to do next ([enter]=next page; [# + enter]=select an item, [f + enter]=mark as favorite, [x + enter]=stop)?")
-            prompt_session = PromptSession()
+            print("What would you like to do next ([enter]=next page; [# + enter]=select an item; [x + enter]=stop)?")
+            prompt_session = PromptSession(key_bindings=self.kb)
             while self.prompt_user:
-                text = prompt_session.prompt(' > ')
-                if '' == text:
-                    self.prompt_user = False
-                    running = True
-                    self.select_an_item = False
-                    self.press_right = True
-                    self.press_left = False
-                else:
-                    try:
-                        selected_no = int(text)
-                        self.selected_no = selected_no
+                try:
+                    text = prompt_session.prompt(' > ')
+                    if '' == text:
                         self.prompt_user = False
-                        running = False
-                        self.select_an_item = True
-                    except ValueError:
-                        self.prompt_user = False
-                        running = False
+                        running = True
                         self.select_an_item = False
+                        self.press_right = True
+                        self.press_left = False
+                    else:
+                        try:
+                            selected_no = int(text)
+                            self.selected_no = selected_no
+                            self.prompt_user = False
+                            running = False
+                            self.select_an_item = True
+                            self.press_right = False
+                            self.press_left = False
+                        except ValueError:
+                            self.prompt_user = False
+                            running = False
+                            self.select_an_item = False
+                except KeyboardInterrupt:
+                    break
 
             self.previous_start_index = self.start_index
             self.previous_end_index = self.end_index
 
-            self.start_index += page_size
-            self.end_index += page_size
+            if self.press_right:
+                self.start_index += page_size
+                self.end_index += page_size
+            elif self.press_left:
+                if self.start_index > 0:
+                    self.start_index -= page_size
+                    self.end_index -= page_size
+                else:
+                    return
 
     def _get_checklist(self, checklist_name):
         """Get checklist."""
@@ -250,42 +263,63 @@ class Checklist(): # pylint: disable=R0903
         else:
             print("What would you like to do next ([enter]=next record; [x + enter]=stop)?")
 
-        prompt_session = PromptSession()
+        prompt_session = PromptSession(key_bindings=self.kb)
 
         self.prompt_user = True
         self.goto_next_item = False
         self.select_an_item = False
+        self.press_right = False
+        self.press_left = False
         continue_loop = True
         while self.prompt_user and continue_loop:
-            text = prompt_session.prompt(' > ')
-            if '' == text:
-                self.prompt_user = False
-                self.select_an_item = False
-                self.goto_next_item = True
-                continue_loop = False
-            elif 'n' == text.lower():
-                try:
-                    text = f'note add [[item_id={checklist_record.item_id}]]'
-                    handler = InputHandler(self.app_obj, text)
-                    handler._handle_input()
-                except Exception as exc:
-                    print(exc)
-            else:
-                try:
-                    selected_no = int(text)
-                    self.selected_no = selected_no
-                    self.prompt_user = False
-                    self.select_an_item = True
-                    continue_loop = False
-                    self._select_checklist_record(selected_no, checklist_record)
-                except ValueError:
+            try:
+                text = prompt_session.prompt(' > ')
+                if '' == text:
                     self.prompt_user = False
                     self.select_an_item = False
+                    self.goto_next_item = True
                     continue_loop = False
+                    self.press_right = True
+                    self.press_left = False
+                elif 'n' == text.lower():
+                    self.prompt_user = False
+                    self.select_an_item = False
+                    self.goto_next_item = False
+                    continue_loop = False
+                    self.press_right = False
+                    self.press_left = False
+                    try:
+                        text = f'note add [[item_id={checklist_record.item_id}]]'
+                        handler = InputHandler(self.app_obj, text)
+                        handler._handle_input()
+                    except Exception as exc:
+                        print(exc)
+                else:
+                    try:
+                        selected_no = int(text)
+                        self.selected_no = selected_no
+                        self.prompt_user = False
+                        self.select_an_item = True
+                        self.goto_next_item = False
+                        continue_loop = False
+                        self.press_right = False
+                        self.press_left = False
+                        self._select_checklist_record(selected_no, checklist_record)
+                    except ValueError:
+                        self.prompt_user = False
+                        self.select_an_item = False
+                        self.goto_next_item = False
+                        continue_loop = False
+                        self.press_right = False
+                        self.press_left = False
+            except KeyboardInterrupt:
+                break
 
-        if self.goto_next_item:
+        if self.goto_next_item or self.press_right:
             self.select_an_item = False
             self.goto_next_item = False
+            self.press_right = False
+            self.press_left = False
             try:
                 selected_no = int(self.selected_no)
                 selected_no += 1
@@ -295,7 +329,16 @@ class Checklist(): # pylint: disable=R0903
                 self._select_checklist_record(self.selected_no, self.checklist_items[self.selected_no])
             except ValueError:
                 print("ERROR: Invalid input. Input a valid number.")
-
+        elif self.press_left:
+            try:
+                selected_no = int(self.selected_no)
+                selected_no -= 1
+                self.selected_no = selected_no
+                if self.selected_no < 0:
+                    return
+                self._select_checklist_record(self.selected_no, self.checklist_items[self.selected_no])
+            except ValueError:
+                print("ERROR: Invalid input. Input a valid number.")
 
     def owasp_wstg(self) -> None:
         """OWASP Web Security Testing Guide (WSTG)"""
@@ -307,9 +350,10 @@ class Checklist(): # pylint: disable=R0903
         self.previous_end_index = 0
 
         checklist_name = 'OWASP Web Security Testing Guide'
+        self.page_counter = 0
         self.checklist_items: list = self._get_checklist(checklist_name)
         self._paginated_print(self.checklist_items)
-        if self.select_an_item and self.selected_no is not None:
+        if (self.select_an_item or self.press_right) and self.selected_no is not None:
             try:
                 selected_no = int(self.selected_no)
                 self._select_checklist_record(selected_no, self.checklist_items[selected_no])

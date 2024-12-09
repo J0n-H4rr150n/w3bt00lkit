@@ -1,65 +1,317 @@
+************* Module modules.proxyhelper
+src/modules/proxyhelper.py:115:23: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:92:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+src/modules/proxyhelper.py:97:12: W0612: Unused variable 'cookies' (unused-variable)
+src/modules/proxyhelper.py:114:12: W0612: Unused variable 'data' (unused-variable)
+src/modules/proxyhelper.py:137:26: W0622: Redefining built-in 'vars' (redefined-builtin)
+src/modules/proxyhelper.py:171:16: W0621: Redefining name 'json' from outer scope (line 3) (redefined-outer-name)
+src/modules/proxyhelper.py:159:19: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:137:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+src/modules/proxyhelper.py:137:26: W0613: Unused argument 'vars' (unused-argument)
+src/modules/proxyhelper.py:141:8: W0612: Unused variable 'cookies' (unused-variable)
+src/modules/proxyhelper.py:158:8: W0612: Unused variable 'data' (unused-variable)
+src/modules/proxyhelper.py:185:26: W0622: Redefining built-in 'vars' (redefined-builtin)
+src/modules/proxyhelper.py:249:16: W0621: Redefining name 'json' from outer scope (line 3) (redefined-outer-name)
+src/modules/proxyhelper.py:211:19: W3101: Missing timeout argument for method 'requests.put' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:243:31: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:185:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+src/modules/proxyhelper.py:185:26: W0613: Unused argument 'vars' (unused-argument)
+src/modules/proxyhelper.py:189:8: W0612: Unused variable 'cookies' (unused-variable)
+src/modules/proxyhelper.py:265:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/modules/proxyhelper.py:274:8: C0103: Variable name "campaignName" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:275:8: C0103: Variable name "orgId" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:276:8: C0103: Variable name "listingId" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:277:8: C0103: Variable name "listingCodename" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:278:8: C0103: Variable name "campaignId" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:279:8: C0103: Variable name "taskId" doesn't conform to snake_case naming style (invalid-name)
+src/modules/proxyhelper.py:311:28: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:330:36: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:272:8: W0612: Unused variable 'title' (unused-variable)
+src/modules/proxyhelper.py:273:8: W0612: Unused variable 'desc' (unused-variable)
+src/modules/proxyhelper.py:274:8: W0612: Unused variable 'campaignName' (unused-variable)
+src/modules/proxyhelper.py:277:8: W0612: Unused variable 'listingCodename' (unused-variable)
+src/modules/proxyhelper.py:280:8: W0612: Unused variable 'payout' (unused-variable)
+src/modules/proxyhelper.py:351:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/modules/proxyhelper.py:355:16: W0622: Redefining built-in 'vars' (redefined-builtin)
+src/modules/proxyhelper.py:370:40: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/modules/proxyhelper.py:414:19: R1714: Consider merging these comparisons with 'in' by using 'header in ('authorization', 'Authorization')'. Use a set instead if elements are hashable. (consider-using-in)
+src/modules/proxyhelper.py:433:45: E0602: Undefined variable 'auth_token_created_timestamp' (undefined-variable)
+src/modules/proxyhelper.py:412:8: R1702: Too many nested blocks (6/5) (too-many-nested-blocks)
+src/modules/proxyhelper.py:589:8: R1702: Too many nested blocks (6/5) (too-many-nested-blocks)
+src/modules/proxyhelper.py:561:20: W0201: Attribute 'missions_thread' defined outside __init__ (attribute-defined-outside-init)
+src/modules/proxyhelper.py:7:0: C0411: standard import "string" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:8:0: C0411: standard import "sys" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:9:0: C0411: standard import "signal" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:10:0: C0411: standard import "threading" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:11:0: C0411: standard import "traceback" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:12:0: C0411: standard import "time" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:13:0: C0411: standard import "datetime.datetime" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:14:0: C0411: standard import "warnings" should be placed before third party import "requests" (wrong-import-order)
+src/modules/proxyhelper.py:15:0: C0411: standard import "urllib.parse.ParseResult" should be placed before third party import "requests" (wrong-import-order)
+************* Module modules.apphelp
+src/modules/apphelp.py:17:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/apphelp.py:85:35: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/apphelp.py:36:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/apphelp.py:76:0: W0613: Unused argument 'args' (unused-argument)
+************* Module modules.target_notes
+src/modules/target_notes.py:78:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:159:0: C0301: Line too long (151/150) (line-too-long)
+src/modules/target_notes.py:172:0: C0301: Line too long (206/150) (line-too-long)
+src/modules/target_notes.py:183:0: C0301: Line too long (168/150) (line-too-long)
+src/modules/target_notes.py:185:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:229:61: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:274:61: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:284:0: C0301: Line too long (156/150) (line-too-long)
+src/modules/target_notes.py:409:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/target_notes.py:431:0: C0305: Trailing newlines (trailing-newlines)
+src/modules/target_notes.py:55:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:64:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_notes.py:92:11: C0121: Comparison 'save_to_database == False' should be 'save_to_database is False' if checking for the singleton value False, or 'not save_to_database' if testing for falsiness (singleton-comparison)
+src/modules/target_notes.py:96:13: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:110:4: R0914: Too many local variables (18/15) (too-many-locals)
+src/modules/target_notes.py:116:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/target_notes.py:121:8: W0212: Access to a protected member _clear of a client class (protected-access)
+src/modules/target_notes.py:122:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+src/modules/target_notes.py:127:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:129:28: C0121: Comparison 'TargetNoteModel.active == True' should be 'TargetNoteModel.active is True' if checking for the singleton value True, or 'bool(TargetNoteModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_notes.py:110:4: R0912: Too many branches (14/12) (too-many-branches)
+src/modules/target_notes.py:110:4: R0915: Too many statements (54/50) (too-many-statements)
+src/modules/target_notes.py:246:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:205:21: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:207:32: C0121: Comparison 'TargetNoteModel.active == True' should be 'TargetNoteModel.active is True' if checking for the singleton value True, or 'bool(TargetNoteModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_notes.py:291:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:250:21: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:252:32: C0121: Comparison 'TargetNoteModel.active == True' should be 'TargetNoteModel.active is True' if checking for the singleton value True, or 'bool(TargetNoteModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/target_notes.py:294:4: R0914: Too many local variables (29/15) (too-many-locals)
+src/modules/target_notes.py:296:8: W0212: Access to a protected member _clear of a client class (protected-access)
+src/modules/target_notes.py:297:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+src/modules/target_notes.py:332:15: R1714: Consider merging these comparisons with 'in' by using 'text in ('', 'no')'. Use a set instead if elements are hashable. (consider-using-in)
+src/modules/target_notes.py:338:25: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:347:31: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:364:27: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:382:27: R1716: Simplify chained comparison between the operands (chained-comparison)
+src/modules/target_notes.py:387:27: R1716: Simplify chained comparison between the operands (chained-comparison)
+src/modules/target_notes.py:410:25: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/target_notes.py:429:31: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/target_notes.py:294:4: R0912: Too many branches (36/12) (too-many-branches)
+src/modules/target_notes.py:294:4: R0915: Too many statements (118/50) (too-many-statements)
+src/modules/target_notes.py:374:20: W0612: Unused variable 'num_lines' (unused-variable)
+src/modules/target_notes.py:14:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+src/modules/target_notes.py:4:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
+src/modules/target_notes.py:10:0: C0411: third party import "prompt_toolkit.PromptSession" should be placed before first party imports "modules.database.Database", "models.ChecklistModel"  (wrong-import-order)
+src/modules/target_notes.py:11:0: C0411: third party import "prompt_toolkit.shortcuts.input_dialog" should be placed before first party imports "modules.database.Database", "models.ChecklistModel"  (wrong-import-order)
+src/modules/target_notes.py:12:0: C0411: standard import "urllib.parse.urlparse" should be placed before third party imports "sqlalchemy.orm.query.Query", "rich.console.Console", "rich.table.Table", "rich.text.Text", "prompt_toolkit.PromptSession", "prompt_toolkit.shortcuts.input_dialog" and first party imports "modules.database.Database", "models.ChecklistModel"  (wrong-import-order)
+src/modules/target_notes.py:3:0: W0611: Unused Query imported from sqlalchemy.orm.query (unused-import)
+src/modules/target_notes.py:4:0: W0611: Unused Literal imported from typing (unused-import)
+src/modules/target_notes.py:4:0: W0611: Unused LiteralString imported from typing (unused-import)
+src/modules/target_notes.py:11:0: W0611: Unused input_dialog imported from prompt_toolkit.shortcuts (unused-import)
+************* Module modules.completers
+src/modules/completers.py:14:0: C0301: Line too long (153/150) (line-too-long)
+************* Module modules.checklist
+src/modules/checklist.py:169:111: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/checklist.py:186:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/checklist.py:220:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/checklist.py:18:0: R0902: Too many instance attributes (17/7) (too-many-instance-attributes)
+src/modules/checklist.py:38:14: W0613: Unused argument 'event' (unused-argument)
+src/modules/checklist.py:51:14: W0613: Unused argument 'event' (unused-argument)
+src/modules/checklist.py:85:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/checklist.py:131:16: W0621: Redefining name 'text' from outer scope (line 8) (redefined-outer-name)
+src/modules/checklist.py:125:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/checklist.py:166:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/checklist.py:167:47: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/checklist.py:182:32: C0121: Comparison 'ChecklistModel.active == True' should be 'ChecklistModel.active is True' if checking for the singleton value True, or 'bool(ChecklistModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/checklist.py:260:12: W0621: Redefining name 'text' from outer scope (line 8) (redefined-outer-name)
+src/modules/checklist.py:206:8: W0212: Access to a protected member _clear of a client class (protected-access)
+src/modules/checklist.py:208:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
+src/modules/checklist.py:244:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/checklist.py:243:16: W0212: Access to a protected member _get_checklist_notes of a client class (protected-access)
+src/modules/checklist.py:271:23: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/checklist.py:270:20: W0212: Access to a protected member _handle_input of a client class (protected-access)
+src/modules/checklist.py:204:4: R0912: Too many branches (20/12) (too-many-branches)
+src/modules/checklist.py:204:4: R0915: Too many statements (79/50) (too-many-statements)
+src/modules/checklist.py:244:12: W0612: Unused variable 'exc' (unused-variable)
+src/modules/checklist.py:42:12: W0201: Attribute 'goto_previous_item' defined outside __init__ (attribute-defined-outside-init)
+src/modules/checklist.py:55:12: W0201: Attribute 'goto_previous_item' defined outside __init__ (attribute-defined-outside-init)
+src/modules/checklist.py:46:12: W0201: Attribute 'prompt_running' defined outside __init__ (attribute-defined-outside-init)
+src/modules/checklist.py:59:12: W0201: Attribute 'prompt_running' defined outside __init__ (attribute-defined-outside-init)
+src/modules/checklist.py:13:0: C0411: third party import "pandas" should be placed before first party imports "modules.owaspwstg.OWASPWSTG", "modules.database.Database", "modules.input_handler.InputHandler", "models.ChecklistModel"  (wrong-import-order)
+src/modules/checklist.py:14:0: C0411: third party import "rich.console.Console" should be placed before first party imports "modules.owaspwstg.OWASPWSTG", "modules.database.Database", "modules.input_handler.InputHandler", "models.ChecklistModel"  (wrong-import-order)
+src/modules/checklist.py:15:0: C0411: third party import "rich.table.Table" should be placed before first party imports "modules.owaspwstg.OWASPWSTG", "modules.database.Database", "modules.input_handler.InputHandler", "models.ChecklistModel"  (wrong-import-order)
+src/modules/checklist.py:2:0: W0611: Unused datetime imported from datetime (unused-import)
+src/modules/checklist.py:3:0: W0611: Unused Any imported from typing (unused-import)
+src/modules/checklist.py:3:0: W0611: Unused Generator imported from typing (unused-import)
+src/modules/checklist.py:3:0: W0611: Unused Literal imported from typing (unused-import)
+src/modules/checklist.py:7:0: W0611: Unused WordCompleter imported from prompt_toolkit.completion (unused-import)
+src/modules/checklist.py:9:0: W0611: Unused OWASPWSTG imported from modules.owaspwstg (unused-import)
 ************* Module modules.owaspwstg
-src/modules/owaspwstg.py:77:32: C0121: Comparison 'ChecklistModel.active == True' should be 'ChecklistModel.active is True' if checking for the singleton value True, or 'bool(ChecklistModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/owaspwstg.py:76:32: C0121: Comparison 'ChecklistModel.active == True' should be 'ChecklistModel.active is True' if checking for the singleton value True, or 'bool(ChecklistModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/owaspwstg.py:90:12: E1101: Instance of 'OWASPWSTG' has no '_paginated_print' member (no-member)
 src/modules/owaspwstg.py:5:0: C0411: standard import "typing.Any" should be placed before third party imports "prompt_toolkit.PromptSession", "prompt_toolkit.completion.WordCompleter", "sqlalchemy.orm.session.Session" (wrong-import-order)
 src/modules/owaspwstg.py:4:0: W0611: Unused Session imported from sqlalchemy.orm.session (unused-import)
 src/modules/owaspwstg.py:5:0: W0611: Unused Any imported from typing (unused-import)
 src/modules/owaspwstg.py:5:0: W0611: Unused Generator imported from typing (unused-import)
 src/modules/owaspwstg.py:5:0: W0611: Unused Literal imported from typing (unused-import)
-************* Module modules.target_scope
-src/modules/target_scope.py:33:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
-src/modules/target_scope.py:75:0: C0303: Trailing whitespace (trailing-whitespace)
-src/modules/target_scope.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
-src/modules/target_scope.py:34:15: W0718: Catching too general exception Exception (broad-exception-caught)
-src/modules/target_scope.py:48:17: W0212: Access to a protected member _get_db of a client class (protected-access)
-src/modules/target_scope.py:50:24: C0121: Comparison 'TargetScopeModel.active == True' should be 'TargetScopeModel.active is True' if checking for the singleton value True, or 'bool(TargetScopeModel.active)' if testing for truthiness (singleton-comparison)
-src/modules/target_scope.py:51:24: C0121: Comparison 'TargetScopeModel.in_scope_ind == True' should be 'TargetScopeModel.in_scope_ind is True' if checking for the singleton value True, or 'bool(TargetScopeModel.in_scope_ind)' if testing for truthiness (singleton-comparison)
-src/modules/target_scope.py:52:24: C0121: Comparison 'TargetScopeModel.out_of_scope_ind == False' should be 'TargetScopeModel.out_of_scope_ind is False' if checking for the singleton value False, or 'not TargetScopeModel.out_of_scope_ind' if testing for falsiness (singleton-comparison)
-src/modules/target_scope.py:86:17: W0212: Access to a protected member _get_db of a client class (protected-access)
-src/modules/target_scope.py:88:24: C0121: Comparison 'TargetScopeModel.active == True' should be 'TargetScopeModel.active is True' if checking for the singleton value True, or 'bool(TargetScopeModel.active)' if testing for truthiness (singleton-comparison)
-src/modules/target_scope.py:89:24: C0121: Comparison 'TargetScopeModel.out_of_scope_ind == True' should be 'TargetScopeModel.out_of_scope_ind is True' if checking for the singleton value True, or 'bool(TargetScopeModel.out_of_scope_ind)' if testing for truthiness (singleton-comparison)
-src/modules/target_scope.py:90:24: C0121: Comparison 'TargetScopeModel.in_scope_ind == False' should be 'TargetScopeModel.in_scope_ind is False' if checking for the singleton value False, or 'not TargetScopeModel.in_scope_ind' if testing for falsiness (singleton-comparison)
-src/modules/target_scope.py:127:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
-src/modules/target_scope.py:161:13: C0121: Comparison 'valid_scope_type == False' should be 'valid_scope_type is False' if checking for the singleton value False, or 'not valid_scope_type' if testing for falsiness (singleton-comparison)
-src/modules/target_scope.py:186:11: C0121: Comparison 'save_to_database == False' should be 'save_to_database is False' if checking for the singleton value False, or 'not save_to_database' if testing for falsiness (singleton-comparison)
-src/modules/target_scope.py:190:13: W0212: Access to a protected member _get_db of a client class (protected-access)
-src/modules/target_scope.py:215:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
-src/modules/target_scope.py:3:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
-src/modules/target_scope.py:3:0: W0611: Unused Literal imported from typing (unused-import)
-src/modules/target_scope.py:3:0: W0611: Unused LiteralString imported from typing (unused-import)
-************* Module modules.target_notes
-src/modules/target_notes.py:42:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
-src/modules/target_notes.py:91:0: C0303: Trailing whitespace (trailing-whitespace)
-src/modules/target_notes.py:173:0: C0303: Trailing whitespace (trailing-whitespace)
-src/modules/target_notes.py:43:15: W0718: Catching too general exception Exception (broad-exception-caught)
-src/modules/target_notes.py:52:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
-src/modules/target_notes.py:88:11: C0121: Comparison 'save_to_database == False' should be 'save_to_database is False' if checking for the singleton value False, or 'not save_to_database' if testing for falsiness (singleton-comparison)
-src/modules/target_notes.py:92:13: E0602: Undefined variable 'TargetDatabase' (undefined-variable)
-src/modules/target_notes.py:93:20: E0602: Undefined variable 'Session' (undefined-variable)
-src/modules/target_notes.py:111:4: R0914: Too many local variables (20/15) (too-many-locals)
-src/modules/target_notes.py:117:39: W0212: Access to a protected member _get_selected_target of a client class (protected-access)
-src/modules/target_notes.py:122:8: W0212: Access to a protected member _clear of a client class (protected-access)
-src/modules/target_notes.py:123:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
-src/modules/target_notes.py:128:17: W0212: Access to a protected member _get_db of a client class (protected-access)
-src/modules/target_notes.py:129:82: C0121: Comparison 'TargetNoteModel.active == True' should be 'TargetNoteModel.active is True' if checking for the singleton value True, or 'bool(TargetNoteModel.active)' if testing for truthiness (singleton-comparison)
-src/modules/target_notes.py:190:8: W0212: Access to a protected member _clear of a client class (protected-access)
-src/modules/target_notes.py:191:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
-src/modules/target_notes.py:220:15: R1714: Consider merging these comparisons with 'in' by using 'text in ('', 'no')'. Use a set instead if elements are hashable. (consider-using-in)
-src/modules/target_notes.py:226:25: E0602: Undefined variable 'TargetDatabase' (undefined-variable)
-src/modules/target_notes.py:227:32: E0602: Undefined variable 'Session' (undefined-variable)
-src/modules/target_notes.py:12:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-src/modules/target_notes.py:3:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
-src/modules/target_notes.py:9:0: C0411: third party import "prompt_toolkit.PromptSession" should be placed before first party imports "modules.database.Database", "models.TargetModel"  (wrong-import-order)
-src/modules/target_notes.py:10:0: C0411: standard import "urllib.parse.urlparse" should be placed before third party imports "sqlalchemy.orm.query.Query", "rich.console.Console", "rich.table.Table", "rich.text.Text", "prompt_toolkit.PromptSession" and first party imports "modules.database.Database", "models.TargetModel"  (wrong-import-order)
-src/modules/target_notes.py:2:0: W0611: Unused Query imported from sqlalchemy.orm.query (unused-import)
+************* Module modules.synack
+src/modules/synack.py:38:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
+src/modules/synack.py:70:111: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/synack.py:88:0: C0304: Final newline missing (missing-final-newline)
+src/modules/synack.py:32:12: W0621: Redefining name 'func' from outer scope (line 12) (redefined-outer-name)
+src/modules/synack.py:39:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/synack.py:29:12: W0612: Unused variable 'class_name' (unused-variable)
+src/modules/synack.py:51:17: W0212: Access to a protected member _get_db of a client class (protected-access)
+src/modules/synack.py:53:28: C0121: Comparison 'SynackTargetModel.active == True' should be 'SynackTargetModel.active is True' if checking for the singleton value True, or 'bool(SynackTargetModel.active)' if testing for truthiness (singleton-comparison)
+src/modules/synack.py:54:28: C0121: Comparison 'SynackTargetModel.vulnerability_discovery == True' should be 'SynackTargetModel.vulnerability_discovery is True' if checking for the singleton value True, or 'bool(SynackTargetModel.vulnerability_discovery)' if testing for truthiness (singleton-comparison)
+src/modules/synack.py:83:16: E1101: Instance of 'Synack' has no '_select_target' member (no-member)
+src/modules/synack.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+src/modules/synack.py:4:0: C0411: standard import "typing.List" should be placed before third party import "sqlalchemy.orm.query.Query" (wrong-import-order)
+src/modules/synack.py:10:0: C0411: third party import "prompt_toolkit.PromptSession" should be placed before first party imports "modules.database.Database", "models.SynackTargetModel"  (wrong-import-order)
+src/modules/synack.py:11:0: C0411: third party import "prompt_toolkit.shortcuts.input_dialog" should be placed before first party imports "modules.database.Database", "models.SynackTargetModel"  (wrong-import-order)
+src/modules/synack.py:12:0: C0411: third party import "sqlalchemy.desc" should be placed before first party imports "modules.database.Database", "models.SynackTargetModel"  (wrong-import-order)
+src/modules/synack.py:13:0: C0411: standard import "urllib.parse.urlparse" should be placed before third party imports "sqlalchemy.orm.query.Query", "rich.console.Console", "rich.table.Table" (...) "prompt_toolkit.PromptSession", "prompt_toolkit.shortcuts.input_dialog", "sqlalchemy.desc" and first party imports "modules.database.Database", "models.SynackTargetModel"  (wrong-import-order)
+src/modules/synack.py:12:0: C0412: Imports from package sqlalchemy are not grouped (ungrouped-imports)
+src/modules/synack.py:3:0: W0611: Unused Query imported from sqlalchemy.orm.query (unused-import)
+src/modules/synack.py:4:0: W0611: Unused Literal imported from typing (unused-import)
+src/modules/synack.py:4:0: W0611: Unused LiteralString imported from typing (unused-import)
+src/modules/synack.py:7:0: W0611: Unused Text imported from rich.text (unused-import)
+src/modules/synack.py:10:0: W0611: Unused PromptSession imported from prompt_toolkit (unused-import)
+src/modules/synack.py:10:0: W0611: Unused print_formatted_text imported from prompt_toolkit (unused-import)
+src/modules/synack.py:11:0: W0611: Unused input_dialog imported from prompt_toolkit.shortcuts (unused-import)
+src/modules/synack.py:12:0: W0611: Unused or_ imported from sqlalchemy (unused-import)
+src/modules/synack.py:12:0: W0611: Unused select imported from sqlalchemy (unused-import)
+src/modules/synack.py:12:0: W0611: Unused func imported from sqlalchemy (unused-import)
+src/modules/synack.py:13:0: W0611: Unused urlparse imported from urllib.parse (unused-import)
+src/modules/synack.py:13:0: W0611: Unused parse_qs imported from urllib.parse (unused-import)
+************* Module modules.tools
+src/modules/tools.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/tools.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/tools.py:31:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/tools.py:21:12: W0612: Unused variable 'class_name' (unused-variable)
+src/modules/tools.py:36:17: W1510: 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
+src/modules/tools.py:34:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+src/modules/tools.py:46:15: W0718: Catching too general exception Exception (broad-exception-caught)
+src/modules/tools.py:41:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+src/modules/tools.py:49:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/modules/tools.py:55:21: W1510: 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
+src/modules/tools.py:74:30: R1732: Consider using 'with' for resource-allocating operations (consider-using-with)
+src/modules/tools.py:6:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module modules.proxy
+src/modules/proxy.py:112:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:608:110: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:699:0: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:720:101: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:791:73: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:792:74: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:793:72: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:794:72: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:802:73: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:803:74: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:804:72: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:805:72: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/proxy.py:1067:0: C0304: Final newline missing (missing-final-newline)
+src/modules/proxy.py:1:0: C0302: Too many lines in module (1067/1000) (too-many-lines)
+src/modules/proxy.py:677:9: W0511: TODO - filter for `.js` (fixme)
+src/modules/proxy.py:678:9: W0511: TODO - filter for json (fixme)
+src/modules/proxy.py:88:14: W0613: Unused argument 'event' (unused-argument)
+src/modules/proxy.py:101:14: W0613: Unused argument 'event' (unused-argument)
+src/modules/proxy.py:130:20: W0621: Redefining name 'func' from outer scope (line 16) (redefined-outer-name)
+src/modules/proxy.py:461:8: R1702: Too many nested blocks (6/5) (too-many-nested-blocks)
+src/modules/proxy.py:655:8: W0612: Unused variable 'allowed_strings' (unused-variable)
+src/modules/proxy.py:660:8: W0612: Unused variable 'or_conditions' (unused-variable)
+src/modules/proxy.py:911:4: R1711: Useless return at end of function or method (useless-return)
+src/modules/proxy.py:949:4: R1711: Useless return at end of function or method (useless-return)
+src/modules/proxy.py:949:23: W0613: Unused argument 'filtered_records' (unused-argument)
+src/modules/proxy.py:1005:31: C0121: Comparison 'search_responses == False' should be 'search_responses is False' if checking for the singleton value False, or 'not search_responses' if testing for falsiness (singleton-comparison)
+src/modules/proxy.py:1007:13: C0121: Comparison 'search_requests == False' should be 'search_requests is False' if checking for the singleton value False, or 'not search_requests' if testing for falsiness (singleton-comparison)
+src/modules/proxy.py:16:0: W0611: Unused select imported from sqlalchemy (unused-import)
+src/modules/proxy.py:16:0: W0611: Unused func imported from sqlalchemy (unused-import)
+************* Module modules.database
+src/modules/database.py:11:0: W0611: Unused TargetNoteModel imported from models (unused-import)
+************* Module modules.vulnerabilities
+src/modules/vulnerabilities.py:67:53: C0303: Trailing whitespace (trailing-whitespace)
+src/modules/vulnerabilities.py:29:12: W0612: Unused variable 'class_name' (unused-variable)
+src/modules/vulnerabilities.py:42:4: R0912: Too many branches (14/12) (too-many-branches)
+src/modules/vulnerabilities.py:3:0: W0611: Unused func imported from sqlalchemy (unused-import)
+src/modules/vulnerabilities.py:4:0: W0611: Unused Query imported from sqlalchemy.orm.query (unused-import)
 ************* Module tests.test_common
 src/tests/test_common.py:16:0: C0303: Trailing whitespace (trailing-whitespace)
 src/tests/test_common.py:6:0: C0411: third party import "prompt_toolkit.completion.WordCompleter" should be placed before first party import "src.modules.common"  (wrong-import-order)
 src/tests/test_common.py:3:0: W0611: Unused patch imported from unittest.mock (unused-import)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.database:[44:68]
-==modules.proxy:[120:135]
+==modules.checklist:[38:66]
+==modules.proxy:[88:116]
+            self.press_left = True
+            self.press_right = False
+
+            self.goto_previous_item = True
+            self.goto_next_item = False
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
+
+        @self.kb.add_binding(Keys.Right)
+        def _(event):
+            self.press_right = True
+            self.press_left = False
+
+            self.goto_previous_item = False
+            self.goto_next_item = True
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
+
+
+    def _handle_input(self, args):
+        """Handle Input."""
+        self.args = args (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.apphelp:[23:48]
+==modules.checklist:[72:93]
                 function_name = self.args[1]
             else:
+                function_name = self.args[0]
+            args = []
+            function_name = function_name.replace('-','_')
+            func = getattr(self, function_name)
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _classhelp(self) -> None:
+        """Help for Checklist class.
+
+        Returns:
+            None
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[44:63]
+==modules.targets:[34:49]
+                case _:
+                    return
+
+            func = getattr(self, function_name) # pylint: disable=W0621
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _add_target(self):
+        """Add a target.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.database:[58:80]
+==modules.target_scope:[27:48]
                 function_name = self.args[0]
             args = []
             func = getattr(self, function_name)
@@ -83,67 +335,79 @@ src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
            request (ProxyModel): The updated model that was used with the request.
         """ (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.target_notes:[32:51]
-==modules.targets:[34:49]
-                case _:
-                    return
-
-            func = getattr(self, function_name) # pylint: disable=W0621
-            if callable(func):
-                func(*args)
-            else:
-                print('Else: Function is not callable:%s',function_name)
-        except AttributeError:
-            return
-        except Exception as exc:
-            print(exc)
-
-    def _add_target(self):
-        """Add a target.""" (duplicate-code)
+==modules.synack:[78:88]
+==modules.targets:[140:150]
+            if '' == selected:
+                return
+            try:
+                selected_no = int(selected)
+                self._select_target(selected_no, records)
+            except ValueError:
+                return
+        except Exception as database_exception: # pylint: disable=W0718
+            print("*** EXCEPTION ***")
+            print(database_exception) (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.proxy:[122:135]
-==modules.target_scope:[24:45]
-            function_name = self.args[0]
-            args = []
-            func = getattr(self, function_name)
-            if callable(func):
-                func(*args)
-            else:
-                print('Else: Function is not callable:%s',function_name)
-        except AttributeError:
-           return
-        except Exception as exc:
-            print(exc)
+==modules.proxy:[131:174]
+==modules.synack:[31:48]
+                    func = getattr(self, f"_{function_name}")
+                if callable(func):
+                    func(*args)
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+        #elif len(self.args) == 3:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
+        #        args = []
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc)
+        #elif len(self.args) == 4:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
 
-    def _classhelp(self):
-        """Help for TargetScope class.
+        #        action_filter = self.args[3]
+        #        args = []
+        #        args.append(action_filter)
 
-        Returns:
-            None
-        """
-
-    def _get_in_scope(self, selected_target):
-        """Get In Scope items.""" (duplicate-code)
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc) (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.target_notes:[14:28]
-==modules.targets:[16:30]
-        self.app_obj = app_obj
-        self.args = args
-
-    def _handle_input(self, args):
-        """Handle Input."""
-        self.args = args
-        if len(self.args) < 2:
-            return
-
-        try:
-            class_name = self.args[1]
-            function_name = self.args[0]
-            args = []
-            match class_name: (duplicate-code)
+==modules.checklist:[102:112]
+==modules.proxy:[351:360]
+        self.start_index = 0
+        self.end_index = page_size
+        df = pd.DataFrame(data)
+        df.index.name = '#'
+        running = True
+        while running and self.start_index < len(data):
+            self.prompt_user = True
+            try:
+                page_data = df.iloc[self.start_index:self.end_index] (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.database:[48:68]
-==modules.target_notes:[35:51]
+==modules.database:[60:80]
+==modules.target_notes:[47:63]
             func = getattr(self, function_name)
             if callable(func):
                 func(*args)
@@ -165,11 +429,47 @@ src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
            request (ProxyModel): The updated model that was used with the request.
         """ (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.proxy:[124:135]
+==modules.checklist:[77:93]
 ==modules.targets:[37:49]
-                func = getattr(self, function_name)
+            func = getattr(self, function_name) # pylint: disable=W0621
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _add_target(self):
+        """Add a target.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.apphelp:[28:48]
+==modules.target_scope:[29:48]
+            func = getattr(self, function_name)
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _classhelp(self):
+        """Help for TargetScope class.
+
+        Returns:
+            None
+        """
+
+    def _get_in_scope(self, selected_target):
+        """Get In Scope items.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.proxy:[187:197]
+==modules.tools:[24:34]
                 if callable(func):
-                    func(*args)
+                    func(args=args)
                 else:
                     print('Else: Function is not callable:%s',function_name)
             except AttributeError:
@@ -179,8 +479,8 @@ src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
 
     def _get(self, item) -> str: (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.proxy:[108:116]
-==modules.targets:[38:49]
+==modules.apphelp:[29:48]
+==modules.proxy:[132:174]
                 if callable(func):
                     func(*args)
                 else:
@@ -188,37 +488,208 @@ src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
             except AttributeError:
                 return
             except Exception as exc:
-                print(exc) (duplicate-code)
+                print(exc)
+        #elif len(self.args) == 3:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
+        #        args = []
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc)
+        #elif len(self.args) == 4:
+        #    try:
+        #        class_name = self.args[0]
+        #        function_name = self.args[1]
+        #        action_name = self.args[2]
+
+        #        action_filter = self.args[3]
+        #        args = []
+        #        args.append(action_filter)
+
+        #        func = getattr(self, f"_{function_name}_{action_name}")
+        #        if callable(func):
+        #            func(*args)
+        #        else:
+        #            print('Else: Function is not callable:%s',function_name)
+        #    except AttributeError:
+        #        return
+        #    except Exception as exc:
+        #        print(exc) (duplicate-code)
 src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.database:[49:68]
-==modules.proxy:[89:97]
-                if callable(func):
-                    func(*args)
-                else:
-                    print('Else: Function is not callable:%s',function_name)
-            except AttributeError:
-                return
-            except Exception as exc:
-                print(exc) (duplicate-code)
-src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
-==modules.target_notes:[42:56]
-==modules.target_scope:[116:131]
-        except Exception as exc: # pylint: disable=W0718
+==modules.synack:[32:48]
+==modules.target_scope:[30:48]
+            if callable(func):
+                func(*args)
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+           return
+        except Exception as exc:
             print(exc)
 
 
-    def add(self) -> None: # pylint: disable=R0914,R0911,R0912,R0915
-        """Add an item to the target's scope and save to the database.
+    def _targets(self):
+        """List all active targets.
+
+        Returns:
+            None
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.targets:[21:29]
+==modules.vulnerabilities:[23:31]
+        self.args = args
+        if len(self.args) < 2:
+            return
+
+        try:
+            class_name = self.args[1]
+            function_name = self.args[0]
+            args = [] (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.checklist:[180:187]
+==modules.owaspwstg:[74:80]
+                    records: List[ChecklistModel] = db.query(ChecklistModel)\
+                        .filter(ChecklistModel.active == True)\
+                        .filter_by(name=checklist_name)\
+                        .order_by(ChecklistModel.category_order,ChecklistModel.item_id)\
+                        .all()
+                    for record in records: (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.synack:[17:27]
+==modules.target_notes:[16:26]
+        self.app_obj = app_obj
+        self.args = args
+        self.prompt_user = False
+
+    def _handle_input(self, args):
+        """Handle Input."""
+        self.args = args
+        if len(self.args) < 2:
+            return
+ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.apphelp:[31:48]
+==modules.proxy:[189:197]
+                else:
+                    print('Else: Function is not callable:%s',function_name)
+            except AttributeError:
+                return
+            except Exception as exc:
+                print(exc)
+
+
+    def main(self) -> None: # pylint: disable=unused-argument
+        """Help menu for proxy.
+
+        Args:
+            *args: dynamic tuple of args
+
+        Returns:
+            None
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_scope:[32:48]
+==modules.tools:[26:34]
+            else:
+                print('Else: Function is not callable:%s',function_name)
+        except AttributeError:
+            return
+        except Exception as exc:
+            print(exc)
+
+    def _classhelp(self):
+        """Help for TargetScope class.
 
         Returns:
             None
         """
-        selected_target: TargetModel = self.app_obj._get_selected_target()
-        if selected_target is None:
-            print("\nPlease select a target before using the 'scope' option.\n")
+
+    def _get_in_scope(self, selected_target):
+        """Get In Scope items.""" (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[102:115]
+==modules.target_scope:[205:211]
+                )
+                db.add(new_target_scope)
+                db.commit()
+                db.refresh(new_target_scope)
+            except Exception as database_exception: # pylint: disable=W0718
+                print(database_exception)
+
+    def _view_notes(self) -> None:
+        """List all active notes.
+
+        Returns:
+            None
+        """ (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.checklist:[259:264]
+==modules.proxy:[528:533]
+                text = prompt_session.prompt(' > ')
+                if '' == text:
+                    self.prompt_user = False
+                    self.select_an_item = False
+                    self.goto_next_item = True (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.checklist:[273:278]
+==modules.proxy:[552:557]
+                try:
+                    selected_no = int(text)
+                    self.selected_no = selected_no
+                    self.prompt_user = False
+                    self.select_an_item = True (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.checklist:[122:128]
+==modules.proxy:[383:389]
+                console = Console()
+                console.print(table)
+            except Exception as exc:
+                print(exc)
+
+            print("What would you like to do next ([enter]=next page; [# + enter]=select an item, [f + enter]=mark as favorite, [x + enter]=stop, left, right)?") (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.checklist:[64:71]
+==modules.synack:[23:29]
+        self.args = args
+        if len(self.args) < 2:
             return
- (duplicate-code)
+
+        try:
+            class_name = self.args[0] (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.targets:[145:150]
+==modules.vulnerabilities:[150:155]
+            except ValueError:
+                return
+        except Exception as database_exception: # pylint: disable=W0718
+            print("*** EXCEPTION ***")
+            print(database_exception) (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.targets:[22:28]
+==modules.tools:[16:22]
+        if len(self.args) < 2:
+            return
+
+        try:
+            class_name = self.args[1]
+            function_name = self.args[0] (duplicate-code)
+src/tests/test_common.py:1:0: R0801: Similar lines in 2 files
+==modules.target_notes:[35:40]
+==modules.targets:[25:30]
+            try:
+                class_name = self.args[1]
+                function_name = self.args[0]
+                args = []
+                match class_name: (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.52/10 (previous run: 9.47/10, +0.05)
+Your code has been rated at 9.11/10 (previous run: 9.11/10, +0.00)
 

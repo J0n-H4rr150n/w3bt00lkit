@@ -1,10 +1,13 @@
 """target_scope.py"""
+from typing import List
 from sqlalchemy.orm.query import Query
-from typing import List, Literal, LiteralString
 from rich.console import Console
 from rich.table import Table
 from modules.database import Database
 from models import TargetModel, TargetScopeModel
+
+# pylint: disable=C0121,W0212,W0718
+
 
 class TargetScope: # pylint: disable=R0902
     """Target Scope."""
@@ -30,7 +33,7 @@ class TargetScope: # pylint: disable=R0902
             else:
                 print('Else: Function is not callable:%s',function_name)
         except AttributeError:
-           return
+            return
         except Exception as exc:
             print(exc)
 
@@ -72,7 +75,7 @@ class TargetScope: # pylint: disable=R0902
                 for record in records:
                     table.add_row(str(counter), 'In', record.fqdn, record.path)
                     counter += 1
-                
+
                 console = Console()
                 console.print(table)
 
@@ -110,7 +113,7 @@ class TargetScope: # pylint: disable=R0902
                 for record in records:
                     table.add_row(str(counter), 'Out', record.fqdn, record.path)
                     counter += 1
-                
+
                 console = Console()
                 console.print(table)
 

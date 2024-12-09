@@ -8,9 +8,9 @@ from modules.completers import Completers
 from modules.input_handler import InputHandler
 from logger import get_logger
 from models import TargetModel
-from modules.apphelp import AppHelp
-from models import ChecklistModel
-from modules.checklist import Checklist
+from modules.apphelp import AppHelp # pylint: disable=C0412
+from models import ChecklistModel # pylint: disable=C0412
+from modules.checklist import Checklist # pylint: disable=C0412
 from modules.database import Database # pylint: disable=C0412
 from modules.proxy import Proxy
 from modules.synack import Synack
@@ -153,7 +153,7 @@ class W3bT00lkit:
                     break
 
     def _pwd(self) -> None:
-        result = subprocess.run(['pwd'], stdout=subprocess.PIPE)
+        result = subprocess.run(['pwd'], stdout=subprocess.PIPE) # pylint: disable=W1510
         if result.returncode == 0:
             print(result.stdout.decode('utf-8').strip())
 

@@ -7,12 +7,14 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm.relationships import _RelationshipDeclared
 from sqlalchemy.dialects.postgresql import JSONB
 
+# pylint: disable=R0903
+
 Base = declarative_base()
 # CONNECTION_OPTION = 'sqlite'
 CONNECTION_OPTION = 'postgres'
 
 
-class ChecklistModel(Base): # pylint: disable=R0903
+class ChecklistModel(Base):
     """ChecklistModel."""
     __tablename__: str = 'checklist'
 

@@ -229,7 +229,7 @@ class TargetNotes:
                         targetnotes.append(targetnote_record)   
 
                 if targetnotes:
-                    table = Table(show_lines=True, title=f"Findings for {selected_target.name}")
+                    table = Table(show_lines=True, title=f"Checklist Notes for {selected_target.name}")
                     table.add_column('#', width=20)
                     table.add_column('checklist_item', width=20)
                     table.add_column('path', width=100)

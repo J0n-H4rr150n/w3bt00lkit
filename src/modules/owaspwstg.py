@@ -16,7 +16,7 @@ go_to_next = False
 prompt_user = True
 
 
-class OWASPWSTG():
+class OWASPWSTGz():
     """OWASP Web Security Testing Guide (WSTG)"""
 
     def __init__(self, parent_obj, handle_input, callback_word_completer) -> None:
@@ -26,6 +26,35 @@ class OWASPWSTG():
         self.session = PromptSession()
         self.completer: WordCompleter = word_completer(self)
         self.checklist_items = None
+        self.kb = KeyBindings()
+        self.press_left = False
+        self.press_right = False
+
+        @self.kb.add_binding(Keys.Left)
+        def _(event):
+            self.press_left = True
+            self.press_right = False
+
+            self.goto_previous_item = True
+            self.goto_next_item = False
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
+
+        @self.kb.add_binding(Keys.Right)
+        def _(event):
+            self.press_right = True
+            self.press_left = False
+
+            self.goto_previous_item = False
+            self.goto_next_item = True
+
+            self.prompt_user = False
+            self.prompt_running = False
+            self.select_an_item = False
+            raise KeyboardInterrupt
 
     def _paginated_print_x(self, data, page_size=25):
         """Prints data in paginated format.
@@ -45,20 +74,32 @@ class OWASPWSTG():
             prompt_user = True
             page_data = df.iloc[start_index:end_index]
             print(tabulate(page_data, headers='keys', tablefmt='psql'))
-            print("What would you like to do next ([enter]=select an item, [n + enter]=next page)?")
-            prompt_session = PromptSession()
+            print("zzWhat would you like to do next ([enter]=select an item, [n + enter]=next page)?")
+            prompt_session = PromptSession(key_bindings=self.kb)
 
             while prompt_user:
                 text = prompt_session.prompt(' > ')
                 if '' == text:
                     prompt_user = False
                     running = False
+                    self.press_right = True
+                    self.press_left = False
                 elif 'n' == text:
                     prompt_user = False
                     running = True
 
-            start_index += page_size
-            end_index += page_size
+            self.previous_start_index = self.start_index
+            self.previous_end_index = self.end_index
+
+            if self.press_right:
+                self.start_index += page_size
+                self.end_index += page_size
+            elif self.press_left:
+                if self.start_index > 0:
+                    self.start_index -= page_size
+                    self.end_index -= page_size
+                else:
+                    return
 
     def _classhelp(self):
         """Help for Web Security Testing Guide (WSTG).

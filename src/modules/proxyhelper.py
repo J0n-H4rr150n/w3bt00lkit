@@ -47,7 +47,7 @@ def signal_handler(sig, frame) -> None: # pylint: disable=W0613
 
 signal.signal(signal.SIGINT, signal_handler)
 
-class ProxyHelper:
+class ProxyHelper: # pylint: disable=R0902
     """ProxyHelper."""
     target: str = ''
     exclusion_list: list = []
@@ -72,11 +72,13 @@ class ProxyHelper:
         self.missions_running = False
 
     def random_string(self, length):
+        """Generate a random string."""
         letters = string.ascii_letters
         result_str = ''.join(random.choice(letters) for i in range(length))
         return result_str
 
     def clean_string(self, string_value):
+        """Clean string with null byte."""
         if string_value is not None:
             try:
                 if isinstance(string_value, str):
@@ -88,14 +90,7 @@ class ProxyHelper:
         return string_value
 
     def post_request(self, url: str) -> str:
-        #vars = {}
-        #with open('.env', 'r') as f:
-        #    for line in f:
-        #        key, value = line.strip().split('=', 1)
-        #        vars[key] = value
-        
-        # 'Authorization': f'Bearer {vars["auth_token"]}',
-
+        """POST Request."""
         if self.auth_token is not None:
             max_retries = 3
             current_retries = 0
@@ -128,18 +123,19 @@ class ProxyHelper:
                         current_retries += 1
                         time.sleep(30)
                 elif response.status_code == 200:
-                    json = response.json()
-                    if json is not None and len(json) > 0:
+                    response_json = response.json()
+                    if response_json is not None and len(response_json) > 0:
                         print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
-                        print(json)
+                        print(response_json)
                         print("+++")
-                    return json
+                    return response_json
                 else:
                     print(response)
             except Exception as exc:
                 print(exc)
 
     def get_request(self, vars, url):
+        """GET Request."""
         max_retries = 3
         current_retries = 0
         cookies = {}
@@ -186,8 +182,8 @@ class ProxyHelper:
             print(exc)
             print("\nProcess halted!\n")
 
-
     def put_request(self, vars: dict, url: str, payload):
+        """PUT request."""
         max_retries = 3
         current_retries = 0
         cookies = {}
@@ -212,15 +208,12 @@ class ProxyHelper:
             'Connection': 'close'
         }
 
-        # /api/launchpoint
-        # print(url)
         response = requests.put(url, headers=headers, data=payload)
         try:
             if response.status_code == 401:
                 print("\nNeed to refresh credentials.")
                 if current_retries > max_retries:
                     print("Process halted!")
-                    #sys.exit(0)
                 else:
                     print("Waiting to see if mitmproxy will refresh...")
                     current_retries = current_retries + 1
@@ -253,7 +246,6 @@ class ProxyHelper:
                 print("")
 
             elif response.status_code == 200:
-                #print(response.__dict__)
                 json = response.json()
                 print("\nResults @",datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
                 print(json)
@@ -266,11 +258,9 @@ class ProxyHelper:
                 print("------")
                 print("Need to refresh credentials? Proxy stopped working?")
                 print("Process halted! [PH0001]")
-                #sys.exit(0)
         except Exception as exc:
             print(exc)
             print("\nProcess halted! [EXCPH0001]\n")
-            #sys.exit(0)
 
     def claim_mission(self, mission):
         print(str(mission))
@@ -360,19 +350,14 @@ class ProxyHelper:
 
     def get_missions(self, stop_event, random_string):
         while self.app_obj.missions_running and not stop_event.is_set() and self.app_obj.proxy_running:
-            #self._parent_callback_proxy_message(f"REQUEST: In loop...{random_string}")
-            #print("In mission loop...", random_string)
             time.sleep(30)
             if self.auth_token is not None and self.synack_api is not None:
                 vars = []
-                url = f"{self.synack_api}tasks?perPage=20&viewed=true&page=1&status=PUBLISHED&sort=CLAIMABLE&sortDir=DESC&includeAssignedBySynackUser=true"
+                url = f"{self.synack_api}tasks?perPage=20&viewed=true&page=1&status=PUBLISHED&sort=CLAIMABLE&sortDir=DESC&includeAssignedBySynackUser=true" # pylint: disable=C0301
                 results = self.get_request(vars, url)
                 if results:
                     print(results)
                     self._parent_callback_proxy_message(f"REQUEST: Mission results... {results}")
-
-                    # TODO - Save to database
-
                     try:
                         headers = {
                             'Accept': '*/*',
@@ -411,7 +396,6 @@ class ProxyHelper:
         #print("stop event:", stop_event.is_set())
         print("Mission thread exiting...", random_string)
         self.app_obj.missions_running = False
-
 
     def request(self, flow: http.HTTPFlow) -> None: # pylint: disable=R0914
         """Proxy request.
@@ -456,23 +440,15 @@ class ProxyHelper:
                         print(exc)
                         print("")
 
-        #for exclusion in self.exclusion_list:
-        #    if exclusion in flow.request.host:
-        #        print("Skip: %s", exclusion)
-        #        return
-
         if self.target is None or self.in_scope is None:
-            #self._parent_callback_proxy_message(f"REQUEST: No target selected.")
             return
-
-        #self._parent_callback_proxy_message(f"REQUEST: {flow.request.pretty_url}")
 
         self.request_count = self.request_count + 1
 
         dynamic_host = None
         dynamic_fqdn = False
         dynamic_full_url = None
-        
+
         save_request = False
         for item in self.in_scope:
             if item['fqdn'] is not None:
@@ -514,8 +490,6 @@ class ProxyHelper:
 
         full_url: str = f'{request.scheme}://{request.host}:{request.port}{request.path}'
 
-        #self._parent_callback_proxy_message(f"REQUEST (CHECK): {flow.request.pretty_url}")
-
         if dynamic_host is not None and dynamic_fqdn:
             dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
@@ -531,7 +505,6 @@ class ProxyHelper:
 
         try:
             raw_request = assemble_request(flow.request).decode('utf-8')
-            #print(assemble_request(flow.request).decode('utf-8'))
         except Exception as exc:
             self._parent_callback_proxy_message("REQUEST:",exc)
             raw_request = None
@@ -542,7 +515,6 @@ class ProxyHelper:
             headers_string = None
 
         try:
-            # self._parent_callback_proxy_message(f"self.target.id: {self.target.id}")
             new_request = ProxyModel(
                 target_id=int(self.target.id),
                 name=None,
@@ -586,7 +558,6 @@ class ProxyHelper:
                 stop_event = threading.Event()
                 try:
                     print("\nStart polling for missions...\n")
-                    #self.get_missions()
                     self.missions_thread = threading.Thread(target=self.get_missions, args=(stop_event,self.random_string(10)))
                     self.missions_thread.daemon = True
                     self.missions_thread.start()
@@ -604,10 +575,7 @@ class ProxyHelper:
         Returns:
             None
         """
-
         self.response_count = self.response_count + 1
-        #self._parent_callback_proxy_message(f"RESPONSE: {self.response_count} out of {self.request_count} requests")
-
         if self.target is None or self.in_scope is None:
             self._parent_callback_proxy_message("RESPONSE: self in_scope is none")
             return
@@ -693,8 +661,6 @@ class ProxyHelper:
         if dynamic_host is not None and dynamic_fqdn:
             dynamic_full_url: str = f'{request.scheme}://{dynamic_host}:{request.port}{request.path}'
 
-        #self._parent_callback_proxy_message(f"RESPONSE (SAVE): {request.pretty_url}")
-
         parsed: ParseResult = urlparse(full_url)
         path: str = parsed.path
         url: str = f'{parsed.scheme}://{parsed.netloc.replace(":443","")}{parsed.path}'
@@ -743,8 +709,6 @@ class ProxyHelper:
             full_flow = None
 
         try:
-            #headers_string = ", ".join([f"{k}: {v}" for k, v in flow.response.headers.items()])
-            #self._parent_callback_proxy_message(f"RESPONSE (ABOUT TO SAVE): {request.pretty_url}")
             new_response = ProxyModel(
                 target_id=int(self.target.id),
                 name=None,
@@ -787,7 +751,7 @@ class ProxyHelper:
             self._parent_callback_proxy_message(traceback.print_exc())
 
         if self.auth_token is not None and self.synack_api is not None:
-            
+
             if flow.request.pretty_url.startswith(self.synack_base) and '/api/targets/registered_summary' == flow.request.path:
                 self._parent_callback_proxy_message(f"RESPONSE: {flow.request.pretty_url}")
                 targets = json.loads(self.clean_string(flow.response.text))
