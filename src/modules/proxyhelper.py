@@ -290,7 +290,7 @@ class ProxyHelper: # pylint: disable=R0902
             'Sec-Ch-Ua': '\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"',
             'Content-Type': 'application/json',
             'Sec-Ch-Ua-Mobile': '?0',
-            'Authorization': self.auth_token,
+            'Authorization': f'Bearer {self.auth_token}',
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
             'Sec-Ch-Ua-Platform': '\"Linux\"',
             'Accept': '*/*',
