@@ -146,5 +146,5 @@ class Targets:
             except ValueError:
                 return
         except Exception as database_exception: # pylint: disable=W0718
-            print("*** EXCEPTION ***")
+            print("*** TARGETS EXCEPTION ***")
             print(database_exception)

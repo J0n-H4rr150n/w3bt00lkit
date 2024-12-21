@@ -2,12 +2,13 @@
 import os
 import sys
 import subprocess
+import re
 from logging import Logger
 from prompt_toolkit import PromptSession
 from modules.completers import Completers
 from modules.input_handler import InputHandler
 from logger import get_logger
-from models import TargetModel
+from models import SynackTargetModel, TargetModel
 from modules.apphelp import AppHelp # pylint: disable=C0412
 from models import ChecklistModel # pylint: disable=C0412
 from modules.checklist import Checklist # pylint: disable=C0412
@@ -43,6 +44,7 @@ class W3bT00lkit:
         self.name: str = f'{self.base_name} '
         self.class_name: str = 'W3bT00lkit'
         self.selected_target = None
+        self.selected_synack_target = None
         self.selected_target_in_scope = None
         self.selected_target_out_of_scope = None
         self.session = PromptSession(completer=Completers())
@@ -59,6 +61,9 @@ class W3bT00lkit:
         self.message = None
         self.proxy_running = False
         self.missions_running = False
+        self.auth_token = None
+        self.auth_token_created_timestamp = None
+        self.auth_token_created_timestamp_str = None
 
     def _get_base_name(self) -> str:
         return self.base_name
@@ -83,12 +88,7 @@ class W3bT00lkit:
             print("*** PROXY MESSAGE ***")
             print(message)
 
-    def _callback_set_target(self, target) -> None:
-        try:
-            self.proxy.stop()
-        except Exception as exc:
-            print(exc)
-
+    def _callback_set_target(self, target: TargetModel) -> None:
         if target is None:
             self.selected_target = None
             self.name = f"{self.base_name} "
@@ -113,6 +113,48 @@ class W3bT00lkit:
         if self.message is not None:
             print(self.message)
             self.message = None
+
+    def _callback_set_synack_target(self, target: SynackTargetModel) -> None:
+        if target is None:
+            self.selected_target = None
+            self.selected_synack_target = None
+            self.name = f"{self.base_name} "
+            self.message = "Target removed.\n"
+        else:
+            selected_target = TargetModel(
+                id = target.id,
+                name = target.target_codename,
+                platform = target.target_id
+            )
+            if self.proxy_running:
+                self.selected_target: TargetModel = selected_target
+                self.selected_synack_target = target
+                self.name = f"{self.base_name} (proxy) ({selected_target.name}) "
+                self.selected_target_in_scope = None
+                self.selected_target_out_of_scope = None
+            else:
+                self.selected_target: TargetModel = selected_target
+                self.selected_synack_target = target
+                self.name = f"{self.base_name} ({selected_target.name}) "
+                self.selected_target_in_scope = None
+                self.selected_target_out_of_scope = None
+
+            self._clear()
+            self._print_output(self.INTRO)
+            print(get_quote())
+            self.targetscope._get_in_scope(selected_target)
+            checklist_record = ChecklistModel()
+            self.targetnotes._get_checklist_notes(selected_target, checklist_record)
+            if self.message is not None:
+                print(self.message)
+                self.message = None
+            if self.selected_synack_target is not None and ".com" not in self.selected_synack_target.target_id.lower() and \
+            len(self.selected_synack_target.target_id) == 10 and bool(re.search(r'[a-zA-Z]' and r'[0-9]', self.selected_synack_target.target_id)) :
+                connected = self.synack._switch_target(self.selected_synack_target.target_id)
+                if connected:
+                    self._clear()
+                    self._print_output(self.INTRO)
+                    print(get_quote())
 
     def _print_output(self, *args, **kwargs) -> None:
         if len(args) > 0:

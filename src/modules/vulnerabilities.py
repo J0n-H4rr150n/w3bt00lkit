@@ -151,5 +151,5 @@ class Vulnerabilities:
             except ValueError:
                 return
         except Exception as database_exception: # pylint: disable=W0718
-            print("*** EXCEPTION ***")
+            print("*** VULNERABILITIES EXCEPTION ***")
             print(database_exception)

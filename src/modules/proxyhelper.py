@@ -177,8 +177,8 @@ class ProxyHelper: # pylint: disable=R0902
             else:
                 print(response.status_code)
                 print(response)
-                print("Process halted!")
         except Exception as exc:
+            print("Problem with get_request...")
             print(exc)
             print("\nProcess halted!\n")
 
@@ -240,7 +240,7 @@ class ProxyHelper: # pylint: disable=R0902
                     }
 
                 print("")
-                response_two = requests.get(url, headers=headers)
+                response_two = requests.put(url, headers=headers, data=payload)
                 print(response_two.status_code)
                 print(response_two.text)
                 print("")
@@ -350,11 +350,15 @@ class ProxyHelper: # pylint: disable=R0902
 
     def get_missions(self, stop_event, random_string):
         while self.app_obj.missions_running and not stop_event.is_set() and self.app_obj.proxy_running:
-            time.sleep(30)
+            time.sleep(10)
             if self.auth_token is not None and self.synack_api is not None:
+                timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S:%f")
+                print("Check for missions... ", timestamp)
                 vars = []
                 url = f"{self.synack_api}tasks?perPage=20&viewed=true&page=1&status=PUBLISHED&sort=CLAIMABLE&sortDir=DESC&includeAssignedBySynackUser=true" # pylint: disable=C0301
                 results = self.get_request(vars, url)
+                print("Results:")
+                print(results)
                 if results:
                     print(results)
                     self._parent_callback_proxy_message(f"REQUEST: Mission results... {results}")
@@ -422,6 +426,9 @@ class ProxyHelper: # pylint: disable=R0902
                             #print(self.auth_token_created_timestamp_str,'->', self.auth_token)
                             print(self.auth_token_created_timestamp_str,'->', '[auth_token]')
                             print("-------------------------------\n")
+                            self.app_obj.auth_token = self.auth_token
+                            self.app_obj.auth_token_created_timestamp = self.auth_token_created_timestamp
+                            self.app_obj.auth_token_created_timestamp_str = self.auth_token_created_timestamp_str
                         else:
                             new_auth_token = headers[header].replace("Bearer ","")
                             previous_auth_token = self.auth_token
@@ -435,10 +442,21 @@ class ProxyHelper: # pylint: disable=R0902
                                 #print(self.auth_token_created_timestamp_str,'->', self.auth_token)
                                 print(self.auth_token_created_timestamp_str,'->', '[auth_token]')
                                 print("-----------------------------------\n")
+                                self.app_obj.auth_token = self.auth_token
+                                self.app_obj.auth_token_created_timestamp = self.auth_token_created_timestamp
+                                self.app_obj.auth_token_created_timestamp_str = self.auth_token_created_timestamp_str
                     except Exception as exc:
                         print("\nAUTHORIZATION EXCEPTION:")
                         print(exc)
                         print("")
+
+
+        self.target = self.app_obj.selected_target
+        self.in_scope = self.app_obj.selected_target_in_scope
+
+        #print("target:",str(self.target.name))
+        #print("in scope:", str(self.in_scope))
+        #print()
 
         if self.target is None or self.in_scope is None:
             return
@@ -551,7 +569,7 @@ class ProxyHelper: # pylint: disable=R0902
             self._parent_callback_proxy_message("REQUEST: database_exception...")
             self._parent_callback_proxy_message(str(database_exception))
 
-        if self.auth_token is not None and self.synack_api is not None:
+        if self.auth_token is not None and self.synack_api is not None and self.auth_token != 'undefined':
             if self.app_obj.missions_running == False:
                 self.missions_running = True
                 self.app_obj.missions_running = True
